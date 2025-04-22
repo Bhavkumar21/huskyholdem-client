@@ -1,4 +1,6 @@
 import React from "react";
+import { apiClient } from "../api";
+import axios, { AxiosError } from "axios";
 
 const Register: React.FC = () => {
   const [username, setUsername] = React.useState("");
@@ -32,17 +34,30 @@ const Register: React.FC = () => {
       console.log("Registering:", { username, email, password });
 
       // Simulate API delay
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+        const response = await apiClient.post("/auth/register", {
+            username,
+            email,
+            password,
+        });
 
+        console.log("Response:", response.data);
+        
       // Simulate success
       setSuccess(true);
       setUsername("");
       setEmail("");
       setPassword("");
       setConfirmPassword("");
-    } catch (err: unknown) {
-      console.error("Registration error:", err);
-      setError("Something went wrong. Please try again.");
+    } catch (err: AxiosError | unknown) {
+    if (err && (err as AxiosError).response) {
+        if (axios.isAxiosError(err)) {
+            setError(err.response?.data.detail || "An unexpected error occurred. Please try again.");
+        } else {
+            setError("An unexpected error occurred. Please try again.");
+        }
+    } else {
+        setError("An unexpected error occurred. Please try again.");
+    }
     } finally {
       setLoading(false);
     }
