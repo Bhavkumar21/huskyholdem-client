@@ -520,3 +520,17 @@ section {
   animation: paths 5s step-end infinite, opacity 5s step-end infinite,
     font 7s step-end infinite, movement 8s step-end infinite;
 }
+
+.environment {
+    position: absolute;
+  top: 0;
+  right: 0;
+    bottom: 0;
+    left: 0;
+  opacity: 0.5;
+  height: 80vh;
+  filter: blur(5px);
+  background: url("../assets/img/back.jpeg")
+    center no-repeat;
+  background-size: cover;
+}

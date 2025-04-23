@@ -33,7 +33,8 @@ const HeroSection: React.FC = () => {
   }, []);
 
   return (
-    <section className="text-center py-16 bg-black w-full h-[80vh] flex flex-col items-center justify-center">
+    <section className="text-center bg-black py-16 w-full h-[80vh] flex flex-col items-center justify-center overflow-clip">
+    <div className="environment"></div>
     <h1 className="hero glitch layers" data-text="冷血不够，要冷码"><span>HUSKY♠ HOLD'EM</span></h1>
     <p className="hero-countdown">Final submission in: {timeLeft}</p>
     <CyberPunkButton text="REGISTER" onClick={() => navigate("/register")} className="mt-4"/>
