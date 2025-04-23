@@ -13,6 +13,12 @@ const Dashboard: React.FC = () => {
     const [lastSubmittedAt, setLastSubmittedAt] = useState<number | null>(null);
     const [cooldownRemaining, setCooldownRemaining] = useState(0);
 
+    // File preview states
+    const [playerFileContent, setPlayerFileContent] = useState<string>("");
+    const [requirementsFileContent, setRequirementsFileContent] = useState<string>("");
+    const [showPreview, setShowPreview] = useState<boolean>(false);
+    const [activeTab, setActiveTab] = useState<"player" | "requirements">("player");
+
     useEffect(() => {
     const interval = setInterval(() => {
         if (lastSubmittedAt) {
@@ -25,8 +31,6 @@ const Dashboard: React.FC = () => {
 
     return () => clearInterval(interval);
     }, [lastSubmittedAt]);
-
-
 
     const fetchJobs = async () => {
     try {
@@ -44,8 +48,6 @@ const Dashboard: React.FC = () => {
     const interval = setInterval(fetchJobs, 15000); // Refresh every 15s
     return () => clearInterval(interval);
     }, []);
-
-
 
   const { user } = useAuth();
 
@@ -77,6 +79,33 @@ const Dashboard: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
+  // Read file content when files are selected
+  useEffect(() => {
+    if (playerFile) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const content = e.target?.result as string;
+        setPlayerFileContent(content || "");
+      };
+      reader.readAsText(playerFile);
+    } else {
+      setPlayerFileContent("");
+    }
+  }, [playerFile]);
+
+  useEffect(() => {
+    if (requirementsFile) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const content = e.target?.result as string;
+        setRequirementsFileContent(content || "");
+      };
+      reader.readAsText(requirementsFile);
+    } else {
+      setRequirementsFileContent("");
+    }
+  }, [requirementsFile]);
+
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     const files = Array.from(e.dataTransfer.files);
@@ -92,8 +121,14 @@ const Dashboard: React.FC = () => {
     for (const file of files) {
       if (file.name === "player.py") {
         setPlayerFile(file);
+        setShowPreview(true);
+        setActiveTab("player");
       } else if (file.name === "requirements.txt") {
         setRequirementsFile(file);
+        if (!playerFile) {
+          setShowPreview(true);
+          setActiveTab("requirements");
+        }
       }
     }
   };
@@ -120,6 +155,9 @@ const Dashboard: React.FC = () => {
         setStatus("success");
         setPlayerFile(null);
         setRequirementsFile(null);
+        setPlayerFileContent("");
+        setRequirementsFileContent("");
+        setShowPreview(false);
         setLastSubmittedAt(Date.now()); // 🆕 Start cooldown timer
         fetchJobs(); // 🆕 Refresh jobs after submit
     } catch (err) {
@@ -127,8 +165,7 @@ const Dashboard: React.FC = () => {
         setStatus("error");
         setError("Submission failed. Check your files and try again.");
     }
-    };
-
+  };
 
   return (
     <div className="min-h-screen text-white px-4 py-12 max-w-3xl mx-auto">
@@ -169,6 +206,42 @@ const Dashboard: React.FC = () => {
         </p>
       </div>
 
+      {/* File Preview Section */}
+      {showPreview && (playerFile || requirementsFile) && (
+        <div className="mt-6 border border-[#333] rounded-lg overflow-hidden">
+          {/* Tab Headers */}
+          <div className="flex border-b border-[#333]">
+            {playerFile && (
+              <button
+                className={`px-4 py-2 ${
+                  activeTab === "player" ? "bg-[#222] text-[#39ff14]" : "text-gray-400"
+                }`}
+                onClick={() => setActiveTab("player")}
+              >
+                player.py
+              </button>
+            )}
+            {requirementsFile && (
+              <button
+                className={`px-4 py-2 ${
+                  activeTab === "requirements" ? "bg-[#222] text-[#ff00cc]" : "text-gray-400"
+                }`}
+                onClick={() => setActiveTab("requirements")}
+              >
+                requirements.txt
+              </button>
+            )}
+          </div>
+          
+          {/* Content */}
+          <div className="bg-[#111] p-4 max-h-96 overflow-y-auto">
+            <pre className="font-mono text-sm whitespace-pre-wrap break-words">
+              {activeTab === "player" ? playerFileContent : requirementsFileContent}
+            </pre>
+          </div>
+        </div>
+      )}
+
       {error && <p className="text-red-500 mt-2 text-sm">{error}</p>}
       {status === "success" && (
         <p className="text-green-400 mt-2 text-sm">Submitted successfully! ✅</p>
@@ -187,8 +260,6 @@ const Dashboard: React.FC = () => {
             ? `Wait ${cooldownRemaining}s`
             : "Submit Bot"}
         </button>
-
-          
 
           {/* --- My Jobs --- */}
 <div className="mt-12">
