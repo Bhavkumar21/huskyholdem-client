@@ -1,17 +1,26 @@
 import { ReactElement } from "react";
 import DefaultFooter from "./footer";
 import DefaultHeader from "./header";
+import "./layout.css";
 
-const DefaultLauyout = ({ children }: { children: ReactElement }) => {
+const DefaultLayout = ({ children }: { children: ReactElement }) => {
   return (
-    <div className="h-screen">
-      <DefaultHeader />
-      <div className="w-auto items-center justify-center flex">
-        <div className="w-full">{children}</div>
+    <div className="relative min-h-screen bg-black text-white">
+      {/* Moving Grid Background */}
+      <div className="fixed top-0 left-0 w-full h-full z-0 pointer-events-none overflow-hidden">
+        <div className="moving-grid" />
       </div>
-      <DefaultFooter />
+
+      {/* Foreground Content */}
+      <div className="relative z-10 flex flex-col min-h-screen">
+        <DefaultHeader />
+              <main className="flex-grow">
+                  {children}
+              </main>
+        <DefaultFooter />
+      </div>
     </div>
   );
 };
 
-export default DefaultLauyout;
+export default DefaultLayout;
