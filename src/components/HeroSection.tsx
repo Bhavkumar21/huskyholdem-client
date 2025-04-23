@@ -37,6 +37,7 @@ const HeroSection: React.FC = () => {
     <div className="environment"></div>
     <h1 className="hero glitch layers" data-text="冷血不够，要冷码"><span>HUSKY♠ HOLD'EM</span></h1>
     <p className="hero-countdown">Final submission in: {timeLeft}</p>
+    <p>A University of Washington POKERBOTS EXTRAVAGANZA</p>
     <CyberPunkButton text="REGISTER" onClick={() => navigate("/register")} className="mt-4"/>
     </section>
   );
