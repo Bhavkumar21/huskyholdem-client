@@ -39,7 +39,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             return;
         }
       const res = await authAPI.verify(token);
-      setUser(res.data);
+      setUser(res);
       } catch (err: AxiosError | unknown) {
           if (err && (err as AxiosError).response) {
               setUser(null);
@@ -56,13 +56,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = async (credentials: { username: string; password: string }) => {
     const res = await authAPI.login(credentials.username, credentials.password);
-    localStorage.setItem("token", res.data.token);
+    localStorage.setItem("token", res.access_token);
     await fetchUser();
     };
     
     const register = async (data: { username: string; email: string; password: string }) => {
         const res = await authAPI.register(data.username, data.email, data.password);
-        localStorage.setItem("token", res.data.token);
+        localStorage.setItem("token", res.access_token);
         await fetchUser();
     };
 

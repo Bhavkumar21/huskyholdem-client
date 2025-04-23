@@ -6,6 +6,8 @@ import Register from "./page/Register";
 import Login from "./page/Login";
 import About from "./page/About";
 import { AuthProvider } from "./context/AuthContext";
+import Dashboard from "./page/Dashboard";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   const router = createBrowserRouter([
@@ -41,6 +43,16 @@ function App() {
           <About />
         </DefaultLauyout>
       ),
+      },
+      {
+        path: "/dashboard",
+          element: (
+        <ProtectedRoute>              
+            <DefaultLauyout>
+                <Dashboard />
+            </DefaultLauyout>
+        </ProtectedRoute>
+        ),
     },
   ]);
 

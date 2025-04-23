@@ -1,75 +1,99 @@
 import React from "react";
-import { apiClient } from "../api";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Login: React.FC = () => {
-    const { isAuthenticated } = useAuth(); // Assuming you have an AuthContext to manage authentication
-    const navigate = useNavigate();
-    
+  const { isAuthenticated, login } = useAuth();
+  const navigate = useNavigate();
+
+  const [username, setUsername] = React.useState("");
+  const [password, setPassword] = React.useState("");
+
+  const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState<string | null>(null);
+  const [success, setSuccess] = React.useState(false);
+
+  React.useEffect(() => {
     if (isAuthenticated) {
-        navigate("/dashboard")
+      navigate("/dashboard");
+    }
+  }, [isAuthenticated, navigate]);
+
+  const handleLogin = async (event: React.FormEvent) => {
+    event.preventDefault();
+    setError(null);
+    setSuccess(false);
+
+    if (!username || !password) {
+      setError("Please enter both username and password.");
+      return;
     }
 
-    const [username, setUsername] = React.useState("");
-    const [password, setPassword] = React.useState("");
+    try {
+      setLoading(true);
+      await login({ username, password });
 
-    // Handle form submission and authentication logic here
-    const handleLogin = async (event: React.FormEvent) => {
-        event.preventDefault();
-        // Add your login logic here
-        console.log("Login form submitted");
-        console.log("Username:", username);
-        console.log("Password:", password);
+      setSuccess(true);
+      setUsername("");
+      setPassword("");
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        setError(err.response?.data.detail || "Login failed. Please try again.");
+      } else {
+        setError("An unexpected error occurred.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
-        const response = await apiClient.post("/auth/login", {
-            username,
-            password,
-        });
-        console.log("Response:", response.data);
-    };
+  return (
+    <div className="flex min-h-[80vh] items-center justify-center px-4 py-12">
+      <div className="w-full max-w-md bg-white/5 backdrop-blur-md rounded-xl border border-white/10 shadow-lg p-8 text-white">
+        <h1 className="text-3xl font-semibold mb-6 text-center tracking-wide">
+          Welcome Back
+        </h1>
 
-    
+        <form className="space-y-4" onSubmit={handleLogin}>
+          <div>
+            <label className="block text-sm font-medium mb-1">Username</label>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="w-full px-4 py-2 bg-white/10 text-white placeholder-gray-400 border border-white/10 focus:outline-none focus:ring-2 focus:ring-[#ff00cc]"
+              placeholder="Your username"
+            />
+          </div>
 
-    return (
-        <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
-            <h1 className="text-4xl font-bold mb-4">Login Page</h1>
-            <form className="bg-white p-6 rounded shadow-md w-96" onSubmit={handleLogin}>
-                <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
-                        Username
-                    </label>
-                    <input
-                        type="text"
-                        id="username"
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        placeholder="Username"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                    />
-                </div>
-                <div className="mb-6">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
-                        Password
-                    </label>
-                    <input
-                        type="password"
-                        id="password"
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                        placeholder="Password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                </div>
-                <button
-                    type="submit"
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                >
-                    Login
-                </button>
-            </form>
-        </div>
-    );
-}
+          <div>
+            <label className="block text-sm font-medium mb-1">Password</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-4 py-2 bg-white/10 text-white placeholder-gray-400 border border-white/10 focus:outline-none focus:ring-2 focus:ring-[#ff00cc]"
+              placeholder="••••••••"
+            />
+          </div>
+
+          {error && <p className="text-red-500 text-sm">{error}</p>}
+          {success && <p className="text-green-400 text-sm">Login successful!</p>}
+
+          <button
+            type="submit"
+            disabled={loading}
+            className={`w-full mt-6 cursor-pointer border border-[#ff00cc] text-center text-[#ff00cc] hover:bg-[#ff00cc] hover:text-black transition-colors duration-200 py-2 ${
+              loading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
+          >
+            {loading ? "Logging in..." : "Login"}
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+};
 
 export default Login;

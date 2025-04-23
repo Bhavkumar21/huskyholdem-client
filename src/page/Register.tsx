@@ -1,6 +1,5 @@
-import React from "react";
-import { apiClient } from "../api";
-import axios, { AxiosError } from "axios";
+import React, { useEffect } from "react";
+import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
@@ -8,9 +7,13 @@ const Register: React.FC = () => {
     const { isAuthenticated, register } = useAuth(); // Assuming you have an AuthContext to manage authentication
     const navigate = useNavigate();
     
-    if (isAuthenticated) {
-        navigate("/dashboard")
-    }
+    useEffect(() => {
+        if (isAuthenticated) {
+            navigate("/dashboard");
+        }
+    }, [isAuthenticated, navigate]);
+
+
   const [username, setUsername] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");

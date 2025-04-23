@@ -49,7 +49,8 @@ const authAPI = {
         return response.data;
     },
     verify: async (token: string) => {
-        const response = await apiClient.post('/auth/whoami', { token });
+        apiClient.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        const response = await apiClient.get('/auth/whoami');
         return response.data;
     },
     logout: async (token: string) => {
