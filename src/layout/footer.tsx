@@ -6,7 +6,7 @@ const DefaultFooter = () => {
           University of Washington, Seattle, WA, 98195
         </div>
         <div className="text-sm pl-4 w-full md:w-auto">
-          ©2024 Algorithm Trading Club UW. All rights reserved.
+          ©2025 Algorithm Trading Club UW. All rights reserved.
         </div>
       </div>
     </footer>

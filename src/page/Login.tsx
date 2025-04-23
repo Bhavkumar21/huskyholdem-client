@@ -1,6 +1,6 @@
 import React from "react";
 import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Login: React.FC = () => {
@@ -89,7 +89,12 @@ const Login: React.FC = () => {
             }`}
           >
             {loading ? "Logging in..." : "Login"}
-          </button>
+                  </button>
+            <Link
+            to={"/register"}
+            className="text-sm text-[#ff00cc] hover:text-[#39ff14] transition duration-200 mt-4 block text-center">
+            Don't have an account? Register here.
+            </Link>
         </form>
       </div>
     </div>

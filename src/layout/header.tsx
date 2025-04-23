@@ -69,8 +69,6 @@ const DefaultHeader = () => {
               ) : (
                 <Link
                   to="/login"
-                  target="_blank"
-                  rel="noopener noreferrer"
                   className="border border-[#ff00cc] px-4 py-1 text-[#ff00cc] hover:bg-[#ff00cc] hover:text-black transition uppercase"
                 >
                   Login
@@ -164,7 +162,7 @@ const DefaultHeader = () => {
                 className="block border border-[#ff00cc] text-center py-2 text-[#ff00cc] hover:bg-[#ff00cc] hover:text-black transition"
                 onClick={() => setIsMenuOpen(false)}
               >
-                Apply
+                Login
               </Link>
             )}
           </div>

@@ -59,7 +59,28 @@ const authAPI = {
     }
 }
 
+const gameAPI = {
+    get_jobs: async () => {
+        const response = await apiClient.get('/sim/status/all');
+        return response.data;
+    },
+    get_job: async (job_id: string) => {
+        const response = await apiClient.get(`/sim/status/${job_id}`);
+        return response.data;
+    },
+    submitSimulationJob: async (formData: FormData) => {
+        const response = await apiClient.post("/sim/async_run", formData, {
+        headers: {
+            "Content-Type": "multipart/form-data",
+        },
+        });
+        console.log(response)
+        return response.data;
+    },
+}
+
 export {
     apiClient,
-    authAPI
+    authAPI,
+    gameAPI,
 }
