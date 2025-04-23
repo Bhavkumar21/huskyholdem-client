@@ -9,6 +9,25 @@ const Dashboard: React.FC = () => {
     const [jobs, setJobs] = useState<any[]>([]);
     const [jobsLoading, setJobsLoading] = useState(true);
 
+    // cool down
+    const [lastSubmittedAt, setLastSubmittedAt] = useState<number | null>(null);
+    const [cooldownRemaining, setCooldownRemaining] = useState(0);
+
+    useEffect(() => {
+    const interval = setInterval(() => {
+        if (lastSubmittedAt) {
+        const now = Date.now();
+        const secondsElapsed = Math.floor((now - lastSubmittedAt) / 1000);
+        const remaining = Math.max(0, 30 - secondsElapsed);
+        setCooldownRemaining(remaining);
+        }
+    }, 1000);
+
+    return () => clearInterval(interval);
+    }, [lastSubmittedAt]);
+
+
+
     const fetchJobs = async () => {
     try {
     const data = await gameAPI.get_jobs(); // ✅ use your API
@@ -80,9 +99,14 @@ const Dashboard: React.FC = () => {
   };
 
   const submitBot = async () => {
+    if (cooldownRemaining > 0) {
+        setError(`Please wait ${cooldownRemaining}s before submitting again.`);
+        return;
+    }
+
     if (!playerFile || !requirementsFile) {
-      setError("Both player.py and requirements.txt must be provided.");
-      return;
+        setError("Both player.py and requirements.txt must be provided.");
+        return;
     }
 
     const formData = new FormData();
@@ -90,17 +114,21 @@ const Dashboard: React.FC = () => {
     formData.append("packages_file", requirementsFile);
 
     try {
-      setStatus("submitting");
-      await gameAPI.submitSimulationJob(formData);
-      setStatus("success");
-      setPlayerFile(null);
-      setRequirementsFile(null);
+        setStatus("submitting");
+        setError(null);
+        await gameAPI.submitSimulationJob(formData);
+        setStatus("success");
+        setPlayerFile(null);
+        setRequirementsFile(null);
+        setLastSubmittedAt(Date.now()); // 🆕 Start cooldown timer
+        fetchJobs(); // 🆕 Refresh jobs after submit
     } catch (err) {
-      console.error(err);
-      setStatus("error");
-      setError("Submission failed. Check your files and try again.");
+        console.error(err);
+        setStatus("error");
+        setError("Submission failed. Check your files and try again.");
     }
-  };
+    };
+
 
   return (
     <div className="min-h-screen text-white px-4 py-12 max-w-3xl mx-auto">
@@ -148,18 +176,35 @@ const Dashboard: React.FC = () => {
 
       <button
         onClick={submitBot}
-        disabled={status === "submitting"}
-        className={`mt-6 w-full py-2 cursor-pointer border border-[#ff00cc] text-[#ff00cc] hover:bg-[#ff00cc] hover:text-black transition-all ${
-          status === "submitting" ? "opacity-50 cursor-not-allowed" : ""
+        disabled={status === "submitting" || cooldownRemaining > 0}
+        className={`mt-6 w-full py-2 border border-[#ff00cc] text-[#ff00cc] hover:bg-[#ff00cc] hover:text-black transition-all ${
+            status === "submitting" || cooldownRemaining > 0 ? "opacity-50 cursor-not-allowed" : ""
         }`}
-      >
-        {status === "submitting" ? "Submitting..." : "Submit Bot"}
-          </button>
+        >
+        {status === "submitting"
+            ? "Submitting..."
+            : cooldownRemaining > 0
+            ? `Wait ${cooldownRemaining}s`
+            : "Submit Bot"}
+        </button>
+
           
 
           {/* --- My Jobs --- */}
 <div className="mt-12">
-  <h2 className="text-xl font-bold mb-4 border-b border-[#444] pb-2">My Jobs</h2>
+  <div className="flex items-center justify-between mb-4">
+    <h2 className="text-xl font-bold border-b border-[#444] pb-2">My Jobs</h2>
+    <button
+      onClick={() => {
+        setJobsLoading(true);
+        fetchJobs();
+      }}
+      className="text-sm border border-[#39ff14] text-[#39ff14] hover:bg-[#39ff14] hover:text-black px-3 py-1 transition"
+    >
+      Refresh Jobs
+    </button>
+  </div>
+
 
   {jobsLoading ? (
     <p className="text-gray-400">Loading jobs...</p>
@@ -173,6 +218,7 @@ const Dashboard: React.FC = () => {
             <th className="p-2">Job ID</th>
             <th className="p-2">Status</th>
             <th className="p-2">Result</th>
+            <th className="p-2">Message</th>
           </tr>
         </thead>
         <tbody>
@@ -194,7 +240,8 @@ const Dashboard: React.FC = () => {
                   {job.job_status}
                 </span>
               </td>
-              <td className="p-2 text-white">{job.result_data ?? "-"}</td>
+                <td className="p-2 text-white">{job.result_data ?? "-"}</td>
+                <td className="p-2 text-white">{job.message ?? "-"}</td>
             </tr>
           ))}
         </tbody>
