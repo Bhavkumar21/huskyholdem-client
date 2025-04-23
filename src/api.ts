@@ -1,52 +1,64 @@
 import axios from 'axios';
 
 const apiClient = axios.create({
-    baseURL: 'http://localhost:8002',
-    headers: {
-        'Content-Type': 'application/json',
-    },
+  baseURL: 'http://localhost:8002',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  timeout: 30000, // 30 seconds timeout
 });
 
-export const get = async (url: string, params?: Record<string, unknown>) => {
-    try {
-        const response = await apiClient.get(url, { params });
-        return response.data;
-    } catch (error) {
-        console.error('GET request failed:', error);
-        throw error;
+apiClient.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
     }
-};
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
-export const post = async <T>(url: string, data: T) => {
-    try {
-        const response = await apiClient.post(url, data);
-        return response.data;
-    } catch (error) {
-        console.error('POST request failed:', error);
-        throw error;
+apiClient.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      // Handle unauthorized access
+      console.error('Unauthorized access - redirecting to login');
+      // Redirect to login page or show a modal
     }
-};
+    return Promise.reject(error);
+  }
+);
 
-export const put = async <T>(url: string, data: T) => {
-    try {
-        const response = await apiClient.put(url, data);
+const authAPI = {
+    login: async (username: string, password: string) => {
+        const response = await apiClient.post('/auth/login', { username, password });
         return response.data;
-    } catch (error) {
-        console.error('PUT request failed:', error);
-        throw error;
-    }
-};
-
-export const del = async (url: string) => {
-    try {
-        const response = await apiClient.delete(url);
+    },
+    register: async (username: string, email: string, password: string) => {
+        const response = await apiClient.post('/auth/register', {
+            username,
+            email,
+            password,
+        });
         return response.data;
-    } catch (error) {
-        console.error('DELETE request failed:', error);
-        throw error;
+    },
+    verify: async (token: string) => {
+        const response = await apiClient.post('/auth/whoami', { token });
+        return response.data;
+    },
+    logout: async (token: string) => {
+        const response = await apiClient.post('/auth/logout', { token });
+        return response.data;
     }
-};
+}
 
 export {
     apiClient,
+    authAPI
 }

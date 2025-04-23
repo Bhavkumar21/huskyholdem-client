@@ -1,8 +1,16 @@
 import React from "react";
 import { apiClient } from "../api";
 import axios, { AxiosError } from "axios";
+import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const Register: React.FC = () => {
+    const { isAuthenticated, register } = useAuth(); // Assuming you have an AuthContext to manage authentication
+    const navigate = useNavigate();
+    
+    if (isAuthenticated) {
+        navigate("/dashboard")
+    }
   const [username, setUsername] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
@@ -13,55 +21,41 @@ const Register: React.FC = () => {
   const [success, setSuccess] = React.useState(false);
 
   const handleRegister = async (event: React.FormEvent) => {
-    event.preventDefault();
-    setError(null);
-    setSuccess(false);
+  event.preventDefault();
+  setError(null);
+  setSuccess(false);
 
-    if (!username || !email || !password || !confirmPassword) {
-      setError("Please fill in all fields.");
-      return;
-    }
+  if (!username || !email || !password || !confirmPassword) {
+    setError("Please fill in all fields.");
+    return;
+  }
 
-    if (password !== confirmPassword) {
-      setError("Passwords do not match.");
-      return;
-    }
+  if (password !== confirmPassword) {
+    setError("Passwords do not match.");
+    return;
+  }
 
-    try {
-      setLoading(true);
+  try {
+    setLoading(true);
+    await register({ username, email, password });
 
-      // Replace this with your actual API logic
-      console.log("Registering:", { username, email, password });
-
-      // Simulate API delay
-        const response = await apiClient.post("/auth/register", {
-            username,
-            email,
-            password,
-        });
-
-        console.log("Response:", response.data);
-        
-      // Simulate success
-      setSuccess(true);
-      setUsername("");
-      setEmail("");
-      setPassword("");
-      setConfirmPassword("");
-    } catch (err: AxiosError | unknown) {
-    if (err && (err as AxiosError).response) {
-        if (axios.isAxiosError(err)) {
-            setError(err.response?.data.detail || "An unexpected error occurred. Please try again.");
-        } else {
-            setError("An unexpected error occurred. Please try again.");
-        }
+    setSuccess(true);
+    setUsername("");
+    setEmail("");
+    setPassword("");
+    setConfirmPassword("");
+  } catch (err: unknown) {
+    console.log(err)
+    if (axios.isAxiosError(err)) {
+      setError(err.response?.data.detail || "An unexpected error occurred. Please try again.");
     } else {
-        setError("An unexpected error occurred. Please try again.");
+      setError("An unexpected error occurred. Please try again.");
     }
-    } finally {
-      setLoading(false);
-    }
-  };
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <div className="flex min-h-[80vh] items-center justify-center px-4 py-12">

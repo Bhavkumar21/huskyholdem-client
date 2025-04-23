@@ -1,7 +1,16 @@
 import React from "react";
 import { apiClient } from "../api";
+import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const Login: React.FC = () => {
+    const { isAuthenticated } = useAuth(); // Assuming you have an AuthContext to manage authentication
+    const navigate = useNavigate();
+    
+    if (isAuthenticated) {
+        navigate("/dashboard")
+    }
+
     const [username, setUsername] = React.useState("");
     const [password, setPassword] = React.useState("");
 
