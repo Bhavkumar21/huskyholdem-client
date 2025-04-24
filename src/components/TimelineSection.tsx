@@ -67,7 +67,8 @@ const TimelineSection = () => {
       </div>
       
       <div className="mt-12 font-mono text-xs text-gray-500 tracking-wider">
-        <p className="mb-2">[SYS:STATUS] <span className="text-cyan-400">TOURNAMENT_PHASE</span>:<span className="text-fuchsia-600">ACTIVE</span></p>
+        {/* ACTIVE, ESTIMATED, DONE */}
+        <p className="mb-2">[SYS:STATUS] <span className="text-cyan-400">TOURNAMENT_PHASE</span>:<span className="text-fuchsia-600">ESTIMATED</span></p>
         <p>INIT::<span className="text-cyan-400">PROTOCOL_2025</span></p>
       </div>
     </section>
