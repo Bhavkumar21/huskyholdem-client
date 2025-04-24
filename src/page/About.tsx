@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
-const developers = ["Hoang Nguyen", "Jane Doe", "John Smith"];
-const advisors = ["Prof. Jane AI", "Dr. Quantum Chips"];
+const developers = ["Hoang Nguyen", "Bhavesh Kumar", "Demirhan", "Derek Zhu", "Thakrit Wongcharoensangsiri"];
+const advisors = ["ChatGPT-4o", "Claude Sonet"];
 
 const GlitchText = ({ children, intensity = "medium" }: { children: React.ReactNode; intensity?: "low" | "medium" | "high" }) => {
   const [isGlitching, setIsGlitching] = useState(false);

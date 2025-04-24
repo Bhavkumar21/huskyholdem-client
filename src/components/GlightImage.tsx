@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef } from "react";
 import Sketch from "react-p5";
 import p5Types from "p5";
 import { Glitch } from "./Glight";
