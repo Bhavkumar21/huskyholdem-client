@@ -6,7 +6,22 @@ const DefaultFooter = () => {
           University of Washington, Seattle, WA, 98195
         </div>
         <div className="text-sm pl-4 w-full md:w-auto">
-          ©2025 Algorithm Trading Club UW. All rights reserved.
+          <div>
+          <span className="text-[#ff00cc]">[SYSTEM::COPYRIGHT]</span> ALGORITHMIC TRADING CLUB @ UW
+          <span className="text-[#39ff14]">[2025]</span>
+          </div>
+            <div className="flex flex-col items-start">
+            <div>
+              <span className="text-[#ff00cc] w-full">[SYS::STATUS]</span> <span className="text-[#39ff14]">ACTIVE</span>
+            </div>
+            <div>
+              <span className="text-[#ff00cc]">[SYS::VERSION]</span> <span className="text-[#39ff14]"> 2025.0.0</span>
+            </div>
+            <div>
+              <span className="text-[#39ff14]">[SYS::CRED]</span>
+              <span className="text-[#ff00cc] underline">[<a href="https://www.kipiiler.me" className="text-[#ff00cc]">KIPIILER</a>]</span>
+            </div>
+          </div>
         </div>
       </div>
     </footer>
