@@ -15,7 +15,7 @@ const TimelineSection = () => {
   return (
     <section className="py-16 px-4  min-h-screen flex flex-col items-center justify-center ">
       <div className="relative mb-16">
-        <h2 className="text-4xl font-mono font-bold text-cyan-400 tracking-widest uppercase relative z-10">
+        <h2 className="text-4xl font-bold text-cyan-400 tracking-widest uppercase relative z-10">
           <span className="text-fuchsia-600">SYS</span>:<span className="text-cyan-400">TIMELINE</span>
         </h2>
         <div className="absolute -inset-1 bg-cyan-400 opacity-20 blur-md"></div>
@@ -43,15 +43,14 @@ const TimelineSection = () => {
               
               {/* Content */}
               <div className={`transition-all duration-300 ${hoveredIndex === idx ? 'translate-x-2' : ''}`}>
-                <p className="text-fuchsia-600 font-mono text-lg mb-1 flex items-center">
+                <p className="text-fuchsia-600 text-lg mb-1 flex items-center">
                   <span className="inline-block w-8 text-cyan-400 mr-2">[</span>
                   {item.date}
                   <span className="inline-block w-8 text-cyan-400 ml-2">]</span>
                 </p>
-                <p className="text-cyan-300 font-mono text-xl tracking-wide ml-12">
+                <p className="text-cyan-300 text-xl tracking-wide ml-12">
                   {item.label}
                 </p>
-                <div className={`absolute inset-0 border border-cyan-400 opacity-0 ${hoveredIndex === idx ? 'opacity-30' : ''} transition-opacity duration-300`}></div>
                 <div className={`absolute inset-0 border border-fuchsia-600 opacity-0 ${hoveredIndex === idx ? 'opacity-20' : ''} transition-opacity duration-300 blur-sm`}></div>
               </div>
               
