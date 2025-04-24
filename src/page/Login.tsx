@@ -93,7 +93,7 @@ const Login: React.FC = () => {
             <Link
             to={"/register"}
             className="text-sm text-[#ff00cc] hover:text-[#39ff14] transition duration-200 mt-4 block text-center">
-            Don't have an account? Register here.
+            Don't have an account? <span className="underline hover:text-fuchsia-400 text-[#ff00cc]">Register here.</span>
             </Link>
         </form>
       </div>

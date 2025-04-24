@@ -10,7 +10,7 @@ interface RegisterButtonProps {
 const CyberPunkButton: React.FC<RegisterButtonProps> = (
     props
 ) => {
-    return <button className={"cyberpunk-btn " + props.className} disabled={props.disabled || false} >{props.text}</button>;
+    return <button onClick={props.onClick} className={"cyberpunk-btn " + props.className} disabled={props.disabled || false} >{props.text}</button>;
 }
 
 export default CyberPunkButton;

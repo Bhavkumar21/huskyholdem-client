@@ -1,0 +1,58 @@
+.sponsor-section {
+    color: #ffffff;
+    text-align: center;
+    padding: 6rem 2rem;
+    background: black
+  }
+  
+  .sponsor-title {
+    font-size: 2.5rem;
+    letter-spacing: 2px;
+    color: #ff00cc;
+    text-shadow: 0 0 10px #ff00cc;
+    margin-bottom: 0.5rem;
+  }
+  
+  .sponsor-contact {
+    font-size: 1.1rem;
+    color: #39ff14;
+    margin-bottom: 2.5rem;
+  }
+  
+  .sponsor-contact a {
+    color: #00ffff;
+    text-decoration: underline;
+    transition: color 0.3s;
+  }
+  
+  .sponsor-contact a:hover {
+    color: #ff00cc;
+  }
+  
+  .sponsor-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+  }
+  
+  .sponsor-card {
+    background-color: #ffffff;
+    padding: 1rem;
+    border: 1px solid #39ff14;
+    transition: transform 0.3s, border-color 0.3s;
+    display: inline-block;
+  }
+  
+  .sponsor-card:hover {
+    border-color: #ff00cc;
+    box-shadow: 0 0 10px #39ff14, 0 0 20px #ff00cc;
+    transform: scale(1.05);
+  }
+  
+  .sponsor-card img {
+    width: 200px;
+    height: 100px;
+    object-fit: contain;
+  }
+  
