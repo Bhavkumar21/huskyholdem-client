@@ -101,7 +101,7 @@ const AboutPage = () => {
         <div className="md:col-span-2">
           <InfoCard title="ABOUT THE TOURNAMENT">
             <p>
-              Husky Hold'em is the official poker bot tournament hosted by the Algorithmic Trading Club at the University of Washington. Competitors build intelligent agents that play Texas Hold'em and compete in a real-time tournament simulation.
+              Husky Hold'em is the official poker bot tournament hosted by the <span className="text-[#39ff14]"><a style={{color: "#39ff14"}} href="https://atcuw.org/" className="underline">[Algorithmic Trading Club]</a></span> at the University of Washington. Competitors build intelligent agents that play Texas Hold'em and compete in a real-time tournament simulation.
             </p>
             <p className="mt-4">
               This event tests algorithmic reasoning, decision-making under uncertainty, and competitive spirit in a cyberpunk-themed challenge.
@@ -110,7 +110,7 @@ const AboutPage = () => {
           
           <InfoCard title="ABOUT THE ALGORITHMIC TRADING CLUB">
             <p>
-              Founded in 2019, the <span className="text-[#39ff14]">Algorithmic Trading Club</span> (formerly the Financial Engineering Club) at the University of Washington guides students through the evolving landscape of quantitative finance and algorithmic systems.
+              Founded in 2019, the <span className="text-[#39ff14]"><a style={{color: "#39ff14"}} href="https://atcuw.org/" className="underline">[Algorithmic Trading Club]</a></span> (formerly the Financial Engineering Club) at the University of Washington guides students through the evolving landscape of quantitative finance and algorithmic systems.
             </p>
             <p className="mt-4">
               From foundational Python to advanced data science and machine learning techniques, ATC equips members with the practical skills needed to thrive in high-stakes environments.
