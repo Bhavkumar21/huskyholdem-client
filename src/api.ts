@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const apiClient = axios.create({
-  baseURL: 'http://localhost:8002',
+  baseURL: 'https://api.atcuw.org',
   headers: {
     'Content-Type': 'application/json',
   },

@@ -19,7 +19,11 @@ const DefaultFooter = () => {
             </div>
             <div>
               <span className="text-[#39ff14]">[SYS::CRED]</span>
-              <span className="text-[#ff00cc] underline">[<a href="https://www.kipiiler.me" className="text-[#ff00cc]">KIPIILER</a>]</span>
+              <span className="text-[#ff00cc]"> Built by [<a href="https://www.kipiiler.me" className="text-[#ff00cc] underline">KIPIILER</a>]</span>
+            </div>
+            <div>
+              <span className="text-[#39ff14]">[SYS::CRED]</span>
+              <span className="text-[#ff00cc]"> Designed by [<a href="https://www.thaongx.com/" className="text-[#ff00cc] underline">THAONGX</a>]</span>
             </div>
           </div>
         </div>

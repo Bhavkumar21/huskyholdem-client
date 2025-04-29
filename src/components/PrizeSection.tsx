@@ -138,28 +138,28 @@ const PrizeSection = () => {
             <PrizeCard 
               emoji="🥇" 
               title="FIRST PRIZE" 
-              description="$1000 + Championship Trophy + VIP Access" 
+              description="Championship Trophy (FPGA board) + ATC-0 fast track + coming soon" 
               color="fuchsia-600" 
               highlight={true}
             />
             <PrizeCard 
               emoji="🥈" 
               title="SECOND PRIZE" 
-              description="$500 + Exclusive Neural-Link Hoodie" 
+              description="$coming soon + Digital Certificate" 
               color="#39ff14" 
               highlight={false}
             />
             <PrizeCard 
               emoji="🥉" 
               title="THIRD PRIZE" 
-              description="$250 + Digital Certificate + Badge" 
+              description="$coming soon + Digital Certificate" 
               color="#39ff14" 
               highlight={false}
             />
             <PrizeCard 
               emoji="🏅" 
               title="HONORABLE MENTIONS" 
-              description="Cyberpunk Swag Bags + Network Profile Features" 
+              description="coming soon + Digital Certificate" 
               color="#39ff14" 
               highlight={false}
             />
@@ -170,7 +170,7 @@ const PrizeSection = () => {
         <div className="mt-12 max-w-lg mx-auto text-center">
           <div className="inline-block px-4 py-2 bg-black bg-opacity-70 border-l-2 border-r-2 border-[#39ff14]">
             <p className="text-gray-400  text-sm">
-              <span className="text-fuchsia-600">[SYS:INFO]</span> All winners receive exclusive access to the next tournament beta
+              <span className="text-fuchsia-600">[SYS:INFO]</span> All winners receive exclusive fast-track interview for ATC-0, our newest quant funnel program.
             </p>
           </div>
         </div>

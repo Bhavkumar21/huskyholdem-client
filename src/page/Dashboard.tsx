@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { gameAPI } from "../api";
 
-const FINAL_DEADLINE = new Date("2025-05-01T23:59:59Z"); // <-- Change this to your actual deadline
+const FINAL_DEADLINE = new Date("2025-05-31T23:59:59Z"); // <-- Change this to your actual deadline
 
 const Dashboard: React.FC = () => {
     // job

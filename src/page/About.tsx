@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
+import img1 from "../assets/img/img1.webp";
+import img2 from "../assets/img/img2.webp";
+import img3 from "../assets/img/img3.webp";
 
-const developers = ["Hoang Nguyen", "Bhavesh Kumar", "Demirhan", "Derek Zhu", "Thakrit Wongcharoensangsiri"];
-const advisors = ["ChatGPT-4o", "Claude Sonet"];
+const developers = ["Hoang Nguyen - Lead Dev", "Bhavesh Kumar - Director", "Demirhan", "Derek", "Thakrit"];
+const advisors = ["Tim Leung - Director CFMR Program @UW"];
 
 const GlitchText = ({ children, intensity = "medium" }: { children: React.ReactNode; intensity?: "low" | "medium" | "high" }) => {
   const [isGlitching, setIsGlitching] = useState(false);
@@ -207,7 +210,7 @@ const AboutPage = () => {
             <span className="font-mono text-gray-500 group-hover:text-[#ff00cc] transition-colors duration-300">NEURAL::ACCESS</span>
           </div>
           
-          <div className="col-span-4 row-span-3 bg-cover bg-center border border-gray-800 relative group" style={{ backgroundImage: "url('https://codesandbox.io/api/v1/sandboxes/6d97z4/screenshot.png')" }}>
+          <div className="col-span-4 row-span-3 bg-cover bg-center border border-gray-800 relative group" style={{ backgroundImage: `url(${img1})` }}>
             <div className="absolute inset-0 bg-black bg-opacity-60 opacity-100 group-hover:opacity-0 transition-opacity duration-500 flex items-center justify-center">
               <span className="font-mono text-[#39ff14]">// TOURNAMENT SESSION 2024</span>
             </div>
@@ -216,7 +219,7 @@ const AboutPage = () => {
             </div>
           </div>
           
-          <div className="col-span-3 row-span-3 bg-cover bg-center border border-gray-800 relative group" style={{ backgroundImage: "url('https://codesandbox.io/api/v1/sandboxes/6d97z4/screenshot.png')" }}>
+          <div className="col-span-3 row-span-3 bg-cover bg-center border border-gray-800 relative group" style={{ backgroundImage: `url(${img2})` }}>
             <div className="absolute inset-0 bg-black bg-opacity-60 opacity-100 group-hover:opacity-0 transition-opacity duration-500 flex items-center justify-center">
               <span className="font-mono text-[#39ff14]">// STRATEGY SESSION</span>
             </div>
@@ -232,7 +235,7 @@ const AboutPage = () => {
             <span className="font-mono text-gray-500 group-hover:text-[#39ff14] transition-colors duration-300">DATA::STREAM</span>
           </div>
           
-          <div className="col-span-3 row-span-3 bg-cover bg-center border border-gray-800 relative group" style={{ backgroundImage: "url('https://codesandbox.io/api/v1/sandboxes/6d97z4/screenshot.png')" }}>
+          <div className="col-span-3 row-span-3 bg-cover bg-center border border-gray-800 relative group" style={{ backgroundImage: `url(${img3})` }}>
             <div className="absolute inset-0 bg-black bg-opacity-60 opacity-100 group-hover:opacity-0 transition-opacity duration-500 flex items-center justify-center">
               <span className="font-mono text-[#39ff14]">// CODING INTERFACE</span>
             </div>
@@ -242,6 +245,129 @@ const AboutPage = () => {
           </div>
         </div>
       </div>
+
+{/* <div className="mt-16 relative bg-black text-white p-4">
+      <h3 className="text-xl font-mono text-[#ff00cc] mb-6 flex items-center">
+        <span className="inline-block w-2 h-2 bg-[#ff00cc] mr-2"></span>
+        <GlitchText>MEMORY::ARCHIVES</GlitchText>
+      </h3>
+      
+      <div className="grid grid-cols-12 gap-4 h-[80vh]">
+        <div className="col-span-6 row-span-4 bg-cover bg-center border border-gray-800 relative group">
+          <div className="absolute inset-0 bg-black bg-opacity-60 opacity-100 group-hover:opacity-0 transition-opacity duration-500 flex items-center justify-center">
+            <span className="font-mono text-[#39ff14]">// TOURNAMENT SESSION 2024</span>
+          </div>
+          <div className="absolute bottom-0 left-0 w-full p-2 bg-black bg-opacity-70 font-mono text-xs text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+            <span className="text-[#ff00cc]">[IMAGE::01]</span> Annual competition finals
+          </div>
+          <img src="/api/placeholder/600/400" alt="Tournament" className="w-full h-full object-cover" />
+        </div>
+        
+        <div className="col-span-3 row-span-2 bg-cover bg-center border border-gray-800 relative group">
+          <div className="absolute inset-0 bg-black bg-opacity-60 opacity-100 group-hover:opacity-0 transition-opacity duration-500 flex items-center justify-center">
+            <span className="font-mono text-[#39ff14]">// STRATEGY SESSION</span>
+          </div>
+          <div className="absolute bottom-0 left-0 w-full p-2 bg-black bg-opacity-70 font-mono text-xs text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+            <span className="text-[#ff00cc]">[IMAGE::02]</span> Workshop event
+          </div>
+          <img src="/api/placeholder/300/200" alt="Strategy Session" className="w-full h-full object-cover" />
+        </div>
+        
+        <div className="col-span-3 row-span-2 bg-cover bg-center border border-gray-800 relative group">
+          <div className="absolute inset-0 bg-black bg-opacity-60 opacity-100 group-hover:opacity-0 transition-opacity duration-500 flex items-center justify-center">
+            <span className="font-mono text-[#39ff14]">// CODING INTERFACE</span>
+          </div>
+          <div className="absolute bottom-0 left-0 w-full p-2 bg-black bg-opacity-70 font-mono text-xs text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+            <span className="text-[#ff00cc]">[IMAGE::03]</span> Bot development
+          </div>
+          <img src="/api/placeholder/300/200" alt="Coding Interface" className="w-full h-full object-cover" />
+        </div>
+        
+        <div className="col-span-3 row-span-2 bg-cover bg-center border border-gray-800 relative group">
+          <div className="absolute inset-0 bg-black bg-opacity-60 opacity-100 group-hover:opacity-0 transition-opacity duration-500 flex items-center justify-center">
+            <span className="font-mono text-[#39ff14]">// NEURAL NETWORK</span>
+          </div>
+          <div className="absolute bottom-0 left-0 w-full p-2 bg-black bg-opacity-70 font-mono text-xs text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+            <span className="text-[#ff00cc]">[IMAGE::04]</span> Training algorithms
+          </div>
+          <img src="/api/placeholder/300/200" alt="Neural Network" className="w-full h-full object-cover" />
+        </div>
+        
+        <div className="col-span-3 row-span-2 bg-cover bg-center border border-gray-800 relative group">
+          <div className="absolute inset-0 bg-black bg-opacity-60 opacity-100 group-hover:opacity-0 transition-opacity duration-500 flex items-center justify-center">
+            <span className="font-mono text-[#39ff14]">// VIRTUAL ARENA</span>
+          </div>
+          <div className="absolute bottom-0 left-0 w-full p-2 bg-black bg-opacity-70 font-mono text-xs text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+            <span className="text-[#ff00cc]">[IMAGE::05]</span> Simulation system
+          <div style={{background: 'url("../assets/img/img1.webp")'}}  className="w-full h-full object-cover" />
+          </div>
+        </div>
+        
+        <div className="col-span-3 row-span-3 bg-[#0f0f0f] border border-gray-800 flex items-center justify-center relative group overflow-hidden">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(57,255,20,0.15)_0%,transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          <div className="absolute top-0 right-0 w-full h-0.5 bg-gradient-to-l from-[#39ff14] to-transparent opacity-50"></div>
+          <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-[#39ff14] to-transparent opacity-50"></div>
+          <span className="font-mono text-gray-500 group-hover:text-[#39ff14] transition-colors duration-300">DATA::STREAM</span>
+        </div>
+        
+        <div className="col-span-3 row-span-3 bg-[#0f0f0f] border border-gray-800 flex items-center justify-center relative group overflow-hidden">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,0,204,0.15)_0%,transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-[#ff00cc] to-transparent opacity-50"></div>
+          <div className="absolute bottom-0 right-0 w-full h-0.5 bg-gradient-to-l from-[#ff00cc] to-transparent opacity-50"></div>
+          <span className="font-mono text-gray-500 group-hover:text-[#ff00cc] transition-colors duration-300">NEURAL::ACCESS</span>
+        </div>
+        
+        <div className="col-span-2 row-span-1 bg-cover bg-center border border-gray-800 relative group">
+          <div className="absolute inset-0 bg-black bg-opacity-70 opacity-100 group-hover:opacity-0 transition-opacity duration-500"></div>
+          <div className="absolute bottom-0 left-0 w-full p-1 bg-black bg-opacity-70 font-mono text-xs text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+            <span className="text-[#ff00cc]">[IMG::06]</span>
+          </div>
+          <img src="/api/placeholder/200/100" alt="Image 6" className="w-full h-full object-cover" />
+        </div>
+        
+        <div className="col-span-2 row-span-1 bg-cover bg-center border border-gray-800 relative group">
+          <div className="absolute inset-0 bg-black bg-opacity-70 opacity-100 group-hover:opacity-0 transition-opacity duration-500"></div>
+          <div className="absolute bottom-0 left-0 w-full p-1 bg-black bg-opacity-70 font-mono text-xs text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+            <span className="text-[#ff00cc]">[IMG::07]</span>
+          </div>
+          <img src="/api/placeholder/200/100" alt="Image 7" className="w-full h-full object-cover" />
+        </div>
+        
+        <div className="col-span-2 row-span-1 bg-cover bg-center border border-gray-800 relative group">
+          <div className="absolute inset-0 bg-black bg-opacity-70 opacity-100 group-hover:opacity-0 transition-opacity duration-500"></div>
+          <div className="absolute bottom-0 left-0 w-full p-1 bg-black bg-opacity-70 font-mono text-xs text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+            <span className="text-[#ff00cc]">[IMG::08]</span>
+          </div>
+          <img src="/api/placeholder/200/100" alt="Image 8" className="w-full h-full object-cover" />
+        </div>
+        
+        <div className="col-span-4 row-span-3 bg-cover bg-center border border-gray-800 relative group">
+          <div className="absolute inset-0 bg-black bg-opacity-60 opacity-100 group-hover:opacity-0 transition-opacity duration-500 flex items-center justify-center">
+            <span className="font-mono text-[#39ff14]">// DEVELOPER TEAM</span>
+          </div>
+          <div className="absolute bottom-0 left-0 w-full p-2 bg-black bg-opacity-70 font-mono text-xs text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+            <span className="text-[#ff00cc]">[IMAGE::09]</span> Hackathon champions
+          </div>
+          <img src="/api/placeholder/400/300" alt="Developer Team" className="w-full h-full object-cover" />
+        </div>
+        
+        <div className="col-span-2 row-span-3 bg-cover bg-center border border-gray-800 relative group">
+          <div className="absolute inset-0 bg-black bg-opacity-60 opacity-100 group-hover:opacity-0 transition-opacity duration-500 flex items-center justify-center">
+            <span className="font-mono text-[#39ff14]">// LAB</span>
+          </div>
+          <div className="absolute bottom-0 left-0 w-full p-2 bg-black bg-opacity-70 font-mono text-xs text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+            <span className="text-[#ff00cc]">[IMAGE::10]</span>
+          </div>
+          <img src="/api/placeholder/200/300" alt="Lab" className="w-full h-full object-cover" />
+        </div>
+      </div>
+
+      <div className="flex justify-center mt-6 gap-2">
+        <div className="w-8 h-1 bg-[#ff00cc]"></div>
+        <div className="w-8 h-1 bg-gray-700"></div>
+        <div className="w-8 h-1 bg-gray-700"></div>
+      </div>
+    </div> */}
     </section>
   );
 };
