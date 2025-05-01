@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "./HeroSection.css"; // Assuming you have a CSS file for styles
 import CyberPunkButton from "./CyberPunkButton";
 
-const FINAL_DEADLINE = new Date("2025-05-31T23:59:59Z");
+const FINAL_DEADLINE = new Date("2025-05-24T23:59:59Z");
 
 const HeroSection: React.FC = () => {
   const [timeLeft, setTimeLeft] = useState("");
