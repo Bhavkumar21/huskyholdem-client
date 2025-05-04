@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { gameAPI } from "../api";
+import FileUploadPanel from "../components/FileUploadPanel";
 
 const FINAL_DEADLINE = new Date("2025-05-31T23:59:59Z"); // <-- Change this to your actual deadline
 
@@ -106,33 +107,6 @@ const Dashboard: React.FC = () => {
     }
   }, [requirementsFile]);
 
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    const files = Array.from(e.dataTransfer.files);
-    processFiles(files);
-  };
-
-  const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files ? Array.from(e.target.files) : [];
-    processFiles(files);
-  };
-
-  const processFiles = (files: File[]) => {
-    for (const file of files) {
-      if (file.name === "player.py") {
-        setPlayerFile(file);
-        setShowPreview(true);
-        setActiveTab("player");
-      } else if (file.name === "requirements.txt") {
-        setRequirementsFile(file);
-        if (!playerFile) {
-          setShowPreview(true);
-          setActiveTab("requirements");
-        }
-      }
-    }
-  };
-
   const submitBot = async () => {
     if (cooldownRemaining > 0) {
         setError(`Please wait ${cooldownRemaining}s before submitting again.`);
@@ -163,7 +137,7 @@ const Dashboard: React.FC = () => {
     } catch (err) {
         console.error(err);
         setStatus("error");
-        setError("Submission failed. Check your files and try again.");
+        setError("Failed to upload submission. Error: " + (err as Error).message);
     }
   };
 
@@ -180,88 +154,35 @@ const Dashboard: React.FC = () => {
         </p>
       </div>
 
-      {/* Drag + Upload */}
-      <div
-        onDrop={handleDrop}
-        onDragOver={(e) => e.preventDefault()}
-        className="border-2 border-dashed border-[#ff00cc] bg-black/30 p-6 rounded-lg text-center cursor-pointer hover:bg-white/5 transition"
-      >
-        <p className="text-lg mb-2">Drag & drop <code>player.py</code> and <code>requirements.txt</code></p>
-        <p className="text-sm text-gray-400">Or select files manually below</p>
-        <input
-          type="file"
-          accept=".py,.txt"
-          multiple
-          onChange={handleFileInput}
-          className="mt-4 text-sm text-white file:hidden"
-        />
-      </div>
-
-      <div className="mt-4 space-y-2">
-        <p className="text-sm">
-          <span className="font-mono text-green-400">player.py</span>: {playerFile?.name || "Not selected"}
+      <div className="bg-black bg-opacity-30 border-l-4 border-[#ff00cc] pl-4 py-3 my-4">
+        <p className="text-[#39ff14] font-bold mb-1">🃏 TOURNAMENT PROTOCOL 🃏</p>
+        <p className="text-gray-300 text-sm mb-2">
+        ♠️ Welcome to the <span className="text-[#ff00cc] font-semibold">HuskyHoldem Tournament</span> Arena! Upload your poker bot below to face off in simulated games at our virtual table. 
+        This phase (our first phase or the tournament - development) allows you to challenge the <span className="text-[#39ff14] font-mono">House Bot</span> to test your strategy before the main competition.
+        Upon submission, you’ll receive a unique <span className="text-yellow-300">Job ID</span> to track your bot’s performance in real-time under the <strong>My Jobs</strong> section.
         </p>
-        <p className="text-sm">
-          <span className="font-mono text-purple-400">requirements.txt</span>: {requirementsFile?.name || "Not selected"}
+        <p className="text-gray-400 text-xs mb-2">
+            <span className="text-yellow-400">⚠️ HOUSE RULE #1:</span> Make sure your bot behaves! Submissions that crash, stall, or break the rules may be disqualified.
+        </p>
+        <p className="text-gray-400 text-xs">
+        <span className="text-yellow-400">⚠️ HOUSE RULE #2:</span> This upload portal is for <span className="text-[#ffcc00] font-semibold">test runs only</span>. 
+            For official entry into the tournament, submit your final bot through the dedicated submission page in the main menu. Stay tuned on the tournament dashboard for updates and deadlines.
         </p>
       </div>
 
-      {/* File Preview Section */}
-      {showPreview && (playerFile || requirementsFile) && (
-        <div className="mt-6 border border-[#333] rounded-lg overflow-hidden">
-          {/* Tab Headers */}
-          <div className="flex border-b border-[#333]">
-            {playerFile && (
-              <button
-                className={`px-4 py-2 ${
-                  activeTab === "player" ? "bg-[#222] text-[#39ff14]" : "text-gray-400"
-                }`}
-                onClick={() => setActiveTab("player")}
-              >
-                player.py
-              </button>
-            )}
-            {requirementsFile && (
-              <button
-                className={`px-4 py-2 ${
-                  activeTab === "requirements" ? "bg-[#222] text-[#ff00cc]" : "text-gray-400"
-                }`}
-                onClick={() => setActiveTab("requirements")}
-              >
-                requirements.txt
-              </button>
-            )}
-          </div>
-          
-          {/* Content */}
-          <div className="bg-[#111] p-4 max-h-96 overflow-y-auto">
-            <pre className="font-mono text-sm whitespace-pre-wrap break-words">
-              {activeTab === "player" ? playerFileContent : requirementsFileContent}
-            </pre>
-          </div>
-        </div>
-      )}
+      <FileUploadPanel
+        playerFile={playerFile}
+        setPlayerFile={setPlayerFile}
+        requirementsFile={requirementsFile}
+        setRequirementsFile={setRequirementsFile}
+        error={error}
+        status={status}
+        setError={setError}
+        setStatus={setStatus}
+        onSubmit={submitBot}
+        cooldownRemaining={cooldownRemaining}/>
 
-      {error && <p className="text-red-500 mt-2 text-sm">{error}</p>}
-      {status === "success" && (
-        <p className="text-green-400 mt-2 text-sm">Submitted successfully! ✅</p>
-      )}
-
-      <button
-        onClick={submitBot}
-        disabled={status === "submitting" || cooldownRemaining > 0}
-        className={`mt-6 w-full py-2 border border-[#ff00cc] text-[#ff00cc] hover:bg-[#ff00cc] hover:text-black transition-all ${
-            status === "submitting" || cooldownRemaining > 0 ? "opacity-50 cursor-not-allowed" : ""
-        }`}
-        >
-        {status === "submitting"
-            ? "Submitting..."
-            : cooldownRemaining > 0
-            ? `Wait ${cooldownRemaining}s`
-            : "Submit Bot"}
-        </button>
-
-          {/* --- My Jobs --- */}
+{/* --- My Jobs --- */}
 <div className="mt-12">
   <div className="flex items-center justify-between mb-4">
     <h2 className="text-xl font-bold border-b border-[#444] pb-2">My Jobs</h2>

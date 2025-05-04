@@ -2,6 +2,7 @@ import axios from 'axios';
 
 const apiClient = axios.create({
   baseURL: 'https://api.atcuw.org',
+  // baseURL: 'http://localhost:8002',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -74,7 +75,55 @@ const gameAPI = {
             "Content-Type": "multipart/form-data",
         },
         });
-        console.log(response)
+
+        if (response.data.status_code !== 200) {
+            throw new Error(response.data.error);
+        }
+        return response.data;
+    },
+}
+
+const submissionAPI = {
+   uploadSubmission: async (formData: FormData) => {
+        const response = await apiClient.post("/submission/upload", formData, {
+        headers: {
+            "Content-Type": "multipart/form-data",
+        },
+        });
+
+        if (response.data.status_code !== 200) {
+            throw new Error(response.data.error);
+        }
+        return response.data;
+      },
+    getSubmission: async (submission_id: string) => {
+        const res = await apiClient.get(`/submission/list`);
+        const submission = res.data.files.find((file: any) => file.id === submission_id);
+        return submission;
+    },
+    getContentFile: async (file_name: string) => {
+        const res = await apiClient.get(`/submission/files/${file_name}`);
+        return res.data; 
+    },
+    listSubmissions: async () => {
+        const response = await apiClient.get('/submission/list');
+        console.log(response.data)
+        return response.data;
+    },
+    unmark_submission: async (submission_id: string) => {
+        const response = await apiClient.post(`/submission/unmark_final`, { 
+            submission_id: submission_id
+         });
+        return response.data;
+    },
+    mark_submission: async (submission_id: string) => {
+        const response = await apiClient.post(`/submission/mark_final`, { 
+            submission_id: submission_id
+         });
+        return response.data;
+    },
+    delete_submission: async (submission_id: string) => {
+        const response = await apiClient.delete(`/submission/${submission_id}`);
         return response.data;
     },
 }
@@ -83,4 +132,5 @@ export {
     apiClient,
     authAPI,
     gameAPI,
+    submissionAPI,
 }
