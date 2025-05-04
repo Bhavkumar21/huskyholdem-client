@@ -154,6 +154,22 @@ const Dashboard: React.FC = () => {
         </p>
       </div>
 
+      <div className="bg-black bg-opacity-30 border-l-4 border-[#ff00cc] pl-4 py-3 my-4">
+        <p className="text-[#39ff14] font-bold mb-1">🃏 TOURNAMENT PROTOCOL 🃏</p>
+        <p className="text-gray-300 text-sm mb-2">
+        ♠️ Welcome to the <span className="text-[#ff00cc] font-semibold">HuskyHoldem Tournament</span> Arena! Upload your poker bot below to face off in simulated games at our virtual table. 
+        This phase (our first phase or the tournament - development) allows you to challenge the <span className="text-[#39ff14] font-mono">House Bot</span> to test your strategy before the main competition.
+        Upon submission, you’ll receive a unique <span className="text-yellow-300">Job ID</span> to track your bot’s performance in real-time under the <strong>My Jobs</strong> section.
+        </p>
+        <p className="text-gray-400 text-xs mb-2">
+            <span className="text-yellow-400">⚠️ HOUSE RULE #1:</span> Make sure your bot behaves! Submissions that crash, stall, or break the rules may be disqualified.
+        </p>
+        <p className="text-gray-400 text-xs">
+        <span className="text-yellow-400">⚠️ HOUSE RULE #2:</span> This upload portal is for <span className="text-[#ffcc00] font-semibold">test runs only</span>. 
+            For official entry into the tournament, submit your final bot through the dedicated submission page in the main menu. Stay tuned on the tournament dashboard for updates and deadlines.
+        </p>
+      </div>
+
       <FileUploadPanel
         playerFile={playerFile}
         setPlayerFile={setPlayerFile}
