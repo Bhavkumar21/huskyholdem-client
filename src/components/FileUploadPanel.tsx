@@ -13,7 +13,7 @@ type Props = {
   cooldownRemaining: number;
 };
 
-const FileUploadPanel: React.FC<Props> = ({ playerFile, setPlayerFile, requirementsFile, setRequirementsFile, status, setStatus, error, setError, onSubmit, cooldownRemaining }) => {
+const FileUploadPanel: React.FC<Props> = ({ playerFile, setPlayerFile, requirementsFile, setRequirementsFile, status, error, onSubmit, cooldownRemaining }) => {
   const [playerFileContent, setPlayerFileContent] = useState("");
   const [requirementsFileContent, setRequirementsFileContent] = useState("");
   const [showPreview, setShowPreview] = useState(false);
