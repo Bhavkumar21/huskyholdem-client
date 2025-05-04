@@ -14,12 +14,6 @@ const Dashboard: React.FC = () => {
     const [lastSubmittedAt, setLastSubmittedAt] = useState<number | null>(null);
     const [cooldownRemaining, setCooldownRemaining] = useState(0);
 
-    // File preview states
-    const [playerFileContent, setPlayerFileContent] = useState<string>("");
-    const [requirementsFileContent, setRequirementsFileContent] = useState<string>("");
-    const [showPreview, setShowPreview] = useState<boolean>(false);
-    const [activeTab, setActiveTab] = useState<"player" | "requirements">("player");
-
     useEffect(() => {
     const interval = setInterval(() => {
         if (lastSubmittedAt) {
@@ -80,33 +74,6 @@ const Dashboard: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Read file content when files are selected
-  useEffect(() => {
-    if (playerFile) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const content = e.target?.result as string;
-        setPlayerFileContent(content || "");
-      };
-      reader.readAsText(playerFile);
-    } else {
-      setPlayerFileContent("");
-    }
-  }, [playerFile]);
-
-  useEffect(() => {
-    if (requirementsFile) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const content = e.target?.result as string;
-        setRequirementsFileContent(content || "");
-      };
-      reader.readAsText(requirementsFile);
-    } else {
-      setRequirementsFileContent("");
-    }
-  }, [requirementsFile]);
-
   const submitBot = async () => {
     if (cooldownRemaining > 0) {
         setError(`Please wait ${cooldownRemaining}s before submitting again.`);
@@ -129,9 +96,6 @@ const Dashboard: React.FC = () => {
         setStatus("success");
         setPlayerFile(null);
         setRequirementsFile(null);
-        setPlayerFileContent("");
-        setRequirementsFileContent("");
-        setShowPreview(false);
         setLastSubmittedAt(Date.now()); // 🆕 Start cooldown timer
         fetchJobs(); // 🆕 Refresh jobs after submit
     } catch (err) {

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { submissionAPI } from "../api";
 import { useAuth } from "../context/AuthContext";
 import FileUploadPanel from "../components/FileUploadPanel";
-import { ChevronDown, ChevronUp, Loader, FileText, Package, Trash2, Star, XCircle, Download, Check, Clock } from "lucide-react";
+import { ChevronDown, ChevronUp, Loader, FileText, Package, Star, XCircle, Download } from "lucide-react";
 
 interface Submission {
   id: string;
@@ -40,6 +40,7 @@ const SubmissionPage = () => {
 
   useEffect(() => {
     fetchSubmissions();
+    setCooldownRemaining(0); // Reset cooldown on mount
   }, []);
 
   const handleSubmit = async () => {
