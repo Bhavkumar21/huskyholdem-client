@@ -3,6 +3,7 @@ import "./SponsorSection.css";
 import GlitchImage from "./GlightImage";
 
 const sponsors = [
+  { name: "Jane Street", src: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Jane_Street_Capital_Logo.svg/1280px-Jane_Street_Capital_Logo.svg.png", link: "https://www.janestreet.com" },
   { name: "QuantConnect", src: "https://algotrading101.com/learn/wp-content/uploads/2020/11/QuantConnect-Guide.png", link: "https://www.quantconnect.com" },
   { name: "Wolfram", src: "https://students.washington.edu/atcuw/img/wolfram.jpeg", link: "https://www.wolfram.com" },
   { name: "QuantInsti", src: "https://students.washington.edu/atcuw/img/qi.png", link: "https://www.quantinsti.com" },

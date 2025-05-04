@@ -51,6 +51,12 @@ const DefaultHeader = () => {
               {isAuthenticated ? (
                 <>
                   <Link
+                      to="/submission"
+                      className="hover:text-[#39ff14] text-white transition-all glitch-hover"
+                    >
+                      Submission
+                  </Link>
+                  <Link
                     to="/dashboard"
                     className="hover:text-[#39ff14] text-white transition-all glitch-hover"
                   >
@@ -136,6 +142,13 @@ const DefaultHeader = () => {
 
             {isAuthenticated ? (
               <>
+                <Link
+                    to="/submission"
+                    className="block text-white hover:text-[#39ff14] glitch-hover"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                  Submission
+                </Link>
                 <Link
                   to="/dashboard"
                   className="block text-white hover:text-[#39ff14] glitch-hover"

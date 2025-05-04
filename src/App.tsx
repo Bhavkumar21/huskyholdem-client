@@ -8,6 +8,7 @@ import About from "./page/About";
 import { AuthProvider } from "./context/AuthContext";
 import Dashboard from "./page/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
+import SubmissionPage from "./page/Submission";
 
 function App() {
   const router = createBrowserRouter([
@@ -54,6 +55,16 @@ function App() {
         </ProtectedRoute>
         ),
     },
+    {
+      path: "/submission",
+        element: (
+      <ProtectedRoute>              
+          <DefaultLauyout>
+              <SubmissionPage  />
+          </DefaultLauyout>
+      </ProtectedRoute>
+      ),
+  },
   ]);
 
   return (
