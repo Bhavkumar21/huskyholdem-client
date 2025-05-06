@@ -1,12 +1,14 @@
+// SponsorSection.tsx
 import React from "react";
 import "./SponsorSection.css";
 import GlitchImage from "./GlightImage";
+import Wolfram from "../assets/img/wolfram.webp";
 
 const sponsors = [
-  { name: "Jane Street", src: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Jane_Street_Capital_Logo.svg/1280px-Jane_Street_Capital_Logo.svg.png", link: "https://www.janestreet.com" },
-  { name: "QuantConnect", src: "https://algotrading101.com/learn/wp-content/uploads/2020/11/QuantConnect-Guide.png", link: "https://www.quantconnect.com" },
-  { name: "Wolfram", src: "https://students.washington.edu/atcuw/img/wolfram.jpeg", link: "https://www.wolfram.com" },
-  { name: "QuantInsti", src: "https://students.washington.edu/atcuw/img/qi.png", link: "https://www.quantinsti.com" },
+  { name: "Jane Street", src: "https://opensource.janestreet.com/assets/JS_logo-d7838b558a1de6c51553426ab5a2bba474510c41c6a5e910a9e30524a32dec27.png", link: "https://www.janestreet.com" },
+  { name: "QuantConnect", src: "https://www.interactivebrokers.com/images/emailImages/co-logo-quantconnect.png", link: "https://www.quantconnect.com" },
+  { name: "Wolfram", src: Wolfram, link: "https://www.wolfram.com" },
+  { name: "QuantInsti", src: "https://upload.wikimedia.org/wikipedia/commons/5/5b/Quantinsti-registered-logo.png", link: "https://www.quantinsti.com" },
 ];
 
 const SponsorSection: React.FC = () => {
@@ -25,9 +27,11 @@ const SponsorSection: React.FC = () => {
             href={sponsor.link}
             target="_blank"
             rel="noopener noreferrer"
-            className="sponsor-card"
+            className="sponsor-link"
           >
-            <img src={sponsor.src} alt={sponsor.name} />
+            <div className="sponsor-card">
+              <img src={sponsor.src} alt={sponsor.name} />
+            </div>
           </a>
         ))}
       </div>
