@@ -133,7 +133,7 @@ const AboutPage = () => {
             <div className="mt-6 p-3 bg-black bg-opacity-50 border-l-2 border-[#39ff14] flex gap-3 items-center group hover:bg-opacity-70 transition-all duration-300">
               <span className="text-2xl">📖</span>
               <a 
-                href="https://huskyholdem.gitbook.io/wiki/" 
+                href="https://kipiilier.notion.site/Husky-Hold-em-Wiki-1eb8f86cec5c80b9b5e7cc2963162ca2?pvs=74" 
                 target="_blank" 
                 rel="noopener noreferrer" 
                 className="text-[#39ff14] underline hover:text-[#ff00cc] transition-colors duration-300"
