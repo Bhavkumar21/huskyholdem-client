@@ -138,28 +138,28 @@ const PrizeSection = () => {
             <PrizeCard 
               emoji="🥇" 
               title="FIRST PRIZE" 
-              description="Championship Trophy (FPGA board) + ATC-0 fast track + coming soon" 
+              description="Championship Trophy (FPGA board) + ATC-0 fast track + $150 + Jane Street Owala Water bottles" 
               color="fuchsia-600" 
               highlight={true}
             />
             <PrizeCard 
               emoji="🥈" 
               title="SECOND PRIZE" 
-              description="$coming soon + Digital Certificate" 
+              description="$100 + Jane Street Owala Water bottles + Digital Certificate" 
               color="#39ff14" 
               highlight={false}
             />
             <PrizeCard 
               emoji="🥉" 
               title="THIRD PRIZE" 
-              description="$coming soon + Digital Certificate" 
+              description="$50 + Jane Street Owala Water bottles + Digital Certificate" 
               color="#39ff14" 
               highlight={false}
             />
             <PrizeCard 
               emoji="🏅" 
               title="HONORABLE MENTIONS" 
-              description="coming soon + Digital Certificate" 
+              description="Digital Certificate" 
               color="#39ff14" 
               highlight={false}
             />
