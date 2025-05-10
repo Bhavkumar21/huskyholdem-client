@@ -9,6 +9,7 @@ import { AuthProvider } from "./context/AuthContext";
 import Dashboard from "./page/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import SubmissionPage from "./page/Submission";
+import ProfilePage from "./page/Profile"
 
 function App() {
   const router = createBrowserRouter([
@@ -64,7 +65,17 @@ function App() {
           </DefaultLauyout>
       </ProtectedRoute>
       ),
-  },
+    },
+    {
+      path: "/profile",
+        element: (
+      <ProtectedRoute>              
+          <DefaultLauyout>
+              <ProfilePage  />
+          </DefaultLauyout>
+      </ProtectedRoute>
+      ),
+    }
   ]);
 
   return (
