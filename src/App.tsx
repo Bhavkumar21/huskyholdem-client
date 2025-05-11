@@ -75,7 +75,15 @@ function App() {
           </DefaultLauyout>
       </ProtectedRoute>
       ),
-    }
+    },  
+    {
+      path: "/profile/:username",
+      element: (
+        <DefaultLauyout>
+          <ProfilePage />
+        </DefaultLauyout>
+      ),
+    },
   ]);
 
   return (
