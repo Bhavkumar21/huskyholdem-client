@@ -62,9 +62,16 @@ const DefaultHeader = () => {
                   >
                     Dashboard
                   </Link>
-                  <span className="text-gray-300">
-                    Hi, <span className="text-[#ff00cc]">{user?.username}</span>
-                  </span>
+
+                  <Link
+                    to="/profile"
+                    className="hover:text-[#39ff14] text-white transition-all glitch-hover"
+                  >
+                    <span className="text-gray-300">
+                      Hi, <span className="text-[#ff00cc]">{user?.username}</span>
+                    </span>
+                  </Link>
+
                   <button
                     onClick={logout}
                     className="border border-red-500 px-3 py-1 text-red-500 hover:bg-red-500 hover:text-white transition uppercase"

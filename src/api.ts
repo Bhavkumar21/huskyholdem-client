@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const apiClient = axios.create({
   baseURL: 'https://api.atcuw.org',
-  // baseURL: 'http://localhost:8002',
+//   baseURL: 'http://localhost:8002',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -128,9 +128,22 @@ const submissionAPI = {
     },
 }
 
+const profileAPI = {
+    getProfilePublic: async (username: string) => {
+        const res = await apiClient.get(`/profile/${username}`);
+        return res.data;
+    },
+
+    getProfileSelf: async () => {
+        const res = await apiClient.get(`/profile`);
+        return res.data;
+    },
+}
+
 export {
     apiClient,
     authAPI,
     gameAPI,
     submissionAPI,
+    profileAPI
 }
