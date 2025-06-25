@@ -3,7 +3,8 @@ import { useAuth } from "../context/AuthContext";
 import { gameAPI } from "../api";
 import FileUploadPanel from "../components/FileUploadPanel";
 
-const FINAL_DEADLINE = new Date("2025-05-31T23:59:59Z"); // <-- Change this to your actual deadline
+const COMPETITION_START = new Date("2025-07-07T00:00:00Z");
+const FINAL_DEADLINE = new Date("2025-07-18T23:59:59Z"); // <-- Change this to your actual deadline
 
 const Dashboard: React.FC = () => {
     // job
@@ -55,6 +56,14 @@ const Dashboard: React.FC = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       const now = new Date().getTime();
+      
+      // Check if competition hasn't started yet
+      if (now < COMPETITION_START.getTime()) {
+        setTimeLeft("Huskyholdem will officially start at July 7 2025");
+        return;
+      }
+      
+      // Competition has started, count down to final deadline
       const diff = FINAL_DEADLINE.getTime() - now;
 
       if (diff <= 0) {
@@ -113,7 +122,7 @@ const Dashboard: React.FC = () => {
           Welcome, <span className="text-[#ff00cc]">{user?.username}</span>
         </h1>
         <p className="text-md text-gray-400">
-          Time left until final submission:{" "}
+          {timeLeft != "Huskyholdem will officially start at July 7 2025" && "Time left until final submission:"}
           <span className="text-[#39ff14] font-mono">{timeLeft}</span>
         </p>
       </div>
@@ -123,7 +132,7 @@ const Dashboard: React.FC = () => {
         <p className="text-gray-300 text-sm mb-2">
         ♠️ Welcome to the <span className="text-[#ff00cc] font-semibold">HuskyHoldem Tournament</span> Arena! Upload your poker bot below to face off in simulated games at our virtual table. 
         This phase (our first phase or the tournament - development) allows you to challenge the <span className="text-[#39ff14] font-mono">House Bot</span> to test your strategy before the main competition.
-        Upon submission, you’ll receive a unique <span className="text-yellow-300">Job ID</span> to track your bot’s performance in real-time under the <strong>My Jobs</strong> section.
+        Upon submission, you'll receive a unique <span className="text-yellow-300">Job ID</span> to track your bot's performance in real-time under the <strong>My Jobs</strong> section.
         </p>
         <p className="text-gray-400 text-xs mb-2">
             <span className="text-yellow-400">⚠️ HOUSE RULE #1:</span> Make sure your bot behaves! Submissions that crash, stall, or break the rules may be disqualified.

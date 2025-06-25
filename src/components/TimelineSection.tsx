@@ -1,11 +1,12 @@
 import { useState } from "react";
 
 const timelineItems = [
-  { date: "April 30th", label: "Registration Opens" },
-  { date: "May 24th", label: "Final Submission Deadline" },
-  { date: "May 25th", label: "Tournament Begins" },
-  { date: "May 31st", label: "Tournament Ends" },
-  { date: "June 1st", label: "Tournament Results Announced" },
+  { date: "July 7th", label: "Competition & Registration Opens" },
+  { date: "July 18th", label: "Final Submission Deadline" },
+  { date: "July 19th", label: "Tournament Begins" },
+  { date: "July 25th", label: "Tournament Ends" },
+  { date: "July 26th", label: "Showdown Watch Party" },
+  { date: "July 27th", label: "Showdown Results Announced" },
 ];
 
 const TimelineSection = () => {
