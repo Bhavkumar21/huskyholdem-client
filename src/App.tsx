@@ -10,6 +10,7 @@ import Dashboard from "./page/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import SubmissionPage from "./page/Submission";
 import ProfilePage from "./page/Profile"
+import Replay from "./page/Replay";
 
 function App() {
   const router = createBrowserRouter([
@@ -84,6 +85,14 @@ function App() {
         </DefaultLauyout>
       ),
     },
+    {
+      path: "/live",
+      element: (
+        <DefaultLauyout>
+          <Replay />
+        </DefaultLauyout>
+      ),
+      }
   ]);
 
   return (
