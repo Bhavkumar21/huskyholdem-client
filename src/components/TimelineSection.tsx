@@ -5,8 +5,7 @@ const timelineItems = [
   { date: "July 18th", label: "Final Submission Deadline" },
   { date: "July 19th", label: "Tournament Begins" },
   { date: "July 25th", label: "Tournament Ends" },
-  { date: "July 26th", label: "Showdown Watch Party" },
-  { date: "July 27th", label: "Showdown Results Announced" },
+  { date: "July 26th", label: "Showdown Watch Party/Results Announced" },
 ];
 
 const TimelineSection = () => {
