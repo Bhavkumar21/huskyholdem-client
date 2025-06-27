@@ -10,6 +10,7 @@ import Dashboard from "./page/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import SubmissionPage from "./page/Submission";
 import ProfilePage from "./page/Profile"
+import VerificationSuccess from "./page/VerificationSuccess";
 
 function App() {
   const router = createBrowserRouter([
@@ -35,6 +36,14 @@ function App() {
       element: (
         <DefaultLauyout>
           <Login />
+        </DefaultLauyout>
+      ),
+    },
+    {
+      path: "/verification-success",
+      element: (
+        <DefaultLauyout>
+          <VerificationSuccess />
         </DefaultLauyout>
       ),
     },
