@@ -177,20 +177,20 @@ const Dashboard: React.FC = () => {
     <p className="text-gray-500">No jobs submitted yet.</p>
   ) : (
     <div className="overflow-x-auto">
-      <table className="w-full table-auto border-collapse text-sm">
+      <table className="w-full table-fixed border-collapse text-sm">
         <thead>
           <tr className="text-left text-[#ff00cc] border-b border-[#333]">
-            <th className="p-2">Job ID</th>
-            <th className="p-2">Status</th>
-            <th className="p-2">Result</th>
-            <th className="p-2">Message</th>
+            <th className="p-2 w-2/5">Job ID</th>
+            <th className="p-2 w-1/6">Status</th>
+            <th className="p-2 w-1/4">Result</th>
+            <th className="p-2 w-1/4">Message</th>
           </tr>
         </thead>
         <tbody>
           {jobs.map((job) => (
             <tr key={job.job_id} className="border-b border-[#222]">
-              <td className="p-2 font-mono text-xs text-[#39ff14] break-all">{job.job_id}</td>
-              <td className="p-2">
+              <td className="p-2 font-mono text-xs text-[#39ff14] break-all w-2/5">{job.job_id}</td>
+              <td className="p-2 w-1/6">
                 <span
                   className={`px-2 py-1 rounded text-xs font-semibold ${
                     job.job_status === "Completed"
@@ -205,8 +205,20 @@ const Dashboard: React.FC = () => {
                   {job.job_status}
                 </span>
               </td>
-                <td className="p-2 text-white">{job.result_data ?? "-"}</td>
-                <td className="p-2 text-white">{job.message ?? "-"}</td>
+                <td className="p-2 text-white text-xs break-words w-1/4">{
+                  job.result_data 
+                    ? typeof job.result_data === 'object' 
+                      ? JSON.stringify(job.result_data) 
+                      : job.result_data 
+                    : "-"
+                }</td>
+                <td className="p-2 text-white text-xs break-words w-1/4">{
+                  job.message 
+                    ? typeof job.message === 'object' 
+                      ? JSON.stringify(job.message) 
+                      : job.message 
+                    : "-"
+                }</td>
             </tr>
           ))}
         </tbody>
