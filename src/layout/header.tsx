@@ -69,6 +69,15 @@ const DefaultHeader = () => {
                     Leaderboard
                   </Link>
 
+                  {user?.admin && (
+                    <Link
+                      to="/admin"
+                      className="hover:text-[#ff6600] text-white transition-all glitch-hover"
+                    >
+                      Admin
+                    </Link>
+                  )}
+
                   <Link
                     to="/profile"
                     className="hover:text-[#39ff14] text-white transition-all glitch-hover"
@@ -176,6 +185,17 @@ const DefaultHeader = () => {
                 >
                   Leaderboard
                 </Link>
+
+                {user?.admin && (
+                  <Link
+                    to="/admin"
+                    className="block text-white hover:text-[#ff6600] glitch-hover"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Admin
+                  </Link>
+                )}
+
                 <span className="block text-gray-300">
                   Hi, <span className="text-[#ff00cc]">{user?.username}</span>
                 </span>
