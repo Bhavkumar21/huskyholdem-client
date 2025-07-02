@@ -8,10 +8,12 @@ import About from "./page/About";
 import { AuthProvider } from "./context/AuthContext";
 import Dashboard from "./page/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
+import AdminRoute from "./components/AdminRoute";
 import SubmissionPage from "./page/Submission";
 import ProfilePage from "./page/Profile"
 import VerificationSuccess from "./page/VerificationSuccess";
 import LeaderboardPage from "./page/Leaderboard";
+import Admin from "./page/Admin";
 
 function App() {
   const router = createBrowserRouter([
@@ -102,6 +104,16 @@ function App() {
         <DefaultLauyout>
           <ProfilePage />
         </DefaultLauyout>
+      ),
+    },
+    {
+      path: "/admin",
+      element: (
+        <AdminRoute>
+          <DefaultLauyout>
+            <Admin />
+          </DefaultLauyout>
+        </AdminRoute>
       ),
     },
   ]);
