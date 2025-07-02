@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 const apiClient = axios.create({
-  baseURL: 'https://api.atcuw.org',
-//   baseURL: 'http://localhost:8002',
+//   baseURL: 'https://api.atcuw.org',
+  baseURL: 'http://localhost:8002',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -140,10 +140,40 @@ const profileAPI = {
     },
 }
 
+const leaderboardAPI = {
+    getTopN: async (n: number, tag?: string) => {
+        const params = tag ? `?tag=${encodeURIComponent(tag)}` : '';
+        const response = await apiClient.get(`/leaderboard/top/${n}${params}`);
+        return response.data;
+    },
+    
+    getAllTags: async () => {
+        const response = await apiClient.get('/leaderboard/tags');
+        return response.data;
+    },
+    
+    getUserEntries: async (username: string, tag?: string) => {
+        const params = tag ? `?tag=${encodeURIComponent(tag)}` : '';
+        const response = await apiClient.get(`/leaderboard/user/${username}${params}`);
+        return response.data;
+    },
+    
+    removeEntry: async (entryId: string) => {
+        const response = await apiClient.delete(`/leaderboard/remove/${entryId}`);
+        return response.data;
+    },
+    
+    addEntry: async (score: number, tag?: string) => {
+        const response = await apiClient.post('/leaderboard/add', { score, tag });
+        return response.data;
+    }
+}
+
 export {
     apiClient,
     authAPI,
     gameAPI,
     submissionAPI,
-    profileAPI
+    profileAPI,
+    leaderboardAPI
 }

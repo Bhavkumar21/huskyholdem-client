@@ -62,6 +62,12 @@ const DefaultHeader = () => {
                   >
                     Dashboard
                   </Link>
+                  <Link
+                    to="/leaderboard"
+                    className="hover:text-[#39ff14] text-white transition-all glitch-hover"
+                  >
+                    Leaderboard
+                  </Link>
 
                   <Link
                     to="/profile"
@@ -162,6 +168,13 @@ const DefaultHeader = () => {
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Dashboard
+                </Link>
+                <Link
+                  to="/leaderboard"
+                  className="block text-white hover:text-[#39ff14] glitch-hover"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Leaderboard
                 </Link>
                 <span className="block text-gray-300">
                   Hi, <span className="text-[#ff00cc]">{user?.username}</span>

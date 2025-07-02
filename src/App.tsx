@@ -11,6 +11,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import SubmissionPage from "./page/Submission";
 import ProfilePage from "./page/Profile"
 import VerificationSuccess from "./page/VerificationSuccess";
+import LeaderboardPage from "./page/Leaderboard";
 
 function App() {
   const router = createBrowserRouter([
@@ -71,6 +72,16 @@ function App() {
       <ProtectedRoute>              
           <DefaultLauyout>
               <SubmissionPage  />
+          </DefaultLauyout>
+      </ProtectedRoute>
+      ),
+    },
+    {
+      path: "/leaderboard",
+        element: (
+      <ProtectedRoute>              
+          <DefaultLauyout>
+              <LeaderboardPage  />
           </DefaultLauyout>
       </ProtectedRoute>
       ),
