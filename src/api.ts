@@ -140,10 +140,65 @@ const profileAPI = {
     },
 }
 
+const streamingAPI = {
+    getMockData: async () => {
+        const gameData = {
+          rounds: {
+            0: { // Posting blinds
+              pot: 0,
+              bets: { 0: 0, 1: 5, 2: 10, 3: 0, 4: 0, 5: 0 },
+              actions: { 0: " ", 1: "SMALL BLIND", 2: "BIG BLIND", 3: " ", 4: " ", 5: " " },
+              actionTimes: { 0: 0, 1: 300, 2: 400, 3: 0, 4: 0, 5: 0 }
+            },
+            1: { // Pre-flop
+              pot: 15,
+              bets: { 0: 0, 1: 5, 2: 10, 3: 10, 4: 10, 5: 10 },
+              actions: { 0: "FOLD", 1: "CALL", 2: "CHECK", 3: "CALL", 4: "CALL", 5: "CALL" },
+              actionTimes: { 0: 800, 1: 1200, 2: 1800, 3: 2100, 4: 2500, 5: 2000 }
+            },
+            2: { // Flop
+              pot: 55,
+              bets: { 0: 0, 1: 5, 2: 5, 3: 5, 4: 10, 5: 10 },
+              actions: { 0: "FOLD", 1: "CHECK", 2: "CHECK", 3: "CHECK", 4: "BET", 5: "CALL" },
+              actionTimes: { 0: 0, 1: 1300, 2: 1600, 3: 1800, 4: 3000, 5: 2800 }
+            },
+            3: { // Turn
+              pot: 85,
+              bets: { 0: 0, 1: 5, 2: 5, 3: 5, 4: 20, 5: 20 },
+              actions: { 0: "FOLD", 1: "FOLD", 2: "FOLD", 3: "CHECK", 4: "BET", 5: "CALL" },
+              actionTimes: { 0: 0, 1: 1000, 2: 1100, 3: 1500, 4: 3700, 5: 3900 }
+            },
+            4: { // River
+              pot: 125,
+              bets: { 0: 0, 1: 5, 2: 5, 3: 5, 4: 40, 5: 40 },
+              actions: { 0: "FOLD", 1: "FOLD", 2: "FOLD", 3: "CHECK", 4: "BET", 5: "CALL" },
+              actionTimes: { 0: 0, 1: 0, 2: 0, 3: 1200, 4: 4800, 5: 5200 }
+            },
+            5: { // Showdown
+              pot: 205,
+              bets: { 0: 0, 1: 5, 2: 5, 3: 5, 4: 40, 5: 40 },
+              actions: { 0: "FOLD", 1: "FOLD", 2: "FOLD", 3: "SHOW", 4: "SHOW", 5: "SHOW" },
+              actionTimes: { 0: 0, 1: 0, 2: 0, 3: 1500, 4: 1800, 5: 2100 }
+            }
+          },
+          playerNames: {
+            0: "player1", 1: "player2", 2: "player3", 3: "player4", 4: "player5", 5: "player6"
+          },
+          playerHands: {
+            0: ["7s", "2d"], 1: ["4c", "8d"], 2: ["9h", "5h"], 3: ["Ah", "Qc"], 4: ["Jd", "Js"], 5: ["Kh", "10h"]
+          },
+          finalBoard: ["Jc", "9s", "10c", "2h", "Qh"],
+          blinds: { small: 5, big: 10 }
+        };
+        return gameData;
+    }
+}
+
 export {
     apiClient,
     authAPI,
     gameAPI,
     submissionAPI,
-    profileAPI
+    profileAPI,
+    streamingAPI
 }

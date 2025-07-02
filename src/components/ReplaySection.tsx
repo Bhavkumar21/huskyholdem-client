@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { streamingAPI } from "../api";
 import './ReplaySection.css';
 
 interface GameRound {
@@ -30,54 +31,21 @@ interface Position {
 }
 
 const ReplaySection: React.FC = () => {
-  const gameData: GameData = {
-    rounds: {
-      0: {
-        pot: 0,
-        bets: { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 },
-        actions: { 0: " ", 1: " ", 2: " ", 3: " ", 4: " ", 5: " " },
-        actionTimes: { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 }
-      },
-      1: {
-        pot: 75,
-        bets: { 0: 5, 1: 10, 2: 0, 3: 20, 4: 20, 5: 20 },
-        actions: { 0: "CALL", 1: "CALL", 2: "FOLD", 3: "RAISE", 4: "CALL", 5: "CALL" },
-        actionTimes: { 0: 1200, 1: 800, 2: 2100, 3: 4500, 4: 2800, 5: 1900 }
-      },
-      2: {
-        pot: 175,
-        bets: { 0: 25, 1: 30, 2: 0, 3: 45, 4: 45, 5: 30 },
-        actions: { 0: "CHECK", 1: "BET", 2: "FOLD", 3: "RAISE", 4: "CALL", 5: "FOLD" },
-        actionTimes: { 0: 900, 1: 3200, 2: 0, 3: 6800, 4: 4100, 5: 2500 }
-      },
-      3: {
-        pot: 265,
-        bets: { 0: 45, 1: 50, 2: 0, 3: 65, 4: 65, 5: 30 },
-        actions: { 0: "FOLD", 1: "CALL", 2: "FOLD", 3: "BET", 4: "CALL", 5: "FOLD" },
-        actionTimes: { 0: 8200, 1: 5500, 2: 0, 3: 3900, 4: 7300, 5: 0 }
-      },
-      4: {
-        pot: 365,
-        bets: { 0: 45, 1: 100, 2: 0, 3: 115, 4: 115, 5: 30 },
-        actions: { 0: "FOLD", 1: "BET", 2: "FOLD", 3: "CALL", 4: "CALL", 5: "FOLD" },
-        actionTimes: { 0: 0, 1: 12400, 2: 0, 3: 8600, 4: 15200, 5: 0 }
-      }
-    },
-    playerNames: { 0: "player1", 1: "player2", 2: "player3", 3: "player4", 4: "player5", 5: "player6" },
-    playerHands: { 
-      0: ["Qh", "Qd"], 
-      1: ["9c", "9s"], 
-      2: ["6h", "4c"], 
-      3: ["Ad", "Ks"], 
-      4: ["Jd", "Js"], 
-      5: ["8h", "7h"] 
-    },
-    finalBoard: ["9h", "Jc", "Qc", "2s", "Ac"],
-    blinds: { small: 5, big: 10 }
-  };
-
   const [currentRound, setCurrentRound] = useState<number>(0);
   const [showPlayerCards, setShowPlayerCards] = useState<boolean>(false);
+  const [gameData, setGameData] = useState<GameData | null>(null);
+  
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await streamingAPI.getMockData();
+      setGameData(data);
+    };
+
+    fetchData();
+  }, []);
+
+  if (!gameData) return <div>Loading...</div>;
+
   const maxRounds = Object.keys(gameData.rounds).length - 1;
 
   const formatTime = (ms: number): string => {
