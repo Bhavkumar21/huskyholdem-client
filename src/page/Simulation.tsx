@@ -1,4 +1,4 @@
-import { ChevronDown, X } from "lucide-react";
+import { ChevronDown, X, Zap, Users, Play } from "lucide-react";
 import { useEffect, useState } from "react";
 import { submissionAPI, userAPI, gameAPI } from "../api";
 import { useNavigate } from "react-router-dom";
@@ -43,7 +43,6 @@ const SimulationPage = () => {
     }
   };
 
-
   const fetchJobs = async () => {
     try {
       const data = await gameAPI.get_jobs();
@@ -74,7 +73,6 @@ const SimulationPage = () => {
     const interval = setInterval(fetchJobs, 15000);
     return () => clearInterval(interval);
   }, []);
-
 
   /* ---- pagination helpers ---- */
   const baseEntries = Object.entries(userFinalMap) as [string, boolean][];
@@ -113,67 +111,95 @@ const SimulationPage = () => {
     });
   };
 
-
-
-
   return (
-    <div className="min-h-screen text-white px-4 py-12 max-w-3xl mx-auto">
-      <button
-        onClick={() => navigate("/admin")}
-        className="mb-4 text-sm px-3 py-1 border border-[#39ff14] text-[#39ff14] rounded hover:bg-[#39ff14] hover:text-black transition"
-      >
-        ← Back to Admin Dashboard
-      </button>
+    <div className="min-h-screen text-white px-4 py-12 max-w-6xl mx-auto">
+      {/* Header Section */}
+      <div className="mb-8">
+        <button
+          onClick={() => navigate("/admin")}
+          className="mb-6 text-sm px-4 py-2 border border-[#39ff14] text-[#39ff14] rounded hover:bg-[#39ff14] hover:text-black transition duration-200 flex items-center gap-2"
+        >
+          ← Back to Admin Dashboard
+        </button>
+        
+        <div className="border-b border-[#444] pb-6">
+          <h1 className="text-4xl font-bold mb-3 font-glitch text-[#ff00cc]">
+            <Zap className="inline w-8 h-8 mr-3" />
+            SIMULATION CONTROL CENTER
+          </h1>
+          <p className="text-lg text-gray-400">
+            Manage tournament simulations and monitor job status in real-time
+          </p>
+        </div>
+      </div>
 
-      {/* Users List -------------------------------------------------------------------------------------- */}
-      <div className="bg-black bg-opacity-30 border-l-4 border-transparent p-6 my-6 rounded-md">
-        {/* Header */}
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-white">All Users</h2>
-            <button onClick={fetchUsersSubStatus}
-            className="text-sm border border-[#39ff14] text-[#39ff14] px-3 py-1 rounded 
-            hover:bg-[#39ff14] hover:text-black transition">
-              Refresh
-            </button>
-          </div>
+      {/* Protocol Notice */}
+      <div className="bg-black bg-opacity-30 border-l-4 border-[#ff00cc] pl-6 py-4 my-6 rounded-md">
+        <p className="text-[#39ff14] font-bold mb-2">⚡ SIMULATION PROTOCOL ⚡</p>
+        <p className="text-gray-300 text-sm mb-2">
+          Welcome to the <span className="text-[#ff00cc] font-semibold">Tournament Simulation Arena</span>! 
+          Select up to 6 users with final submissions to run competitive poker simulations. 
+          Monitor job progress below and track results in real-time.
+        </p>
+        <p className="text-gray-400 text-xs">
+          <span className="text-yellow-400">⚠️ SYSTEM REQUIREMENT:</span> Only users with final submissions can participate in simulations.
+        </p>
+      </div>
 
-        {/* Two-Column Layout */}
-          <div className="flex flex-col lg:flex-row gap-6">
+      {/* Users Selection Section */}
+      <div className="bg-black bg-opacity-30 border-l-4 border-[#39ff14] p-6 my-8 rounded-lg">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl font-bold text-white flex items-center gap-3">
+            <Users className="w-6 h-6 text-[#39ff14]" />
+            USER SELECTION MATRIX
+          </h2>
+          <button 
+            onClick={fetchUsersSubStatus}
+            className="text-sm border border-[#39ff14] text-[#39ff14] px-4 py-2 rounded hover:bg-[#39ff14] hover:text-black transition duration-200"
+          >
+            SYNC DATA
+          </button>
+        </div>
 
-          {/* Left Column */}
-          <div className="w-full lg:w-[65%]">
-            <h3 className="text-white text-lg mb-2">Submissions</h3>
-            <div className="bg-gray-800 p-4 rounded text-white">
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+          {/* Left Column - User List */}
+          <div className="xl:col-span-2">
+            <h3 className="text-[#ff00cc] text-lg mb-4 font-semibold">REGISTERED PARTICIPANTS</h3>
+            <div className="bg-gray-900 p-6 rounded-lg border border-gray-700">
               {usersLoading ? (
-                <p className="text-gray-400">Loading users…</p>
+                <div className="text-center py-8">
+                  <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#39ff14]"></div>
+                  <p className="text-gray-400 mt-2">Loading participants...</p>
+                </div>
               ) : entries.length === 0 ? (
-                <p className="text-gray-500">No users found.</p>
+                <p className="text-gray-500 text-center py-8">No participants found.</p>
               ) : (
-                <div className="text-sm text-white flex flex-col min-h-[400px] justify-between">
-                  <div>
-                    {/* Header grid */}
-                    <div className="grid grid-cols-3 gap-4 font-semibold py-1 border-b border-gray-700">
-                      <div>Select</div>
-                      <div>Username</div>
-                      <div className="flex items-center space-x-1">
-                        <span>Final Submission</span>
-                        <button onClick={() => setSortHasFinal(v => !v)}>
-                          <ChevronDown
-                            className={
-                              sortHasFinal
-                                ? "w-4 h-4 rotate-180 transition"
-                                : "w-4 h-4 transition"
-                            }
-                          />
-                        </button>
-                      </div>
+                <div className="text-sm text-white">
+                  {/* Header */}
+                  <div className="grid grid-cols-4 gap-4 font-semibold py-3 border-b-2 border-[#39ff14] text-[#39ff14]">
+                    <div>SELECT</div>
+                    <div>USERNAME</div>
+                    <div className="flex items-center space-x-2">
+                      <span>FINAL SUB</span>
+                      <button onClick={() => setSortHasFinal(v => !v)}>
+                        <ChevronDown
+                          className={`w-4 h-4 transition-transform ${
+                            sortHasFinal ? "rotate-180" : ""
+                          }`}
+                        />
+                      </button>
                     </div>
+                    <div>STATUS</div>
+                  </div>
 
-                    {/* Data rows */}
+                  {/* Data rows */}
+                  <div className="max-h-96 overflow-y-auto">
                     {pageRows.map(([username, hasFinal]) => (
                       <div
                         key={username}
-                        className="grid grid-cols-3 gap-4 py-1 items-center border-t border-gray-700"
+                        className={`grid grid-cols-4 gap-4 py-3 items-center border-b border-gray-700 hover:bg-gray-800 transition-colors ${
+                          selectedUsers.includes(username) ? 'bg-gray-800 border-[#39ff14]' : ''
+                        }`}
                       >
                         <div>
                           <input
@@ -181,34 +207,39 @@ const SimulationPage = () => {
                             checked={selectedUsers.includes(username)}
                             disabled={!hasFinal}
                             onChange={() => toggle(username, hasFinal)}
-                            className={!hasFinal ? "cursor-not-allowed" : ""}
+                            className={`w-4 h-4 ${!hasFinal ? "cursor-not-allowed opacity-40" : "cursor-pointer"}`}
                           />
                         </div>
-                        <div>{username}</div>
-                        <div>{hasFinal ? "Yes" : "No"}</div>
+                        <div className="font-mono">{username}</div>
+                        <div className={hasFinal ? "text-[#39ff14]" : "text-red-400"}>
+                          {hasFinal ? "✓ YES" : "✗ NO"}
+                        </div>
+                        <div className={selectedUsers.includes(username) ? "text-[#39ff14] font-bold" : "text-gray-400"}>
+                          {selectedUsers.includes(username) ? "SELECTED" : "STANDBY"}
+                        </div>
                       </div>
                     ))}
                   </div>
 
-                  {/* Pager */}
+                  {/* Pagination */}
                   {pageCount > 1 && (
-                    <div className="flex items-center justify-center gap-4 mt-4">
+                    <div className="flex items-center justify-center gap-4 mt-6 pt-4 border-t border-gray-700">
                       <button
                         onClick={prev}
                         disabled={page === 0}
-                        className="px-3 py-1 border rounded disabled:opacity-40"
+                        className="px-4 py-2 border border-[#39ff14] text-[#39ff14] rounded disabled:opacity-40 disabled:cursor-not-allowed hover:bg-[#39ff14] hover:text-black transition"
                       >
-                        Prev
+                        PREV
                       </button>
-                      <span>
-                        Page {page + 1} of {pageCount}
+                      <span className="text-[#ff00cc] font-mono">
+                        PAGE {page + 1} OF {pageCount}
                       </span>
                       <button
                         onClick={next}
                         disabled={page === pageCount - 1}
-                        className="px-3 py-1 border rounded disabled:opacity-40"
+                        className="px-4 py-2 border border-[#39ff14] text-[#39ff14] rounded disabled:opacity-40 disabled:cursor-not-allowed hover:bg-[#39ff14] hover:text-black transition"
                       >
-                        Next
+                        NEXT
                       </button>
                     </div>
                   )}
@@ -217,126 +248,142 @@ const SimulationPage = () => {
             </div>
           </div>
 
-
-
-
-          {/* Right Column */}
-          <div className="w-full lg:w-[35%]">
-            <h3 className="text-white text-lg mb-2">Details</h3>
-            <div className="bg-gray-800 p-4 rounded space-y-2">
-              {/* selected-user list */}
-              <h4 className="font-semibold">
-                Selected users ({selectedUsers.length}/6)
-              </h4>
+          {/* Right Column - Selected Users & Controls */}
+          <div className="xl:col-span-1">
+            <h3 className="text-[#ff00cc] text-lg mb-4 font-semibold">SIMULATION ROSTER</h3>
+            <div className="bg-gray-900 p-6 rounded-lg border border-gray-700">
+              <div className="text-center mb-4">
+                <div className="text-3xl font-bold text-[#39ff14] mb-2">{selectedUsers.length}/6</div>
+                <div className="text-sm text-gray-400">PARTICIPANTS SELECTED</div>
+              </div>
 
               {selectedUsers.length === 0 ? (
-                <p className="text-gray-400">None selected</p>
+                <div className="text-center py-8">
+                  <Users className="w-12 h-12 text-gray-600 mx-auto mb-3" />
+                  <p className="text-gray-500">No participants selected</p>
+                </div>
               ) : (
-                <>
-                  <ul className="space-y-1">
-                    {selectedUsers.map(u => (
-                      <li key={u} className="flex items-center justify-between">
-                        <span>{u}</span>
-                        <button
-                          onClick={() => removeUser(u)}
-                          className="hover:text-red-400"
-                        >
-                          <X className="w-4 h-4" />
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
+                <div className="space-y-3 mb-6">
+                  {selectedUsers.map((username, index) => (
+                    <div key={username} className="flex items-center justify-between bg-gray-800 p-3 rounded border-l-2 border-[#39ff14]">
+                      <div className="flex items-center gap-3">
+                        <span className="text-[#39ff14] font-bold text-xs">#{index + 1}</span>
+                        <span className="font-mono text-sm">{username}</span>
+                      </div>
+                      <button
+                        onClick={() => removeUser(username)}
+                        className="text-red-400 hover:text-red-300 transition"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ))}
+                  
                   <button
                     onClick={() => setSelectedUsers([])}
-                    className="text-sm text-red-300 hover:text-red-500 transition mt-2"
+                    className="w-full text-sm text-red-400 hover:text-red-300 transition mt-4 py-2"
                   >
-                    Clear All
+                    CLEAR ALL
                   </button>
-                </>
+                </div>
               )}
-              {/* Only allow click button when 6 users selected */}
+
               <button
                 disabled={selectedUsers.length !== 6}
-                className="w-full mt-4 px-3 py-2 rounded bg-[#39ff14] text-black disabled:opacity-40 hover:bg-black 
-                hover:text-[#39ff14] disabled:opacity-40 transition-colors duration-200"
+                className={`w-full py-4 px-6 rounded-lg font-bold text-lg transition-all duration-200 flex items-center justify-center gap-3 ${
+                  selectedUsers.length === 6
+                    ? "bg-[#39ff14] text-black hover:bg-[#2bff00] hover:shadow-lg hover:shadow-[#39ff14]/50"
+                    : "bg-gray-700 text-gray-500 cursor-not-allowed"
+                }`}
                 onClick={runSimulation}
               >
-                Run Simulation
+                <Play className="w-5 h-5" />
+                {selectedUsers.length === 6 ? "INITIATE SIMULATION" : "SELECT 6 PARTICIPANTS"}
               </button>
             </div>
           </div>
         </div>
       </div>
-      
 
-      {/* Jobs Status List -------------------------------------------------------------------------------------- */}
-      <div className="bg-black bg-opacity-30 border-l-4 border-transparent p-6 my-6 rounded-md">
-          {/* Header */}
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-white">Job Status</h2>
-            <button onClick={() => {
+      {/* Jobs Status Section */}
+      <div className=" bg-opacity-30 border-l-4 border-[#ff00cc] p-6 my-8 rounded-lg">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl font-bold text-white flex items-center gap-3">
+            <Zap className="w-6 h-6 text-[#ff00cc]" />
+            ACTIVE SIMULATION JOBS
+          </h2>
+          <button 
+            onClick={() => {
               setJobsLoading(true);
               fetchJobs();
             }}
-            className="text-sm border border-[#39ff14] text-[#39ff14] px-3 py-1 rounded hover:bg-[#39ff14] hover:text-black transition">
-              Refresh
-            </button>
+            className="text-sm border border-[#ff00cc] text-[#ff00cc] px-4 py-2 rounded hover:bg-[#ff00cc] hover:text-black transition duration-200"
+          >
+            REFRESH STATUS
+          </button>
+        </div>
+
+        {jobsLoading ? (
+          <div className="text-center py-8">
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#ff00cc]"></div>
+            <p className="text-gray-400 mt-2">Loading job status...</p>
           </div>
-
-
-          {jobsLoading ? (
-            <p className="text-gray-400">Loading jobs...</p>
-          ) : jobs.length === 0 ? (
-            <p className="text-gray-500">No jobs submitted yet.</p>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm table-fixed border-collapse">
-                <thead>
-                  <tr className="text-left text-[#ff00cc] border-b border-[#333]">
-                    <th className="px-3 py-2 w-[25%]">Job ID</th>
-                    <th className="px-3 py-2 w-[13%]">Status</th>
-                    <th className="px-3 py-2 w-[42%]">Result</th>
-                    <th className="px-3 py-2 w-[20%]">Message</th>
+        ) : jobs.length === 0 ? (
+          <div className="text-center py-12">
+            <Zap className="w-16 h-16 text-gray-600 mx-auto mb-4" />
+            <p className="text-gray-500 text-lg">No simulation jobs found</p>
+            <p className="text-gray-600 text-sm">Start by selecting participants and running a simulation</p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full table-fixed border-collapse text-sm">
+              <thead>
+                <tr className="text-left text-[#ff00cc] border-b border-[#333]">
+                  <th className="p-2 w-2/5">Job ID</th>
+                  <th className="p-2 w-1/6">Status</th>
+                  <th className="p-2 w-1/4">Result</th>
+                  <th className="p-2 w-1/4">Message</th>
+                </tr>
+              </thead>
+              <tbody>
+                {jobs.map((job) => (
+                  <tr key={job.job_id} className="border-b border-[#222]">
+                    <td className="p-2 font-mono text-xs text-[#39ff14] break-all w-2/5">{job.job_id}</td>
+                    <td className="p-2 w-1/6">
+                      <span
+                        className={`px-2 py-1 rounded text-xs font-semibold ${
+                          job.job_status === "Finished"
+                            ? "text-green-400"
+                            : job.job_status === "Pending"
+                            ? "text-yellow-400"
+                            : job.job_status === "Failed"
+                            ? "text-red-500"
+                            : "text-white"
+                        }`}
+                      >
+                        {job.job_status}
+                      </span>
+                    </td>
+                      <td className="p-2 text-white text-xs break-words w-1/4">{
+                        job.result_data 
+                          ? typeof job.result_data === 'object' 
+                            ? JSON.stringify(job.result_data) 
+                            : job.result_data 
+                          : "-"
+                      }</td>
+                      <td className="p-2 text-white text-xs break-words w-1/4">{
+                        job.message 
+                          ? typeof job.message === 'object' 
+                            ? JSON.stringify(job.message) 
+                            : job.message 
+                          : "-"
+                      }</td>
                   </tr>
-                </thead>
-
-                <tbody>
-                  {jobs.map(j => (
-                    <tr key={j.job_id} className="border-b border-[#222]">
-                      <td className="px-3 py-2 font-mono text-xs break-all w-2/5">
-                        {j.job_id}
-                      </td>
-
-                      <td className="px-3 py-2 w-1/6">
-                        <span
-                          className={
-                            j.job_status === "Finished"
-                              ? "text-green-400"
-                              : j.job_status === "Pending"
-                              ? "text-yellow-400"
-                              : j.job_status === "Failed"
-                              ? "text-red-500"
-                              : "text-white"
-                          }
-                        >
-                          {j.job_status}
-                        </span>
-                      </td>
-
-                      <td className="px-3 py-2 break-words text-xs whitespace-pre-wrap w-1/4">
-                        {j.result_data ? JSON.stringify(j.result_data) : "-"}
-                      </td>
-
-                      <td className="px-3 py-2 break-words text-xs whitespace-pre-wrap w-1/4">
-                        {j.message ? JSON.stringify(j.message) : "-"}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     </div>
   );
