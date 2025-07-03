@@ -3,8 +3,8 @@ import { useAuth } from "../context/AuthContext";
 import { gameAPI } from "../api";
 import FileUploadPanel from "../components/FileUploadPanel";
 
-const COMPETITION_START = new Date("2025-07-07T00:00:00Z");
-const FINAL_DEADLINE = new Date("2025-07-18T23:59:59Z"); // <-- Change this to your actual deadline
+const COMPETITION_START = new Date("2025-07-12T00:00:00Z");
+const FINAL_DEADLINE = new Date("2025-07-21T23:59:59Z"); // Updated to new final deadline
 
 const Dashboard: React.FC = () => {
     // job
@@ -59,7 +59,7 @@ const Dashboard: React.FC = () => {
       
       // Check if competition hasn't started yet
       if (now < COMPETITION_START.getTime()) {
-        setTimeLeft("Huskyholdem will officially start at July 7 2025");
+        setTimeLeft("Huskyholdem will officially start at July 12 2025");
         return;
       }
       
@@ -122,7 +122,7 @@ const Dashboard: React.FC = () => {
           Welcome, <span className="text-[#ff00cc]">{user?.username}</span>
         </h1>
         <p className="text-md text-gray-400">
-          {timeLeft != "Huskyholdem will officially start at July 7 2025" && "Time left until final submission:"}
+          {timeLeft != "Huskyholdem will officially start at July 12 2025" && "Time left until final submission:"}
           <span className="text-[#39ff14] font-mono">{timeLeft}</span>
         </p>
       </div>
