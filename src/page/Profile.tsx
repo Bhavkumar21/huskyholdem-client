@@ -63,7 +63,19 @@ const ProfilePage: React.FC = () => {
     fetchData();
   }, [user, username]);
 
-  const getScoreStats = () => {
+  useEffect(() => {
+    if (profile) {
+        setFormData({
+            name: profile.name || "",
+            github: profile.github || "",
+            discord_username: profile.discord_username || "",
+            about: profile.about || ""
+        });
+    }
+    }, [profile]);
+
+
+    const getScoreStats = () => {
     if (leaderboardEntries.length === 0) {
       return {
         totalSubmissions: 0,
@@ -88,6 +100,29 @@ const ProfilePage: React.FC = () => {
 
   const stats = getScoreStats();
 
+  const [editMode, setEditMode] = useState(false);
+  const [formData, setFormData] = useState({
+    name: profile?.name || "",
+    github: profile?.github || "",
+    discord_username: profile?.discord_username || "",
+    about: profile?.about || ""
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async () => {
+    try {
+        await profileAPI.updateProfile(formData);
+        setProfile({ ...profile!, ...formData }); // Update local state
+        setEditMode(false);
+    } catch (err) {
+        console.error("Error updating profile:", err);
+    }
+  };
+
+
   return (
     <div className="min-h-screen text-white px-4 py-12 max-w-4xl mx-auto">
       <div className="mb-10 border-b border-[#444] pb-6">
@@ -108,24 +143,99 @@ const ProfilePage: React.FC = () => {
         <p className="text-gray-400">Loading profile...</p>
       ) : (
         <div className="grid md:grid-cols-2 gap-6">
-          {/* Profile Info */}
-          <div className="bg-gray-900 border border-[#ff00cc] rounded-lg p-6">
-            <h2 className="text-xl font-bold text-[#ff00cc] mb-4 flex items-center">
-              <User className="h-5 w-5 mr-2" />
-              Profile Info
-            </h2>
-            <p><span className="text-[#39ff14]">Username:</span> {profile?.username || "N/A"}</p>
-            <p><span className="text-[#39ff14]">Name:</span> {profile?.name || "N/A"}</p>
-            <p><span className="text-[#39ff14]">GitHub:</span> {profile?.github || "N/A"}</p>
-            <p><span className="text-[#39ff14]">Discord:</span> {profile?.discord_username || "N/A"}</p>
-            <div className="mt-4">
-              <p className="text-[#39ff14] font-semibold">About Me:</p>
-              <p className="text-sm text-gray-300 bg-gray-800 p-3 rounded mt-2">
-                {profile?.about || "This user hasn't written anything yet."}
-              </p>
+            {/* Profile Info */}
+            <div className="bg-gray-900 border border-[#ff00cc] rounded-lg p-6">
+                <h2 className="text-xl font-bold text-[#ff00cc] mb-4 flex items-center">
+                    <User className="h-5 w-5 mr-2" />
+                    Profile Info
+                    {isSelf && (
+                        <button
+                            className="ml-auto text-sm bg-blue-500 text-white px-3 py-1 rounded"
+                            onClick={() => setEditMode(!editMode)}
+                        >
+                            {editMode ? "Cancel" : "Edit"}
+                        </button>
+                    )}
+                </h2>
+
+                {editMode ? (
+                    <>
+                        <label className="block mb-2">
+                            <span className="text-[#39ff14]">Name:</span>
+                            <input
+                                name="name"
+                                className="block w-full mt-1 p-2 bg-gray-800 text-white border border-gray-600 rounded"
+                                value={formData.name}
+                                onChange={handleChange}
+                            />
+                        </label>
+
+                        <label className="block mb-2">
+                            <span className="text-[#39ff14]">GitHub:</span>
+                            <input
+                                name="github"
+                                className="block w-full mt-1 p-2 bg-gray-800 text-white border border-gray-600 rounded"
+                                value={formData.github}
+                                onChange={handleChange}
+                            />
+                        </label>
+
+                        <label className="block mb-2">
+                            <span className="text-[#39ff14]">Discord:</span>
+                            <input
+                                name="discord_username"
+                                className="block w-full mt-1 p-2 bg-gray-800 text-white border border-gray-600 rounded"
+                                value={formData.discord_username}
+                                onChange={handleChange}
+                            />
+                        </label>
+
+                        <label className="block mb-4">
+                            <span className="text-[#39ff14]">About Me:</span>
+                            <textarea
+                                name="about"
+                                rows={4}
+                                className="block w-full mt-1 p-2 bg-gray-800 text-white border border-gray-600 rounded"
+                                value={formData.about}
+                                onChange={handleChange}
+                            />
+                        </label>
+
+                        <button
+                            className="bg-green-500 text-white px-4 py-2 rounded"
+                            onClick={handleSubmit}
+                        >
+                            Save
+                        </button>
+                    </>
+                ) : (
+                    <>
+                        <p>
+                            <span className="text-[#39ff14]">Username:</span>{" "}
+                            {profile?.username || "N/A"}
+                        </p>
+                        <p>
+                            <span className="text-[#39ff14]">Name:</span>{" "}
+                            {profile?.name || "N/A"}
+                        </p>
+                        <p>
+                            <span className="text-[#39ff14]">GitHub:</span>{" "}
+                            {profile?.github || "N/A"}
+                        </p>
+                        <p>
+                            <span className="text-[#39ff14]">Discord:</span>{" "}
+                            {profile?.discord_username || "N/A"}
+                        </p>
+                        <div className="mt-4">
+                            <p className="text-[#39ff14] font-semibold">About Me:</p>
+                            <p className="text-sm text-gray-300 bg-gray-800 p-3 rounded mt-2">
+                                {profile?.about || "This user hasn't written anything yet."}
+                            </p>
+                        </div>
+                    </>
+                )}
             </div>
-          </div>
-  
+
           {/* Score Stats */}
           <div className="bg-gray-900 border border-[#39ff14] rounded-lg p-6">
             <h2 className="text-xl font-bold text-[#39ff14] mb-4 flex items-center">
