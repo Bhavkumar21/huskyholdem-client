@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 const apiClient = axios.create({
-  baseURL: 'https://api.atcuw.org',
-//   baseURL: 'http://localhost:8002',
+//   baseURL: 'https://api.atcuw.org',
+  baseURL: 'http://localhost:8002',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -81,6 +81,14 @@ const gameAPI = {
         }
         return response.data;
     },
+    submitSimulationUserJob: async (usernames: string[]) => {
+        const response = await apiClient.post("/sim/async_run_user", usernames);
+      
+        if (response.data.status_code !== 200) {
+          throw new Error(response.data.error);
+        }
+        return response.data;
+      }
 }
 
 const submissionAPI = {
@@ -126,6 +134,10 @@ const submissionAPI = {
         const response = await apiClient.delete(`/submission/${submission_id}`);
         return response.data;
     },
+    getUsersWithFinalSubmission: async () => {
+        const response = await apiClient.get('/submission/users/with-final')
+        return response.data
+    }
 }
 
 const profileAPI = {
@@ -169,11 +181,19 @@ const leaderboardAPI = {
     }
 }
 
+const userAPI = {
+    getAllUsers: async () => {
+        const res = await apiClient.get('/user/all');
+        return res.data
+    }
+}
+
 export {
     apiClient,
     authAPI,
     gameAPI,
     submissionAPI,
     profileAPI,
-    leaderboardAPI
+    leaderboardAPI,
+    userAPI
 }

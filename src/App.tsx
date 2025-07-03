@@ -14,6 +14,7 @@ import ProfilePage from "./page/Profile"
 import VerificationSuccess from "./page/VerificationSuccess";
 import LeaderboardPage from "./page/Leaderboard";
 import Admin from "./page/Admin";
+import SimulationPage from "./page/Simulation";
 
 function App() {
   const router = createBrowserRouter([
@@ -113,6 +114,16 @@ function App() {
           <DefaultLauyout>
             <Admin />
           </DefaultLauyout>
+        </AdminRoute>
+      ),
+    },
+    {
+      path: "/simulation",
+      element: (
+        <AdminRoute>              
+            <DefaultLauyout>
+                <SimulationPage  />
+            </DefaultLauyout>
         </AdminRoute>
       ),
     },
