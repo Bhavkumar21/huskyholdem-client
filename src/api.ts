@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 const apiClient = axios.create({
-  baseURL: 'https://api.atcuw.org',
-//   baseURL: 'http://localhost:8002',
+//   baseURL: 'https://api.atcuw.org',
+  baseURL: 'http://localhost:8002',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -88,7 +88,11 @@ const gameAPI = {
           throw new Error(response.data.error);
         }
         return response.data;
-      }
+      },
+    deleteJob: async (job_id: string) => {
+        const response = await apiClient.delete(`/sim/job/${job_id}`);
+        return response.data;
+    }
 }
 
 const submissionAPI = {
