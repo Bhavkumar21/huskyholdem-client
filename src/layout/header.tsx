@@ -77,7 +77,6 @@ const DefaultHeader = () => {
                       Admin
                     </Link>
                   )}
-
                   <Link
                     to="/profile"
                     className="hover:text-[#39ff14] text-white transition-all glitch-hover"
