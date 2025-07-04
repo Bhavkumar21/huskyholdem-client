@@ -154,6 +154,16 @@ const profileAPI = {
         const res = await apiClient.get(`/profile`);
         return res.data;
     },
+
+    updateProfile: async (data: {
+        name?: string;
+        github?: string;
+        discord_username?: string;
+        about?: string;
+    }) => {
+        const res = await apiClient.post('/user/update', data);
+        return res.data;
+    },
 }
 
 const leaderboardAPI = {

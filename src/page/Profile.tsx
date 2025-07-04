@@ -63,7 +63,19 @@ const ProfilePage: React.FC = () => {
     fetchData();
   }, [user, username]);
 
-  const getScoreStats = () => {
+  useEffect(() => {
+    if (profile) {
+        setFormData({
+            name: profile.name || "",
+            github: profile.github || "",
+            discord_username: profile.discord_username || "",
+            about: profile.about || ""
+        });
+    }
+    }, [profile]);
+
+
+    const getScoreStats = () => {
     if (leaderboardEntries.length === 0) {
       return {
         totalSubmissions: 0,
@@ -88,6 +100,29 @@ const ProfilePage: React.FC = () => {
 
   const stats = getScoreStats();
 
+  const [editMode, setEditMode] = useState(false);
+  const [formData, setFormData] = useState({
+    name: profile?.name || "",
+    github: profile?.github || "",
+    discord_username: profile?.discord_username || "",
+    about: profile?.about || ""
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async () => {
+    try {
+        await profileAPI.updateProfile(formData);
+        setProfile({ ...profile!, ...formData }); // Update local state
+        setEditMode(false);
+    } catch (err) {
+        console.error("Error updating profile:", err);
+    }
+  };
+
+
   return (
     <div className="min-h-screen text-white px-4 py-12 max-w-4xl mx-auto">
       <div className="mb-10 border-b border-[#444] pb-6">
@@ -108,24 +143,120 @@ const ProfilePage: React.FC = () => {
         <p className="text-gray-400">Loading profile...</p>
       ) : (
         <div className="grid md:grid-cols-2 gap-6">
-          {/* Profile Info */}
-          <div className="bg-gray-900 border border-[#ff00cc] rounded-lg p-6">
-            <h2 className="text-xl font-bold text-[#ff00cc] mb-4 flex items-center">
-              <User className="h-5 w-5 mr-2" />
-              Profile Info
-            </h2>
-            <p><span className="text-[#39ff14]">Username:</span> {profile?.username || "N/A"}</p>
-            <p><span className="text-[#39ff14]">Name:</span> {profile?.name || "N/A"}</p>
-            <p><span className="text-[#39ff14]">GitHub:</span> {profile?.github || "N/A"}</p>
-            <p><span className="text-[#39ff14]">Discord:</span> {profile?.discord_username || "N/A"}</p>
-            <div className="mt-4">
-              <p className="text-[#39ff14] font-semibold">About Me:</p>
-              <p className="text-sm text-gray-300 bg-gray-800 p-3 rounded mt-2">
-                {profile?.about || "This user hasn't written anything yet."}
-              </p>
+            {/* Profile Info */}
+            <div className="bg-gray-900 border border-[#ff00cc] rounded-lg p-6">
+                <h2 className="text-xl font-bold text-[#ff00cc] flex items-center mb-4">
+                    <User className="h-5 w-5 mr-2" />
+                    Profile Info
+                    {isSelf && (
+                        <button
+                            className="ml-auto px-3 py-1 border-[#39ff14] border-2 text-[#39ff14] text-sm font-medium rounded hover:bg-[#39ff14] hover:text-black transition-colors duration-200"
+                            onClick={() => setEditMode(!editMode)}
+                        >
+                            {editMode ? "Cancel" : "Edit"}
+                        </button>
+                    )}
+                </h2>
+
+                {editMode ? (
+                    <div className="bg-white/5 backdrop-blur-md rounded-xl border border-white/10 shadow-lg p-6 mt-4">
+                        <form
+                            className="space-y-4"
+                            onSubmit={e => { e.preventDefault(); handleSubmit(); }}
+                        >
+                            <div>
+                                <label className="block text-sm font-medium mb-1" htmlFor="name">Name</label>
+                                <input
+                                    id="name"
+                                    name="name"
+                                    className="w-full px-4 py-2 bg-white/10 text-white placeholder-gray-400 border border-white/10 focus:outline-none focus:ring-2 focus:ring-[#ff00cc]"
+                                    value={formData.name}
+                                    onChange={handleChange}
+                                    placeholder="Your full name"
+                                    autoComplete="off"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium mb-1" htmlFor="github">GitHub</label>
+                                <input
+                                    id="github"
+                                    name="github"
+                                    className="w-full px-4 py-2 bg-white/10 text-white placeholder-gray-400 border border-white/10 focus:outline-none focus:ring-2 focus:ring-[#ff00cc]"
+                                    value={formData.github}
+                                    onChange={handleChange}
+                                    placeholder="Your GitHub username"
+                                    autoComplete="off"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium mb-1" htmlFor="discord_username">Discord</label>
+                                <input
+                                    id="discord_username"
+                                    name="discord_username"
+                                    className="w-full px-4 py-2 bg-white/10 text-white placeholder-gray-400 border border-white/10 focus:outline-none focus:ring-2 focus:ring-[#ff00cc]"
+                                    value={formData.discord_username}
+                                    onChange={handleChange}
+                                    placeholder="Your Discord username"
+                                    autoComplete="off"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium mb-1" htmlFor="about">About Me</label>
+                                <textarea
+                                    id="about"
+                                    name="about"
+                                    rows={4}
+                                    className="w-full px-4 py-2 bg-white/10 text-white placeholder-gray-400 border border-white/10 focus:outline-none focus:ring-2 focus:ring-[#ff00cc] resize-none"
+                                    value={formData.about}
+                                    onChange={handleChange}
+                                    placeholder="Tell us about yourself..."
+                                />
+                            </div>
+                            <div className="flex gap-3 pt-2">
+                                <button
+                                    type="submit"
+                                    className="px-6 py-2 border border-[#39ff14] text-[#39ff14] hover:bg-[#39ff14] hover:text-black transition-colors duration-200"
+                                >
+                                    Save Changes
+                                </button>
+                                <button
+                                    type="button"
+                                    className="px-6 py-2 border border-gray-400 text-gray-400 hover:bg-gray-400 hover:text-black transition-colors duration-200"
+                                    onClick={() => setEditMode(false)}
+                                >
+                                    Cancel
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                ) : (
+                    <>
+                        <p>
+                            <span className="text-[#39ff14]">Username:</span>{" "}
+                            {profile?.username || "N/A"}
+                        </p>
+                        <p>
+                            <span className="text-[#39ff14]">Name:</span>{" "}
+                            {profile?.name || "N/A"}
+                        </p>
+                        <p>
+                            <span className="text-[#39ff14]">GitHub:</span>{" "}
+                            {profile?.github || "N/A"}
+                        </p>
+                        <p>
+                            <span className="text-[#39ff14]">Discord:</span>{" "}
+                            {profile?.discord_username || "N/A"}
+                        </p>
+                        <div className="mt-4">
+                            <p className="text-[#39ff14] font-semibold">About Me:</p>
+                            <p className="text-sm text-gray-300 bg-gray-800 p-3 rounded mt-2">
+                                {profile?.about || "This user hasn't written anything yet."}
+                            </p>
+                        </div>
+                    </>
+                )}
             </div>
-          </div>
-  
+
           {/* Score Stats */}
           <div className="bg-gray-900 border border-[#39ff14] rounded-lg p-6">
             <h2 className="text-xl font-bold text-[#39ff14] mb-4 flex items-center">
