@@ -47,6 +47,12 @@ const DefaultHeader = () => {
               >
                 About
               </Link>
+              <Link
+                    to="/directory"
+                    className="hover:text-[#39ff14] text-white transition-all glitch-hover"
+                  >
+                    ~/
+                  </Link>
 
               {isAuthenticated ? (
                 <>
@@ -159,6 +165,12 @@ const DefaultHeader = () => {
               onClick={() => setIsMenuOpen(false)}
             >
               About
+            </Link>
+            <Link
+              to="/directory"
+              className="hover:text-[#39ff14] text-white transition-all glitch-hover"
+            >
+              Directory
             </Link>
 
             {isAuthenticated ? (

@@ -199,6 +199,10 @@ const userAPI = {
     getAllUsers: async () => {
         const res = await apiClient.get('/user/all');
         return res.data
+    },
+    searchUsers: async (query: string) => {
+        const res = await apiClient.get(`/user/search?q=${encodeURIComponent(query)}`);
+        return res.data;
     }
 }
 

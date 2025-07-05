@@ -15,6 +15,7 @@ import VerificationSuccess from "./page/VerificationSuccess";
 import LeaderboardPage from "./page/Leaderboard";
 import Admin from "./page/Admin";
 import SimulationPage from "./page/Simulation";
+import DirectoryPage from "./page/Directory";
 
 function App() {
   const router = createBrowserRouter([
@@ -87,6 +88,14 @@ function App() {
               <LeaderboardPage  />
           </DefaultLauyout>
       </ProtectedRoute>
+      ),
+    },
+    {
+      path: "/directory",
+        element: (
+          <DefaultLauyout>
+              <DirectoryPage  />
+          </DefaultLauyout>
       ),
     },
     {
