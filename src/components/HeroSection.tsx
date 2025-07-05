@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import "./HeroSection.css"; // Assuming you have a CSS file for styles
 import CyberPunkButton from "./CyberPunkButton";
 
-const COMPETITION_START = new Date("2025-07-07T00:00:00Z");
-const FINAL_DEADLINE = new Date("2025-07-18T23:59:59Z");
+const COMPETITION_START = new Date("2025-07-12T00:00:00Z");
+const FINAL_DEADLINE = new Date("2025-07-21T23:59:59Z");
 
 const HeroSection: React.FC = () => {
   const [timeLeft, setTimeLeft] = useState("");
@@ -16,7 +16,7 @@ const HeroSection: React.FC = () => {
       
       // Check if competition hasn't started yet
       if (now < COMPETITION_START.getTime()) {
-        setTimeLeft("Huskyholdem will officially start at July 7 2025");
+        setTimeLeft("Huskyholdem will officially start at July 12 2025");
         return;
       }
       
@@ -45,8 +45,8 @@ const HeroSection: React.FC = () => {
     <section className="text-center bg-black py-16 w-full h-[80vh] flex flex-col items-center justify-center overflow-clip">
     <div className="environment"></div>
     <h1 className="hero glitch layers" data-text="冷血不够，要冷码"><span>HUSKY♠ HOLD'EM</span></h1>
-    {timeLeft == "Huskyholdem will officially start at July 7 2025" && <p className="hero-countdown">{timeLeft}</p>}
-    {timeLeft != "Huskyholdem will officially start at July 7 2025" && <p className="hero-countdown">Final submission in: {timeLeft}</p>}
+    {timeLeft == "Huskyholdem will officially start at July 12 2025" && <p className="hero-countdown">{timeLeft}</p>}
+    {timeLeft != "Huskyholdem will officially start at July 12 2025" && <p className="hero-countdown">Final submission in: {timeLeft}</p>}
     <p>A University of Washington POKERBOTS EXTRAVAGANZA</p>
     <CyberPunkButton text="REGISTER" onClick={() => navigate("/register")} className="mt-4"/>
     </section>
