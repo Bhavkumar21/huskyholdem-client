@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 const apiClient = axios.create({
-  baseURL: 'https://api-huskyholdem.atcuw.org',
-//   baseURL: 'http://localhost:8002',
+//   baseURL: 'https://api-huskyholdem.atcuw.org',
+  baseURL: 'http://localhost:8002',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -56,6 +56,10 @@ const authAPI = {
     },
     logout: async (token: string) => {
         const response = await apiClient.post('/auth/logout', { token });
+        return response.data;
+    },
+    resendVerification: async () => {
+        const response = await apiClient.post('/auth/resend-verification');
         return response.data;
     }
 }

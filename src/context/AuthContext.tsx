@@ -9,6 +9,7 @@ interface User {
     discord_username: string;
     about: string;
     admin: boolean;
+    is_verified: boolean;
 }
 
 // Type definition for AuthContext

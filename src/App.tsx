@@ -16,6 +16,9 @@ import LeaderboardPage from "./page/Leaderboard";
 import Admin from "./page/Admin";
 import SimulationPage from "./page/Simulation";
 import DirectoryPage from "./page/Directory";
+import VerifyAccount from "./page/VerifyAccount";
+import VerifiedRoute from "./components/VerifiedRoute";
+import VerifiedAdminRoute from "./components/VerifiedAdminRoute";
 
 function App() {
   const router = createBrowserRouter([
@@ -53,6 +56,16 @@ function App() {
       ),
     },
     {
+      path: "/verify-account",
+      element: (
+        <ProtectedRoute>
+          <DefaultLauyout>
+            <VerifyAccount />
+          </DefaultLauyout>
+        </ProtectedRoute>
+      ),
+    },
+    {
       path: "/about",
       element: (
         <DefaultLauyout>
@@ -63,49 +76,51 @@ function App() {
       {
         path: "/dashboard",
           element: (
-        <ProtectedRoute>              
+        <VerifiedRoute>              
             <DefaultLauyout>
                 <Dashboard />
             </DefaultLauyout>
-        </ProtectedRoute>
+        </VerifiedRoute>
         ),
     },
     {
       path: "/submission",
         element: (
-      <ProtectedRoute>              
+      <VerifiedRoute>              
           <DefaultLauyout>
               <SubmissionPage  />
           </DefaultLauyout>
-      </ProtectedRoute>
+      </VerifiedRoute>
       ),
     },
     {
       path: "/leaderboard",
         element: (
-      <ProtectedRoute>              
+      <VerifiedRoute>              
           <DefaultLauyout>
               <LeaderboardPage  />
           </DefaultLauyout>
-      </ProtectedRoute>
+      </VerifiedRoute>
       ),
     },
     {
       path: "/directory",
         element: (
+      <VerifiedRoute>              
           <DefaultLauyout>
               <DirectoryPage  />
           </DefaultLauyout>
+      </VerifiedRoute>
       ),
     },
     {
       path: "/profile",
         element: (
-      <ProtectedRoute>              
+      <VerifiedRoute>              
           <DefaultLauyout>
               <ProfilePage  />
           </DefaultLauyout>
-      </ProtectedRoute>
+      </VerifiedRoute>
       ),
     },  
     {
@@ -119,21 +134,21 @@ function App() {
     {
       path: "/admin",
       element: (
-        <AdminRoute>
+        <VerifiedAdminRoute>
           <DefaultLauyout>
             <Admin />
           </DefaultLauyout>
-        </AdminRoute>
+        </VerifiedAdminRoute>
       ),
     },
     {
       path: "/simulation",
       element: (
-        <AdminRoute>              
+        <VerifiedAdminRoute>              
             <DefaultLauyout>
                 <SimulationPage  />
             </DefaultLauyout>
-        </AdminRoute>
+        </VerifiedAdminRoute>
       ),
     },
   ]);
