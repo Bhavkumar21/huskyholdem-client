@@ -210,6 +210,21 @@ const userAPI = {
     }
 }
 
+const adminAPI = {
+    getUserCount: async () => {
+        const res = await apiClient.get('/admin/user-count');
+        return res.data.user_count;
+    },
+    getJobCount: async () => {
+        const res = await apiClient.get('/admin/job-count');
+        return res.data.job_count;
+    },
+    getSubmissionCount: async () => {
+        const res = await apiClient.get('/admin/submission-count');
+        return res.data.submission_count;
+    },
+};
+
 export {
     apiClient,
     authAPI,
@@ -217,5 +232,6 @@ export {
     submissionAPI,
     profileAPI,
     leaderboardAPI,
-    userAPI
+    userAPI,
+    adminAPI
 }
