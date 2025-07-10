@@ -16,6 +16,23 @@ const Home: React.FC = () => {
         </div>
         </div>
 
+        <div className="flex w-full items-center justify-center mt-16 mb-16">
+            <div className="w-[90vw] max-w-4xl">
+                <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
+                    <iframe
+                        src="https://lu.ma/embed/event/evt-YfjMEEdENzFvGxZ/simple"
+                        className="absolute top-0 left-0 w-full h-full rounded-lg shadow-lg border border-gray-600/50"
+                        style={{
+                            minHeight: "400px",
+                            background: "rgba(0, 0, 0, 0.1)"
+                        }}
+                        allowFullScreen={true}
+                        tabIndex={0}
+                    />
+                </div>
+            </div>
+        </div>
+
         <PrizeSection />
         <TimelineSection />
         <div className="flex min-h-[30vh]  flex-col w-full items-center justify-center text-white">
