@@ -1,4 +1,4 @@
-import { ChevronDown, X, Zap, Users, Play, Trash2 } from "lucide-react";
+import { ChevronDown, X, Zap, Users, Play, Trash2, Copy } from "lucide-react";
 import { useEffect, useState } from "react";
 import { submissionAPI, userAPI, gameAPI } from "../api";
 import { useNavigate } from "react-router-dom";
@@ -76,6 +76,15 @@ const SimulationPage = () => {
     } catch (err: any) {
       console.error("Failed to delete job:", err);
       alert("Failed to delete job: " + (err.message || "Unknown error"));
+    }
+  };
+
+  const copyToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      // You could add a toast notification here if desired
+    } catch (err) {
+      console.error("Failed to copy to clipboard:", err);
     }
   };
 
@@ -371,57 +380,74 @@ const SimulationPage = () => {
             <table className="w-full table-fixed border-collapse text-sm">
               <thead>
                 <tr className="text-left text-[#ff00cc] border-b border-[#333]">
-                  <th className="p-2 w-1/3">Job ID</th>
+                  <th className="p-2 w-1/4">Job ID</th>
                   <th className="p-2 w-1/6">Status</th>
-                  <th className="p-2 w-1/4">Result</th>
-                  <th className="p-2 w-1/6">Message</th>
-                  <th className="p-2 w-16">Action</th>
+                  <th className="p-2 w-1/3">Result/Error</th>
+                  <th className="p-2 w-1/6">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {jobs.map((job) => (
-                  <tr key={job.job_id} className="border-b border-[#222]">
-                    <td className="p-2 font-mono text-xs text-[#39ff14] break-all w-1/3">{job.job_id}</td>
-                    <td className="p-2 w-1/6">
-                      <span
-                        className={`px-2 py-1 rounded text-xs font-semibold ${
-                          job.job_status === "Finished"
-                            ? "text-green-400"
-                            : job.job_status === "Pending"
-                            ? "text-yellow-400"
-                            : job.job_status === "Failed"
-                            ? "text-red-500"
-                            : "text-white"
-                        }`}
-                      >
-                        {job.job_status}
-                      </span>
-                    </td>
-                      <td className="p-2 text-white text-xs break-words w-1/4">{
-                        job.result_data 
-                          ? typeof job.result_data === 'object' 
-                            ? JSON.stringify(job.result_data) 
-                            : job.result_data 
-                          : "-"
-                      }</td>
-                      <td className="p-2 text-white text-xs break-words w-1/6">{
-                        job.message 
-                          ? typeof job.message === 'object' 
-                            ? JSON.stringify(job.message) 
-                            : job.message 
-                          : "-"
-                      }</td>
-                      <td className="p-2 w-16">
-                        <button
-                          onClick={() => deleteJob(job.job_id)}
-                          className="text-red-400 hover:text-red-300 transition-colors p-1 rounded hover:bg-red-900 hover:bg-opacity-20"
-                          title="Delete job"
+                {jobs.map((job) => {
+                  const contentToShow = job.job_status === "Failed" 
+                    ? (job.error 
+                        ? typeof job.error === 'object' 
+                          ? JSON.stringify(job.error, null, 2) 
+                          : job.error 
+                        : "Unknown error")
+                    : (job.result_data 
+                        ? typeof job.result_data === 'object' 
+                          ? JSON.stringify(job.result_data, null, 2) 
+                          : job.result_data 
+                        : "-");
+                  
+                  return (
+                    <tr key={job.job_id} className="border-b border-[#222]">
+                      <td className="p-2 font-mono text-xs text-[#39ff14] break-all w-1/4">{job.job_id}</td>
+                      <td className="p-2 w-1/6">
+                        <span
+                          className={`px-2 py-1 rounded text-xs font-semibold ${
+                            job.job_status === "Finished"
+                              ? "text-green-400"
+                              : job.job_status === "Pending"
+                              ? "text-yellow-400"
+                              : job.job_status === "Failed"
+                              ? "text-red-500"
+                              : "text-white"
+                          }`}
                         >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
+                          {job.job_status}
+                        </span>
                       </td>
-                  </tr>
-                ))}
+                      <td className="p-2 w-1/3">
+                        <div className="max-h-20 overflow-y-auto text-xs">
+                          <pre className={`whitespace-pre-wrap font-mono ${
+                            job.job_status === "Failed" ? "text-red-400" : "text-white"
+                          }`}>
+                            {contentToShow}
+                          </pre>
+                        </div>
+                      </td>
+                      <td className="p-2 w-1/6">
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => copyToClipboard(contentToShow)}
+                            className="text-[#39ff14] hover:text-[#2bff00] transition-colors p-1 rounded hover:bg-gray-700"
+                            title="Copy to clipboard"
+                          >
+                            <Copy className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => deleteJob(job.job_id)}
+                            className="text-red-400 hover:text-red-300 transition-colors p-1 rounded hover:bg-red-900 hover:bg-opacity-20"
+                            title="Delete job"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
