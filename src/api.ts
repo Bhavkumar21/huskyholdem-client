@@ -85,8 +85,12 @@ const gameAPI = {
         }
         return response.data;
     },
-    submitSimulationUserJob: async (usernames: string[]) => {
-        const response = await apiClient.post("/sim/async_run_user", usernames);
+    submitSimulationUserJob: async (usernames: string[], numRounds: number = 6) => {
+        const payload = {
+            users_list: usernames,
+            num_rounds: numRounds
+        };
+        const response = await apiClient.post("/sim/async_run_user", payload);
       
         if (response.data.status_code !== 200) {
           throw new Error(response.data.error);

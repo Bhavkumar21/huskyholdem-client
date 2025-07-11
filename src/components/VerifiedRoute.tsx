@@ -10,6 +10,8 @@ const VerifiedRoute: React.FC<VerifiedRouteProps> = ({ children }) => {
   const { user, isAuthenticated, loading } = useAuth();
   const location = useLocation();
 
+  console.log(user);
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center text-white">

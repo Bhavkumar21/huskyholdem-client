@@ -13,6 +13,7 @@ const SimulationPage = () => {
   const [page, setPage] = useState(0);
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
   const [sortHasFinal, setSortHasFinal] = useState(false);
+  const [numRounds, setNumRounds] = useState<number>(6);
 
   const [jobs, setJobs] = useState<any[]>([]);
   const [jobsLoading, setJobsLoading] = useState(true);
@@ -56,7 +57,7 @@ const SimulationPage = () => {
 
   const runSimulation = async () => {
     try {
-      await gameAPI.submitSimulationUserJob(selectedUsers);
+      await gameAPI.submitSimulationUserJob(selectedUsers, numRounds);
       setSelectedUsers([]);
       fetchJobs();
     } catch (err: any) {
@@ -301,6 +302,23 @@ const SimulationPage = () => {
                   </button>
                 </div>
               )}
+
+              {/* Number of Rounds Input */}
+              <div className="mb-6">
+                <label className="block text-sm font-semibold text-[#ff00cc] mb-2">
+                  NUMBER OF ROUNDS
+                </label>
+                <input
+                  type="number"
+                  min="1"
+                  max="100"
+                  value={numRounds}
+                  onChange={(e) => setNumRounds(Math.max(1, parseInt(e.target.value) || 1))}
+                  className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded text-white focus:border-[#39ff14] focus:outline-none transition-colors"
+                  placeholder="Enter number of rounds"
+                />
+                <p className="text-xs text-gray-400 mt-1">Default: 6 rounds</p>
+              </div>
 
               <button
                 disabled={selectedUsers.length !== 6}
