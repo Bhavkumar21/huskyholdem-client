@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
-import { adminAPI } from '../api';
+import React, {useEffect, useState} from 'react';
+import {useAuth} from '../context/AuthContext';
+import {useNavigate} from 'react-router-dom';
+import {adminAPI} from '../api';
 
 const Admin: React.FC = () => {
-    const { user } = useAuth();
+    const {user} = useAuth();
     const navigate = useNavigate();
 
     const [userCount, setUserCount] = useState<number | null>(null);
@@ -34,6 +34,15 @@ const Admin: React.FC = () => {
         };
         fetchStats();
     }, []);
+
+    const handleToggleAdmin = async (username: string) => {
+        try {
+            const updated = await adminAPI.toggleAdmin(username);
+            setUsers(prev => prev.map(u => u.username === username ? {...u, admin: updated.admin} : u));
+        } catch (err) {
+            console.error('Failed to toggle admin status', err);
+        }
+    };
 
     return (
         <div className="text-white p-8">
@@ -72,10 +81,21 @@ const Admin: React.FC = () => {
                     <h2 className="text-2xl font-bold mb-4">All Users</h2>
                     <ul className="space-y-1 text-sm">
                         {users.map(u => (
-                            <li key={u.username} className="bg-gray-800 p-2 rounded">{u.username} - {u.email}</li>
+                            <li key={u.username} className="bg-gray-800 p-2 rounded flex justify-between items-center">
+                                <span>{u.username} - {u.email}</span>
+                                {u.username !== user?.username && (
+                                    <button
+                                        onClick={() => handleToggleAdmin(u.username)}
+                                        className="ml-4 px-3 py-1 text-xs rounded border border-[#ffcc00] text-[#ffcc00] hover:bg-[#ffcc00] hover:text-black transition"
+                                    >
+                                        {u.admin ? 'Revoke Admin' : 'Make Admin'}
+                                    </button>
+                                )}
+                            </li>
                         ))}
                     </ul>
                 </div>
+
 
                 <div className="mb-8">
                     <h2 className="text-2xl font-bold mb-4">All Jobs</h2>
