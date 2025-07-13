@@ -19,7 +19,8 @@ const Admin: React.FC = () => {
 
     const fetchJobs = async () => {
         try {
-            const data = await gameAPI.get_jobs();
+            const data = await adminAPI.listJobs();
+            console.log(data);
             setJobs(data);
         } catch (err) {
             console.error("Failed to fetch jobs:", err);
