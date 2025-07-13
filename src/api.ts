@@ -234,6 +234,10 @@ const adminAPI = {
     listJobs: async () => {
         const res = await apiClient.get('/admin/jobs');
         return res.data;
+    },
+    toggleAdmin: async (username: string) => {
+        const res = await apiClient.post(`/admin/toggle-admin/${username}`);
+        return res.data;
     }
 };
 
