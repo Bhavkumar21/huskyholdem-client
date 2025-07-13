@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 const apiClient = axios.create({
-  baseURL: 'https://api-huskyholdem.atcuw.org',
-//   baseURL: 'http://localhost:8002',
+  // baseURL: 'https://api-huskyholdem.atcuw.org',
+  baseURL: 'http://localhost:8002',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -227,6 +227,14 @@ const adminAPI = {
         const res = await apiClient.get('/admin/submission-count');
         return res.data.submission_count;
     },
+    listUsers: async () => {
+        const res = await apiClient.get('/admin/users');
+        return res.data;
+    },
+    listJobs: async () => {
+        const res = await apiClient.get('/admin/jobs');
+        return res.data;
+    }
 };
 
 export {
