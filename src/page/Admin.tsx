@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { adminAPI, gameAPI } from '../api';
 import JobList from '../components/JobList';
+import UserList from '../components/UserList';
 
 const Admin: React.FC = () => {
     const {user} = useAuth();
@@ -11,6 +12,7 @@ const Admin: React.FC = () => {
     const [userCount, setUserCount] = useState<number | null>(null);
     const [jobCount, setJobCount] = useState<number | null>(null);
     const [submissionCount, setSubmissionCount] = useState<number | null>(null);
+    const [verifiedUserCount, setVerifiedUserCount] = useState<number | null>(null);
     const [users, setUsers] = useState<any[]>([]);
     const [jobs, setJobs] = useState<any[]>([]);
     const [jobsLoading, setJobsLoading] = useState(true);
@@ -58,6 +60,10 @@ const Admin: React.FC = () => {
                 setJobCount(jobsCount);
                 setSubmissionCount(submissionsCount);
                 setUsers(userList);
+                
+                // Calculate verified users count
+                const verifiedCount = userList.filter((u: any) => u.is_verified).length;
+                setVerifiedUserCount(verifiedCount);
             } catch (err) {
                 console.error('Failed to load admin stats', err);
             }
@@ -70,6 +76,7 @@ const Admin: React.FC = () => {
         const interval = setInterval(fetchJobs, 30000); // Refresh every 30s
         return () => clearInterval(interval);
     }, []);
+
     const handleToggleAdmin = async (username: string) => {
         try {
             const updated = await adminAPI.toggleAdmin(username);
@@ -77,6 +84,10 @@ const Admin: React.FC = () => {
         } catch (err) {
             console.error('Failed to toggle admin status', err);
         }
+    };
+
+    const handleUserClick = (username: string) => {
+        navigate(`/profile/${username}`);
     };
 
     return (
@@ -95,14 +106,19 @@ const Admin: React.FC = () => {
                     Go to Simulation Page
                 </button>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                     <div className="bg-gray-900 border border-[#ff00cc] p-6 rounded-lg">
-                        <h2 className="text-xl font-bold text-[#ff00cc] mb-2">Users</h2>
+                        <h2 className="text-xl font-bold text-[#ff00cc] mb-2">Total Users</h2>
                         <p className="text-3xl font-mono">{userCount !== null ? userCount : '...'}</p>
                     </div>
 
                     <div className="bg-gray-900 border border-[#39ff14] p-6 rounded-lg">
-                        <h2 className="text-xl font-bold text-[#39ff14] mb-2">Jobs</h2>
+                        <h2 className="text-xl font-bold text-[#39ff14] mb-2">Verified Users</h2>
+                        <p className="text-3xl font-mono">{verifiedUserCount !== null ? verifiedUserCount : '...'}</p>
+                    </div>
+
+                    <div className="bg-gray-900 border border-[#ffcc00] p-6 rounded-lg">
+                        <h2 className="text-xl font-bold text-[#ffcc00] mb-2">Jobs</h2>
                         <p className="text-3xl font-mono">{jobCount !== null ? jobCount : '...'}</p>
                     </div>
 
@@ -112,24 +128,13 @@ const Admin: React.FC = () => {
                     </div>
                 </div>
 
-                <div className="mb-8">
-                    <h2 className="text-2xl font-bold mb-4">All Users</h2>
-                    <ul className="space-y-1 text-sm">
-                        {users.map(u => (
-                            <li key={u.username} className="bg-gray-800 p-2 rounded flex justify-between items-center">
-                                <span>{u.username} - {u.email}</span>
-                                {u.username !== user?.username && (
-                                    <button
-                                        onClick={() => handleToggleAdmin(u.username)}
-                                        className="ml-4 px-3 py-1 text-xs rounded border border-[#ffcc00] text-[#ffcc00] hover:bg-[#ffcc00] hover:text-black transition"
-                                    >
-                                        {u.admin ? 'Revoke Admin' : 'Make Admin'}
-                                    </button>
-                                )}
-                            </li>
-                        ))}
-                    </ul>
-                </div>
+                {/* User Management Section */}
+                <UserList
+                    users={users}
+                    currentUser={user}
+                    onToggleAdmin={handleToggleAdmin}
+                    onUserClick={handleUserClick}
+                />
 
                 <JobList
                     jobs={jobs}
