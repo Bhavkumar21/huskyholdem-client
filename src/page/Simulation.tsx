@@ -1,4 +1,4 @@
-import { ChevronDown, X, Zap, Users, Play, Trash2, Copy } from "lucide-react";
+import { ChevronDown, X, Zap, Users, Play } from "lucide-react";
 import { useEffect, useState } from "react";
 import { submissionAPI, userAPI, gameAPI } from "../api";
 import { useNavigate } from "react-router-dom";
