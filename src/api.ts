@@ -204,8 +204,8 @@ const leaderboardAPI = {
 }
 
 const userAPI = {
-    getAllUsers: async () => {
-        const res = await apiClient.get('/user/all');
+    getAllUsers: async (page: number = 1, pageSize: number = 25) => {
+        const res = await apiClient.get(`/user/all?page=${page}&page_size=${pageSize}`);
         return res.data
     },
     searchUsers: async (query: string) => {
