@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 const apiClient = axios.create({
-  baseURL: 'https://api-huskyholdem.atcuw.org',
-//   baseURL: 'http://localhost:8002',
+//   baseURL: 'https://api-huskyholdem.atcuw.org',
+  baseURL: 'http://localhost:8002',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -237,6 +237,14 @@ const adminAPI = {
     },
     toggleAdmin: async (username: string) => {
         const res = await apiClient.post(`/admin/toggle-admin/${username}`);
+        return res.data;
+    },
+    verifyUser: async (username: string) => {
+        const res = await apiClient.post(`/admin/verify-user/${username}`);
+        return res.data;
+    },
+    deleteUser: async (username: string) => {
+        const res = await apiClient.delete(`/admin/user/${username}`);
         return res.data;
     }
 };

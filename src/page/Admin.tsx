@@ -87,6 +87,41 @@ const Admin: React.FC = () => {
         }
     };
 
+    const handleToggleVerification = async (username: string) => {
+        try {
+            const updated = await adminAPI.verifyUser(username);
+            setUsers(prev => {
+                const updatedUsers = prev.map(u => u.username === username ? {...u, is_verified: updated.is_verified} : u);
+                // Update verified user count
+                const verifiedCount = updatedUsers.filter(u => u.is_verified).length;
+                setVerifiedUserCount(verifiedCount);
+                return updatedUsers;
+            });
+        } catch (err) {
+            console.error('Failed to toggle verification status', err);
+            alert('Failed to update verification status: ' + (err as Error).message);
+        }
+    };
+
+    const handleDeleteUser = async (username: string) => {
+        try {
+            await adminAPI.deleteUser(username);
+            setUsers(prev => {
+                const updatedUsers = prev.filter(u => u.username !== username);
+                // Update verified user count
+                const verifiedCount = updatedUsers.filter(u => u.is_verified).length;
+                setVerifiedUserCount(verifiedCount);
+                return updatedUsers;
+            });
+            
+            // Update total user count
+            setUserCount(prev => prev !== null ? prev - 1 : null);
+        } catch (err) {
+            console.error('Failed to delete user', err);
+            alert('Failed to delete user: ' + (err as Error).message);
+        }
+    };
+
     const handleUserClick = (username: string) => {
         navigate(`/profile/${username}`);
     };
@@ -135,6 +170,8 @@ const Admin: React.FC = () => {
                     currentUser={user}
                     onToggleAdmin={handleToggleAdmin}
                     onUserClick={handleUserClick}
+                    onToggleVerification={handleToggleVerification}
+                    onDeleteUser={handleDeleteUser}
                 />
 
                 <JobList
