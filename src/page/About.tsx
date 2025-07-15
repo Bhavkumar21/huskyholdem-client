@@ -3,7 +3,7 @@ import img1 from "../assets/img/img1.webp";
 import img2 from "../assets/img/img2.webp";
 import img3 from "../assets/img/img3.webp";
 
-const developers = ["Hoang Nguyen - Lead Dev", "Bhavesh Kumar - Director", "Demirhan", "Derek", "Thakrit", "Elise Poniman"];
+const developers = ["Hoang Nguyen - Lead Dev", "Bhavesh Kumar - Director", "Demirhan", "Elise Poniman", "Derek", "Thakrit", ];
 const advisors = ["Tim Leung - Director CFMR Program @UW"];
 
 const GlitchText = ({ children, intensity = "medium" }: { children: React.ReactNode; intensity?: "low" | "medium" | "high" }) => {

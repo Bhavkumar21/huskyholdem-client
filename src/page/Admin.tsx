@@ -20,8 +20,14 @@ const Admin: React.FC = () => {
     const fetchJobs = async () => {
         try {
             const data = await adminAPI.listJobs();
-            console.log(data);
-            setJobs(data);
+            const convertedData = data.map((job: any) => ({
+                job_id: job.id,
+                job_status: job?.status,
+                error: job?.error_message,
+                result_data: job?.result_data,
+                username: job?.username
+            }));
+            setJobs(convertedData);
         } catch (err) {
             console.error("Failed to fetch jobs:", err);
         } finally {
