@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { leaderboardAPI } from "../api";
 import { Trophy, Filter, Trash2, Crown, Calendar, Tag, User } from "lucide-react";
@@ -26,6 +27,7 @@ const LeaderboardPage: React.FC = () => {
   const [deleting, setDeleting] = useState(false);
 
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchData();
@@ -79,6 +81,10 @@ const LeaderboardPage: React.FC = () => {
     if (score > 0) return "text-green-400";
     if (score < 0) return "text-red-400";
     return "text-gray-300";
+  };
+
+  const handleUserClick = (username: string) => {
+    navigate(`/profile/${username}`);
   };
 
   return (
@@ -175,10 +181,17 @@ const LeaderboardPage: React.FC = () => {
                       <div>
                         <div className="flex items-center gap-2">
                           <User className="h-4 w-4 text-[#39ff14]" />
-                          <span className={`font-semibold ${isCurrentUser ? "text-[#ff00cc]" : "text-white"}`}>
+                          <button
+                            onClick={() => handleUserClick(entry.username)}
+                            className={`font-semibold cursor-pointer hover:underline transition-colors ${
+                              isCurrentUser 
+                                ? "text-[#ff00cc] hover:text-[#ff44cc]" 
+                                : "text-white hover:text-[#39ff14]"
+                            }`}
+                          >
                             {entry.username}
                             {isCurrentUser && <span className="ml-2 text-xs">(You)</span>}
-                          </span>
+                          </button>
                         </div>
                         
                         <div className="flex items-center gap-4 mt-1 text-sm text-gray-400">
