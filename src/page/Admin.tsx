@@ -55,12 +55,20 @@ const Admin: React.FC = () => {
                     </div>
                 </div>
 
-                <button
-                    onClick={() => navigate('/simulation')}
-                    className="px-6 py-2 bg-[#39ff14] text-black rounded hover:bg-[#2ecc71] transition-colors"
-                >
-                    Go to Simulation Page
-                </button>
+                <div className="flex flex-col space-y-4">
+                    <button
+                        onClick={() => navigate('/simulation')}
+                        className="w-fit px-6 py-2 bg-[#39ff14] text-black rounded hover:bg-[#2ecc71] transition-colors"
+                    >
+                        Go to Simulation Page
+                    </button>
+                    <button
+                        onClick={() => navigate('/container-manager')}
+                        className="w-fit px-6 py-2 bg-[#39ff14] text-black rounded hover:bg-[#2ecc71] transition-colors"
+                    >
+                        Go to Container Manager
+                    </button>
+                </div>
             </div>
         </div>
     );

@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 const apiClient = axios.create({
-  baseURL: 'https://api-huskyholdem.atcuw.org',
-//   baseURL: 'http://localhost:8002',
+//   baseURL: 'https://api-huskyholdem.atcuw.org',
+  baseURL: 'http://localhost:8002',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -223,6 +223,22 @@ const adminAPI = {
         const res = await apiClient.get('/admin/submission-count');
         return res.data.submission_count;
     },
+}
+
+const dockerAPI = {
+    getPoolStatus: async () => {
+        const res = await apiClient.get('/docker/pool/status');
+        return res.data
+    },
+    submitScalingJob: async (targetSize: number) => {
+        const response = await apiClient.post(`/docker/pool/scale?target_size=${targetSize}`);
+    
+        if (response.status !== 200) {
+            throw new Error(response.data?.detail || 'Failed to scale pool');
+        }
+    
+        return response.data;
+    }
 };
 
 export {
@@ -233,5 +249,6 @@ export {
     profileAPI,
     leaderboardAPI,
     userAPI,
-    adminAPI
+    adminAPI,
+    dockerAPI
 }

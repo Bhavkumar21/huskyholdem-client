@@ -18,6 +18,7 @@ import DirectoryPage from "./page/Directory";
 import VerifyAccount from "./page/VerifyAccount";
 import VerifiedRoute from "./components/VerifiedRoute";
 import VerifiedAdminRoute from "./components/VerifiedAdminRoute";
+import ContainerManagerPage from "./page/ContainerManager";
 
 function App() {
   const router = createBrowserRouter([
@@ -146,6 +147,16 @@ function App() {
         <VerifiedAdminRoute>              
             <DefaultLauyout>
                 <SimulationPage  />
+            </DefaultLauyout>
+        </VerifiedAdminRoute>
+      ),
+    },
+    {
+      path: "/container-manager",
+      element: (
+        <VerifiedAdminRoute>              
+            <DefaultLauyout>
+                <ContainerManagerPage  />
             </DefaultLauyout>
         </VerifiedAdminRoute>
       ),
