@@ -1,7 +1,8 @@
-import { ChevronDown, X, Zap, Users, Play, Trash2 } from "lucide-react";
+import { ChevronDown, X, Zap, Users, Play } from "lucide-react";
 import { useEffect, useState } from "react";
 import { submissionAPI, userAPI, gameAPI } from "../api";
 import { useNavigate } from "react-router-dom";
+import JobList from "../components/JobList";
 
 const PAGE_SIZE = 10;  
 
@@ -13,6 +14,7 @@ const SimulationPage = () => {
   const [page, setPage] = useState(0);
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
   const [sortHasFinal, setSortHasFinal] = useState(false);
+  const [numRounds, setNumRounds] = useState<number>(6);
 
   const [jobs, setJobs] = useState<any[]>([]);
   const [jobsLoading, setJobsLoading] = useState(true);
@@ -56,7 +58,7 @@ const SimulationPage = () => {
 
   const runSimulation = async () => {
     try {
-      await gameAPI.submitSimulationUserJob(selectedUsers);
+      await gameAPI.submitSimulationUserJob(selectedUsers, numRounds);
       setSelectedUsers([]);
       fetchJobs();
     } catch (err: any) {
@@ -65,16 +67,21 @@ const SimulationPage = () => {
   };
 
   const deleteJob = async (jobId: string) => {
-    if (!confirm(`Are you sure you want to delete job ${jobId}? This action cannot be undone.`)) {
-      return;
-    }
-    
     try {
       await gameAPI.deleteJob(jobId);
       fetchJobs(); // Refresh the jobs list
     } catch (err: any) {
       console.error("Failed to delete job:", err);
       alert("Failed to delete job: " + (err.message || "Unknown error"));
+    }
+  };
+
+  const copyToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      // You could add a toast notification here if desired
+    } catch (err) {
+      console.error("Failed to copy to clipboard:", err);
     }
   };
 
@@ -302,6 +309,23 @@ const SimulationPage = () => {
                 </div>
               )}
 
+              {/* Number of Rounds Input */}
+              <div className="mb-6">
+                <label className="block text-sm font-semibold text-[#ff00cc] mb-2">
+                  NUMBER OF ROUNDS
+                </label>
+                <input
+                  type="number"
+                  min="1"
+                  max="100"
+                  value={numRounds}
+                  onChange={(e) => setNumRounds(Math.max(1, parseInt(e.target.value) || 1))}
+                  className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded text-white focus:border-[#39ff14] focus:outline-none transition-colors"
+                  placeholder="Enter number of rounds"
+                />
+                <p className="text-xs text-gray-400 mt-1">Default: 6 rounds</p>
+              </div>
+
               <button
                 disabled={selectedUsers.length !== 6}
                 className={`w-full py-4 px-6 rounded-lg font-bold text-lg transition-all duration-200 flex items-center justify-center gap-3 ${
@@ -320,95 +344,18 @@ const SimulationPage = () => {
       </div>
 
       {/* Jobs Status Section */}
-      <div className=" bg-opacity-30 border-l-4 border-[#ff00cc] p-6 my-8 rounded-lg">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-white flex items-center gap-3">
-            <Zap className="w-6 h-6 text-[#ff00cc]" />
-            ACTIVE SIMULATION JOBS
-          </h2>
-          <button 
-            onClick={() => {
-              setJobsLoading(true);
-              fetchJobs();
-            }}
-            className="text-sm border border-[#ff00cc] text-[#ff00cc] px-4 py-2 rounded hover:bg-[#ff00cc] hover:text-black transition duration-200"
-          >
-            REFRESH STATUS
-          </button>
-        </div>
-
-        {jobsLoading ? (
-          <div className="text-center py-8">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#ff00cc]"></div>
-            <p className="text-gray-400 mt-2">Loading job status...</p>
-          </div>
-        ) : jobs.length === 0 ? (
-          <div className="text-center py-12">
-            <Zap className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-            <p className="text-gray-500 text-lg">No simulation jobs found</p>
-            <p className="text-gray-600 text-sm">Start by selecting participants and running a simulation</p>
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full table-fixed border-collapse text-sm">
-              <thead>
-                <tr className="text-left text-[#ff00cc] border-b border-[#333]">
-                  <th className="p-2 w-1/3">Job ID</th>
-                  <th className="p-2 w-1/6">Status</th>
-                  <th className="p-2 w-1/4">Result</th>
-                  <th className="p-2 w-1/6">Message</th>
-                  <th className="p-2 w-16">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {jobs.map((job) => (
-                  <tr key={job.job_id} className="border-b border-[#222]">
-                    <td className="p-2 font-mono text-xs text-[#39ff14] break-all w-1/3">{job.job_id}</td>
-                    <td className="p-2 w-1/6">
-                      <span
-                        className={`px-2 py-1 rounded text-xs font-semibold ${
-                          job.job_status === "Finished"
-                            ? "text-green-400"
-                            : job.job_status === "Pending"
-                            ? "text-yellow-400"
-                            : job.job_status === "Failed"
-                            ? "text-red-500"
-                            : "text-white"
-                        }`}
-                      >
-                        {job.job_status}
-                      </span>
-                    </td>
-                      <td className="p-2 text-white text-xs break-words w-1/4">{
-                        job.result_data 
-                          ? typeof job.result_data === 'object' 
-                            ? JSON.stringify(job.result_data) 
-                            : job.result_data 
-                          : "-"
-                      }</td>
-                      <td className="p-2 text-white text-xs break-words w-1/6">{
-                        job.message 
-                          ? typeof job.message === 'object' 
-                            ? JSON.stringify(job.message) 
-                            : job.message 
-                          : "-"
-                      }</td>
-                      <td className="p-2 w-16">
-                        <button
-                          onClick={() => deleteJob(job.job_id)}
-                          className="text-red-400 hover:text-red-300 transition-colors p-1 rounded hover:bg-red-900 hover:bg-opacity-20"
-                          title="Delete job"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
+      <JobList
+        jobs={jobs}
+        loading={jobsLoading}
+        onRefresh={() => {
+          setJobsLoading(true);
+          fetchJobs();
+        }}
+        onDelete={deleteJob}
+        onCopy={copyToClipboard}
+        title="ACTIVE SIMULATION JOBS"
+        showDeleteAction={true}
+      />
     </div>
   );
 };

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { gameAPI } from "../api";
 import FileUploadPanel from "../components/FileUploadPanel";
+import { Copy } from "lucide-react";
 
 const COMPETITION_START = new Date("2025-07-12T00:00:00Z");
 const FINAL_DEADLINE = new Date("2025-07-21T23:59:59Z"); // Updated to new final deadline
@@ -38,6 +39,15 @@ const Dashboard: React.FC = () => {
     setJobsLoading(false);
     }
     };
+
+  const copyToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      // You could add a toast notification here if desired
+    } catch (err) {
+      console.error("Failed to copy to clipboard:", err);
+    }
+  };
 
     useEffect(() => {
     fetchJobs();
@@ -180,47 +190,65 @@ const Dashboard: React.FC = () => {
       <table className="w-full table-fixed border-collapse text-sm">
         <thead>
           <tr className="text-left text-[#ff00cc] border-b border-[#333]">
-            <th className="p-2 w-2/5">Job ID</th>
+            <th className="p-2 w-1/3">Job ID</th>
             <th className="p-2 w-1/6">Status</th>
-            <th className="p-2 w-1/4">Result</th>
-            <th className="p-2 w-1/4">Message</th>
+            <th className="p-2 w-1/3">Result/Error</th>
+            <th className="p-2 w-1/6">Actions</th>
           </tr>
         </thead>
         <tbody>
-          {jobs.map((job) => (
-            <tr key={job.job_id} className="border-b border-[#222]">
-              <td className="p-2 font-mono text-xs text-[#39ff14] break-all w-2/5">{job.job_id}</td>
-              <td className="p-2 w-1/6">
-                <span
-                  className={`px-2 py-1 rounded text-xs font-semibold ${
-                    job.job_status === "Completed"
-                      ? "text-green-400"
-                      : job.job_status === "Pending"
-                      ? "text-yellow-400"
-                      : job.job_status === "Failed"
-                      ? "text-red-500"
-                      : "text-white"
-                  }`}
-                >
-                  {job.job_status}
-                </span>
-              </td>
-                <td className="p-2 text-white text-xs break-words w-1/4">{
-                  job.result_data 
-                    ? typeof job.result_data === 'object' 
-                      ? JSON.stringify(job.result_data) 
-                      : job.result_data 
-                    : "-"
-                }</td>
-                <td className="p-2 text-white text-xs break-words w-1/4">{
-                  job.message 
-                    ? typeof job.message === 'object' 
-                      ? JSON.stringify(job.message) 
-                      : job.message 
-                    : "-"
-                }</td>
-            </tr>
-          ))}
+          {jobs.map((job) => {
+            const contentToShow = job.job_status === "Failed" 
+              ? (job.error 
+                  ? typeof job.error === 'object' 
+                    ? JSON.stringify(job.error, null, 2) 
+                    : job.error 
+                  : "Unknown error")
+              : (job.result_data 
+                  ? typeof job.result_data === 'object' 
+                    ? JSON.stringify(job.result_data, null, 2) 
+                    : job.result_data 
+                  : "-");
+            
+            return (
+              <tr key={job.job_id} className="border-b border-[#222]">
+                <td className="p-2 font-mono text-xs text-[#39ff14] break-all w-1/3">{job.job_id}</td>
+                <td className="p-2 w-1/6">
+                  <span
+                    className={`px-2 py-1 rounded text-xs font-semibold ${
+                      job.job_status === "Completed"
+                        ? "text-green-400"
+                        : job.job_status === "Pending"
+                        ? "text-yellow-400"
+                        : job.job_status === "Failed"
+                        ? "text-red-500"
+                        : "text-white"
+                    }`}
+                  >
+                    {job.job_status}
+                  </span>
+                </td>
+                <td className="p-2 w-1/3">
+                  <div className="max-h-20 overflow-y-auto text-xs">
+                    <pre className={`whitespace-pre-wrap font-mono ${
+                      job.job_status === "Failed" ? "text-red-400" : "text-white"
+                    }`}>
+                      {contentToShow}
+                    </pre>
+                  </div>
+                </td>
+                <td className="p-2 w-1/6">
+                  <button
+                    onClick={() => copyToClipboard(contentToShow)}
+                    className="text-[#39ff14] hover:text-[#2bff00] transition-colors p-1 rounded hover:bg-gray-700"
+                    title="Copy to clipboard"
+                  >
+                    <Copy className="w-4 h-4" />
+                  </button>
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>

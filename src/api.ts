@@ -85,8 +85,12 @@ const gameAPI = {
         }
         return response.data;
     },
-    submitSimulationUserJob: async (usernames: string[]) => {
-        const response = await apiClient.post("/sim/async_run_user", usernames);
+    submitSimulationUserJob: async (usernames: string[], numRounds: number = 6) => {
+        const payload = {
+            users_list: usernames,
+            num_rounds: numRounds
+        };
+        const response = await apiClient.post("/sim/async_run_user", payload);
       
         if (response.data.status_code !== 200) {
           throw new Error(response.data.error);
@@ -200,8 +204,8 @@ const leaderboardAPI = {
 }
 
 const userAPI = {
-    getAllUsers: async () => {
-        const res = await apiClient.get('/user/all');
+    getAllUsers: async (page: number = 1, pageSize: number = 25) => {
+        const res = await apiClient.get(`/user/all?page=${page}&page_size=${pageSize}`);
         return res.data
     },
     searchUsers: async (query: string) => {
@@ -223,6 +227,18 @@ const adminAPI = {
         const res = await apiClient.get('/admin/submission-count');
         return res.data.submission_count;
     },
+    listUsers: async () => {
+        const res = await apiClient.get('/admin/users');
+        return res.data;
+    },
+    listJobs: async () => {
+        const res = await apiClient.get('/admin/jobs');
+        return res.data;
+    },
+    toggleAdmin: async (username: string) => {
+        const res = await apiClient.post(`/admin/toggle-admin/${username}`);
+        return res.data;
+    }
 }
 
 const dockerAPI = {
