@@ -100,12 +100,20 @@ const Admin: React.FC = () => {
                     <p className="text-gray-400">Welcome back, {user?.username}!</p>
                 </div>
 
-                <button
-                    onClick={() => navigate('/simulation')}
-                    className="px-6 py-2 bg-[#39ff14] text-black rounded hover:bg-[#2ecc71] transition-colors mb-8"
-                >
-                    Go to Simulation Page
-                </button>
+                <div className="flex flex-row space-x-4 mb-8">
+                    <button
+                        onClick={() => navigate('/simulation')}
+                        className="w-fit px-6 py-2 bg-[#39ff14] text-black rounded hover:bg-[#2ecc71] transition-colors"
+                    >
+                        Go to Simulation Page
+                    </button>
+                    <button
+                        onClick={() => navigate('/container-manager')}
+                        className="w-fit px-6 py-2 bg-[#39ff14] text-black rounded hover:bg-[#2ecc71] transition-colors"
+                    >
+                        Go to Container Manager
+                    </button>
+                </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                     <div className="bg-gray-900 border border-[#ff00cc] p-6 rounded-lg">
