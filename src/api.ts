@@ -246,6 +246,30 @@ const adminAPI = {
     deleteUser: async (username: string) => {
         const res = await apiClient.delete(`/admin/user/${username}`);
         return res.data;
+    },
+    listSimAdminJob: async () => {
+        const res = await apiClient.get('/admin/sim-admin-jobs');
+        return res.data;
+    },
+    listScalingJob: async () => {
+        const res = await apiClient.get('/admin/scaling-jobs');
+        return res.data;
+    }
+}
+
+const dockerAPI = {
+    getPoolStatus: async () => {
+        const res = await apiClient.get('/docker/pool/status');
+        return res.data
+    },
+    submitScalingJob: async (targetSize: number) => {
+        const response = await apiClient.post(`/docker/pool/scale?target_size=${targetSize}`);
+    
+        if (response.status !== 200) {
+            throw new Error(response.data?.detail || 'Failed to scale pool');
+        }
+    
+        return response.data;
     }
 };
 
@@ -257,5 +281,6 @@ export {
     profileAPI,
     leaderboardAPI,
     userAPI,
-    adminAPI
+    adminAPI,
+    dockerAPI
 }
