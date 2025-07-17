@@ -23,7 +23,8 @@ const SimulationPage = () => {
     setUsersLoading(true)
     try {
       // Get all users and list of users with final sub
-      const users = await userAPI.getAllUsers();
+      const res_users = await userAPI.getAllUsers();
+      const users = res_users.users;
       const finals = await submissionAPI.getUsersWithFinalSubmission();
 
       const finalsSet = new Set(finals.users_list || []);
