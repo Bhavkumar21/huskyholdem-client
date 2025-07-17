@@ -1,6 +1,6 @@
 import { Zap } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { adminAPI, dockerAPI, gameAPI } from "../api";
+import { dockerAPI, gameAPI } from "../api";
 import { useEffect, useState } from "react";
 import JobList from "../components/JobList";
 
