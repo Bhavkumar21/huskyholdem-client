@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { liveAPI, gameAPI } from "../api";
 import { Gamepad2, ArrowLeft, Loader2 } from "lucide-react";
 
@@ -20,6 +20,7 @@ interface GameResult {
 
 const JobGamesPage: React.FC = () => {
   const { jobId } = useParams<{ jobId: string }>();
+  const navigate = useNavigate();
   const [games, setGames] = useState<JobGameInfo[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -72,6 +73,23 @@ const JobGamesPage: React.FC = () => {
     // Optionally, you could still fetch per-game results if needed
     setResults(newResults);
     setResultsLoading(false);
+  };
+
+  const handleDownloadRawLog = async (gameId: string) => {
+    try {
+      const data = await liveAPI.get_game_data(gameId);
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `game_${gameId}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      alert('Failed to download raw log.');
+    }
   };
 
   return (
@@ -139,13 +157,13 @@ const JobGamesPage: React.FC = () => {
               <div className="flex gap-3 mt-2 md:mt-0">
                 <button
                   className="px-3 py-1 border border-[#ff00cc] text-[#ff00cc] font-mono rounded hover:bg-[#ff00cc] hover:text-black transition-colors text-sm"
-                  onClick={() => alert(`Get raw log for game ${game.game_id}`)}
+                  onClick={() => handleDownloadRawLog(game.game_id)}
                 >
                   Get Raw Log
                 </button>
                 <button
                   className="px-3 py-1 border border-[#39ff14] text-[#39ff14] font-mono rounded hover:bg-[#39ff14] hover:text-black transition-colors text-sm"
-                  onClick={() => alert(`View game ${game.game_id}`)}
+                  onClick={() => navigate(`/replay/${game.game_id}`)}
                 >
                   View Game
                 </button>
