@@ -19,6 +19,8 @@ import VerifyAccount from "./page/VerifyAccount";
 import VerifiedRoute from "./components/VerifiedRoute";
 import VerifiedAdminRoute from "./components/VerifiedAdminRoute";
 import ContainerManagerPage from "./page/ContainerManager";
+import GamePage from "./page/Game";
+import JobGamesPage from "./page/JobGames";
 
 function App() {
   const router = createBrowserRouter([
@@ -101,6 +103,26 @@ function App() {
               <LeaderboardPage  />
           </DefaultLauyout>
       </VerifiedRoute>
+      ),
+    },
+    {
+      path: "/games",
+        element: (
+      <VerifiedRoute>              
+          <DefaultLauyout>
+              <GamePage  />
+          </DefaultLauyout>
+      </VerifiedRoute>
+      ),
+    },
+    {
+      path: "/games/:jobId",
+      element: (
+        <VerifiedRoute>
+          <DefaultLauyout>
+            <JobGamesPage />
+          </DefaultLauyout>
+        </VerifiedRoute>
       ),
     },
     {

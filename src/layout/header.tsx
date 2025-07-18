@@ -74,6 +74,12 @@ const DefaultHeader = () => {
                   >
                     Leaderboard
                   </Link>
+                  <Link
+                    to="/games"
+                    className="hover:text-[#39ff14] text-white transition-all glitch-hover"
+                  >
+                    Games
+                  </Link>
 
                   {user?.admin && (
                     <Link
@@ -195,6 +201,13 @@ const DefaultHeader = () => {
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Leaderboard
+                </Link>
+                <Link
+                  to="/games"
+                  className="block text-white hover:text-[#39ff14] glitch-hover"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Games
                 </Link>
 
                 {user?.admin && (

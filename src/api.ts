@@ -64,6 +64,17 @@ const authAPI = {
     }
 }
 
+const liveAPI = {
+    get_all_job_ids: async () => {
+        const response = await apiClient.get('/live/job-ids');
+        return response.data;
+    },
+    get_job_games: async (job_id: string) => {
+        const response = await apiClient.get(`/live/job/${job_id}/games`);
+        return response.data;
+    },
+}
+
 const gameAPI = {
     get_jobs: async () => {
         const response = await apiClient.get('/sim/status/all');
@@ -73,6 +84,7 @@ const gameAPI = {
         const response = await apiClient.get(`/sim/status/${job_id}`);
         return response.data;
     },
+
     submitSimulationJob: async (formData: FormData) => {
         const response = await apiClient.post("/sim/async_run", formData, {
         headers: {
@@ -282,5 +294,6 @@ export {
     leaderboardAPI,
     userAPI,
     adminAPI,
-    dockerAPI
+    dockerAPI,
+    liveAPI
 }
