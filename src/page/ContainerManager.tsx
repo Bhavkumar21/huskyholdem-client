@@ -1,6 +1,6 @@
 import { Zap } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { dockerAPI, gameAPI } from "../api";
+import { dockerAPI, adminAPI } from "../api";
 import { useEffect, useState } from "react";
 import JobList from "../components/JobList";
 
@@ -37,7 +37,7 @@ const ContainerManagerPage = () => {
 
     const fetchJobs = async () => {
         try {
-            const res = await gameAPI.get_jobs();
+            const res = await adminAPI.listScalingJob();
             setJobs(res);
         } catch (err) {
             console.error("Error fetching scaling jobs:", err);

@@ -1,7 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./App.css";
 import Home from "./page/Home";
-import DefaultLauyout from "./layout/index";
+import DefaultLayout from "./layout/index";
 import Register from "./page/Register";
 import Login from "./page/Login";
 import About from "./page/About";
@@ -28,61 +28,61 @@ function App() {
     {
       path: "/",
       element: (
-        <DefaultLauyout>
+        <DefaultLayout>
           <Home />
-        </DefaultLauyout>
+        </DefaultLayout>
       ),
     },
     {
       path: "/register",
       element: (
-        <DefaultLauyout>
+        <DefaultLayout>
           <Register />
-        </DefaultLauyout>
+        </DefaultLayout>
       ),
     },
 
     {
       path: "/login",
       element: (
-        <DefaultLauyout>
+        <DefaultLayout>
           <Login />
-        </DefaultLauyout>
+        </DefaultLayout>
       ),
     },
     {
       path: "/verification-success",
       element: (
-        <DefaultLauyout>
+        <DefaultLayout>
           <VerificationSuccess />
-        </DefaultLauyout>
+        </DefaultLayout>
       ),
     },
     {
       path: "/verify-account",
       element: (
         <ProtectedRoute>
-          <DefaultLauyout>
+          <DefaultLayout>
             <VerifyAccount />
-          </DefaultLauyout>
+          </DefaultLayout>
         </ProtectedRoute>
       ),
     },
     {
       path: "/about",
       element: (
-        <DefaultLauyout>
+        <DefaultLayout>
           <About />
-        </DefaultLauyout>
+        </DefaultLayout>
       ),
       },
       {
         path: "/dashboard",
           element: (
         <VerifiedRoute>              
-            <DefaultLauyout>
+            <DefaultLayout>
                 <Dashboard />
-            </DefaultLauyout>
+            </DefaultLayout>
         </VerifiedRoute>
         ),
     },
@@ -90,9 +90,9 @@ function App() {
       path: "/submission",
         element: (
       <VerifiedRoute>              
-          <DefaultLauyout>
+          <DefaultLayout>
               <SubmissionPage  />
-          </DefaultLauyout>
+          </DefaultLayout>
       </VerifiedRoute>
       ),
     },
@@ -100,9 +100,9 @@ function App() {
       path: "/leaderboard",
         element: (
       <VerifiedRoute>              
-          <DefaultLauyout>
+          <DefaultLayout>
               <LeaderboardPage  />
-          </DefaultLauyout>
+          </DefaultLayout>
       </VerifiedRoute>
       ),
     },
@@ -126,9 +126,9 @@ function App() {
       path: "/directory",
         element: (
       <VerifiedRoute>              
-          <DefaultLauyout>
+          <DefaultLayout>
               <DirectoryPage  />
-          </DefaultLauyout>
+          </DefaultLayout>
       </VerifiedRoute>
       ),
     },
@@ -136,27 +136,27 @@ function App() {
       path: "/profile",
         element: (
       <VerifiedRoute>              
-          <DefaultLauyout>
+          <DefaultLayout>
               <ProfilePage  />
-          </DefaultLauyout>
+          </DefaultLayout>
       </VerifiedRoute>
       ),
     },  
     {
       path: "/profile/:username",
       element: (
-        <DefaultLauyout>
+        <DefaultLayout>
           <ProfilePage />
-        </DefaultLauyout>
+        </DefaultLayout>
       ),
     },
     {
       path: "/admin",
       element: (
         <VerifiedAdminRoute>
-          <DefaultLauyout>
+          <DefaultLayout>
             <Admin />
-          </DefaultLauyout>
+          </DefaultLayout>
         </VerifiedAdminRoute>
       ),
     },
@@ -164,9 +164,9 @@ function App() {
       path: "/simulation",
       element: (
         <VerifiedAdminRoute>              
-            <DefaultLauyout>
+            <DefaultLayout>
                 <SimulationPage  />
-            </DefaultLauyout>
+            </DefaultLayout>
         </VerifiedAdminRoute>
       ),
     },
@@ -174,9 +174,9 @@ function App() {
       path: "/container-manager",
       element: (
         <VerifiedAdminRoute>              
-            <DefaultLauyout>
+            <DefaultLayout>
                 <ContainerManagerPage  />
-            </DefaultLauyout>
+            </DefaultLayout>
         </VerifiedAdminRoute>
       ),
     },
