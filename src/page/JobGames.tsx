@@ -24,8 +24,6 @@ const JobGamesPage: React.FC = () => {
   const [games, setGames] = useState<JobGameInfo[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [results, setResults] = useState<Record<string, GameResult | null>>({});
-  const [resultsLoading, setResultsLoading] = useState(false);
   const [jobResult, setJobResult] = useState<GameResult | null>(null);
 
   useEffect(() => {
@@ -55,8 +53,6 @@ const JobGamesPage: React.FC = () => {
   };
 
   const fetchAllResults = async () => {
-    setResultsLoading(true);
-    const newResults: Record<string, GameResult | null> = {};
     let jobLevelResult: GameResult | null = null;
     try {
       if (jobId) {
@@ -70,9 +66,6 @@ const JobGamesPage: React.FC = () => {
       jobLevelResult = null;
     }
     setJobResult(jobLevelResult);
-    // Optionally, you could still fetch per-game results if needed
-    setResults(newResults);
-    setResultsLoading(false);
   };
 
   const handleDownloadRawLog = async (gameId: string) => {
