@@ -1,7 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./App.css";
 import Home from "./page/Home";
-import DefaultLayout from "./layout/index";
 import Register from "./page/Register";
 import Login from "./page/Login";
 import About from "./page/About";
@@ -22,6 +21,7 @@ import ContainerManagerPage from "./page/ContainerManager";
 import GamePage from "./page/Game";
 import JobGamesPage from "./page/JobGames";
 import Replay from "./page/Replay";
+import DefaultLayout from "./layout/index";
 
 function App() {
   const router = createBrowserRouter([
@@ -109,17 +109,17 @@ function App() {
     {
       path: "/games",
         element: (
-          <DefaultLauyout>
+          <DefaultLayout>
               <GamePage  />
-          </DefaultLauyout>
+          </DefaultLayout>
       ),
     },
     {
       path: "/games/:jobId",
       element: (
-          <DefaultLauyout>
+          <DefaultLayout>
             <JobGamesPage />
-          </DefaultLauyout>
+          </DefaultLayout>
       ),
     },
     {
@@ -136,7 +136,7 @@ function App() {
       path: "/profile",
         element: (
       <VerifiedRoute>              
-          <DefaultLayout>
+            <DefaultLayout>
               <ProfilePage  />
           </DefaultLayout>
       </VerifiedRoute>
@@ -183,9 +183,9 @@ function App() {
     {
       path: "/replay/:gameId",
       element: (
-        <DefaultLauyout>
+        <DefaultLayout>
           <Replay />
-        </DefaultLauyout>
+        </DefaultLayout>
       ),
     },
   ]);

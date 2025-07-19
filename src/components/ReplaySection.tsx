@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { liveAPI } from "../api";
-import { Play, Pause, SkipBack, SkipForward, Users, TrendingUp, DollarSign, ToggleLeft, ToggleRight, Eye, EyeOff, Trophy, ArrowLeft } from "lucide-react";
+import { SkipBack, SkipForward, Users, TrendingUp, DollarSign,  Eye, EyeOff, ArrowLeft } from "lucide-react";
 import './ReplaySection.css';
 
 interface GameRound {
@@ -190,7 +190,6 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId }) => {
     </div>
   );
 
-  const playerIdToUsername = gameData.playerIdToUsername || {};
   const maxActionIdx = actionList.length - 1;
   const roundKeys = Object.keys(gameData.rounds).sort((a, b) => parseInt(a) - parseInt(b));
   const maxRoundIdx = roundKeys.length - 1;
@@ -296,7 +295,7 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId }) => {
     return { rank, suitSymbol, suitColor };
   };
 
-  const PlayerSeat: React.FC<PlayerSeatProps> = ({ playerId, style, playerStacks, playerIdToUsername, playerHands, isCurrentPlayer, showCards }) => {
+  const PlayerSeat: React.FC<PlayerSeatProps> = ({ playerId, style, playerStacks, playerHands, isCurrentPlayer, showCards }) => {
     const username = getPlayerUsername(playerId);
     const stack = playerStacks[playerId] || 0;
     const cards = playerHands?.[playerId] || [];
@@ -752,7 +751,6 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId }) => {
                   playerId={playerId}
                   style={playerPositions[index]}
                   playerStacks={playerStacks}
-                  playerIdToUsername={playerIdToUsername}
                   playerHands={gameData.playerHands}
                   showCards={showPlayerCards}
                   isCurrentPlayer={
