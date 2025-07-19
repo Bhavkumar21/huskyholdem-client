@@ -19,6 +19,9 @@ import VerifyAccount from "./page/VerifyAccount";
 import VerifiedRoute from "./components/VerifiedRoute";
 import VerifiedAdminRoute from "./components/VerifiedAdminRoute";
 import ContainerManagerPage from "./page/ContainerManager";
+import GamePage from "./page/Game";
+import JobGamesPage from "./page/JobGames";
+import Replay from "./page/Replay";
 
 function App() {
   const router = createBrowserRouter([
@@ -104,6 +107,22 @@ function App() {
       ),
     },
     {
+      path: "/games",
+        element: (
+          <DefaultLauyout>
+              <GamePage  />
+          </DefaultLauyout>
+      ),
+    },
+    {
+      path: "/games/:jobId",
+      element: (
+          <DefaultLauyout>
+            <JobGamesPage />
+          </DefaultLauyout>
+      ),
+    },
+    {
       path: "/directory",
         element: (
       <VerifiedRoute>              
@@ -161,6 +180,14 @@ function App() {
         </VerifiedAdminRoute>
       ),
     },
+    {
+      path: "/replay/:gameId",
+      element: (
+        <DefaultLauyout>
+          <Replay />
+        </DefaultLauyout>
+      ),
+    },
   ]);
 
   return (
@@ -173,31 +200,3 @@ function App() {
 }
 
 export default App;
-// import { Suspense } from 'react';
-// import { Canvas } from '@react-three/fiber';
-// import { Environment, OrbitControls } from '@react-three/drei';
-
-// import { Model } from './components/Model';
-
-// export default function App() {
-//   return (
-//     <div className="App">
-//       <Canvas
-//         style={{ height: '100vh', width: '100vw' }}
-//         camera={{ position: [0, 0, 5], fov: 50 }}
-//       >
-//         <Suspense fallback={null}>
-//           <ambientLight intensity={0.5} />
-//           <pointLight position={[10, 10, 10]} intensity={1} color="#ff00cc" />
-//           <pointLight position={[-10, -10, -10]} intensity={1} color="#39ff14" />
-
-//           <Model />
-
-//           <Environment preset="sunset" background />
-//           <OrbitControls enableDamping={true} dampingFactor={0.05} />
-//         </Suspense>
-//       </Canvas>
-//     </div>
-//   );
-// }
-
