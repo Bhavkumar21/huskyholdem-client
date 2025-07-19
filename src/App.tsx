@@ -109,21 +109,17 @@ function App() {
     {
       path: "/games",
         element: (
-      <VerifiedRoute>              
           <DefaultLauyout>
               <GamePage  />
           </DefaultLauyout>
-      </VerifiedRoute>
       ),
     },
     {
       path: "/games/:jobId",
       element: (
-        <VerifiedRoute>
           <DefaultLauyout>
             <JobGamesPage />
           </DefaultLauyout>
-        </VerifiedRoute>
       ),
     },
     {

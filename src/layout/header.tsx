@@ -48,11 +48,17 @@ const DefaultHeader = () => {
                 About
               </Link>
               <Link
-                    to="/directory"
-                    className="hover:text-[#39ff14] text-white transition-all glitch-hover"
-                  >
-                    ~/
-                  </Link>
+                to="/directory"
+                className="hover:text-[#39ff14] text-white transition-all glitch-hover"
+              >
+                ~/
+              </Link>
+              <Link
+                to="/games"
+                className="hover:text-[#39ff14] text-white transition-all glitch-hover"
+              >
+                Games
+              </Link>
 
               {isAuthenticated ? (
                 <>
@@ -74,19 +80,13 @@ const DefaultHeader = () => {
                   >
                     Leaderboard
                   </Link>
-                  <Link
-                    to="/games"
-                    className="hover:text-[#39ff14] text-white transition-all glitch-hover"
-                  >
-                    Games
-                  </Link>
 
                   {user?.admin && (
                     <Link
                       to="/admin"
                       className="hover:text-[#ff6600] text-white transition-all glitch-hover"
                     >
-                      Admin
+                      /a
                     </Link>
                   )}
                   <Link
