@@ -83,7 +83,10 @@ const GamePage: React.FC = () => {
         <div className="mt-4">
           <Link
             to="/upload-replay"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-[#39ff14] text-black font-bold rounded-none hover:bg-[#39ff14]/80 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            style={{
+              color: "black"
+            }}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-[#39ff14] font-bold rounded-none hover:bg-[#39ff14]/80 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Upload className="w-4 h-4" />
             Upload your own local run
