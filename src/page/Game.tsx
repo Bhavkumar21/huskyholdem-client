@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { liveAPI } from "../api";
-import { Gamepad2, Users, Calendar, Clock, Trophy, RefreshCw } from "lucide-react";
+import { Gamepad2, Users, Calendar, Clock, Trophy, RefreshCw, Upload } from "lucide-react";
 
 interface JobWithPlayers {
   job_id: string;
@@ -80,6 +80,15 @@ const GamePage: React.FC = () => {
         <p className="text-gray-400">
           All poker games and tournaments run on the platform
         </p>
+        <div className="mt-4">
+          <Link
+            to="/upload-replay"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-[#39ff14] text-black font-bold rounded-none hover:bg-[#39ff14]/80 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <Upload className="w-4 h-4" />
+            Upload your own local run
+          </Link>
+        </div>
       </div>
 
       {/* Refresh Button */}

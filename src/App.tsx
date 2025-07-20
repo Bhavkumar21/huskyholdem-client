@@ -21,6 +21,7 @@ import ContainerManagerPage from "./page/ContainerManager";
 import GamePage from "./page/Game";
 import JobGamesPage from "./page/JobGames";
 import Replay from "./page/Replay";
+import UploadReplay from "./page/UploadReplay";
 import DefaultLayout from "./layout/index";
 
 function App() {
@@ -185,6 +186,14 @@ function App() {
       element: (
         <DefaultLayout>
           <Replay />
+        </DefaultLayout>
+      ),
+    },
+    {
+      path: "/upload-replay",
+      element: (
+        <DefaultLayout>
+          <UploadReplay />
         </DefaultLayout>
       ),
     },

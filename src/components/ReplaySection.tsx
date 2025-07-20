@@ -59,9 +59,10 @@ interface Position {
 
 interface ReplaySectionProps {
   gameId?: string;
+  uploadedGameData?: any; // Optional uploaded game data
 }
 
-const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId }) => {
+const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId, uploadedGameData }) => {
   const navigate = useNavigate();
   const [gameData, setGameData] = useState<GameData | null>(null);
   const [actionList, setActionList] = useState<ActionSequence[]>([]);
@@ -73,10 +74,14 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId }) => {
   const [showPlayerCards, setShowPlayerCards] = useState<boolean>(false);
   const [showPots, setShowPots] = useState<boolean>(false);
 
-  // Fetch game data
+  // Fetch game data or use uploaded data
   useEffect(() => {
     const fetchData = async () => {
-      if (gameId) {
+      if (uploadedGameData) {
+        // Use uploaded game data directly
+        setGameData(uploadedGameData);
+      } else if (gameId) {
+        // Fetch from API
         const data = await liveAPI.get_game_data(gameId);
         setGameData(data.game_data);
       } else {
@@ -84,7 +89,7 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId }) => {
       }
     };
     fetchData();
-  }, [gameId]);
+  }, [gameId, uploadedGameData]);
 
   // Build a flat action list from all rounds
   useEffect(() => {
@@ -105,6 +110,12 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId }) => {
     const numericId = typeof playerId === 'string' ? parseInt(playerId) : playerId;
     // some how the playerId is 1 less than the actual playerId
     return gameData?.playerIdToUsername?.[numericId + 1] || String(playerId);
+  };
+
+  // Helper function to truncate long usernames
+  const truncateUsername = (username: string, maxLength: number = 20) => {
+    if (username.length <= maxLength) return username;
+    return username.substring(0, maxLength - 3) + '...';
   };
 
   // Get player order based on first round action sequence
@@ -297,6 +308,7 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId }) => {
 
   const PlayerSeat: React.FC<PlayerSeatProps> = ({ playerId, style, playerStacks, playerHands, isCurrentPlayer, showCards }) => {
     const username = getPlayerUsername(playerId);
+    const truncatedUsername = truncateUsername(username);
     const stack = playerStacks[playerId] || 0;
     const cards = playerHands?.[playerId] || [];
     
@@ -306,10 +318,11 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId }) => {
           isCurrentPlayer ? 'border-[#ff00cc] shadow-lg shadow-[#ff00cc]/25' : 'border-[#444]'
         }`}
         style={style}
+        title={username !== truncatedUsername ? username : undefined} // Show full username on hover if truncated
       >
         <div className="text-center">
           <div className={`font-mono text-sm font-bold ${isCurrentPlayer ? 'text-[#ff00cc]' : 'text-white'}`}>
-            {username}
+            {truncatedUsername}
           </div>
           <div className="text-[#39ff14] font-mono text-xs mt-1">
             ${stack}
@@ -578,8 +591,8 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId }) => {
                 <div className="flex items-center gap-4">
                   <div className="flex items-center gap-2">
                     <Users className="w-5 h-5 text-[#39ff14]" />
-                    <span className="font-mono text-[#39ff14]">
-                      {getPlayerUsername(String(currentAction.player))}
+                    <span className="font-mono text-[#39ff14]" title={getPlayerUsername(String(currentAction.player))}>
+                      {truncateUsername(getPlayerUsername(String(currentAction.player)))}
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
@@ -663,13 +676,15 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId }) => {
                               {pot.eligible_players && pot.eligible_players.length > 0 ? (
                                 <div className="flex flex-wrap gap-1">
                                   {pot.eligible_players.map((playerId: number, playerIndex: number) => {
-                                    const username = gameData?.playerIdToUsername?.[playerId];
+                                    const username = getPlayerUsername(playerId);
+                                    const truncatedUsername = truncateUsername(username, 12); // Shorter for pots display
                                     return (
                                       <span
                                         key={playerIndex}
                                         className="px-1.5 py-0.5 bg-blue-900/30 border border-blue-500 text-blue-300 rounded text-xs font-mono"
+                                        title={username !== truncatedUsername ? username : undefined} // Show full username on hover if truncated
                                       >
-                                        {username}
+                                        {truncatedUsername}
                                       </span>
                                     );
                                   })}
@@ -774,6 +789,7 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId }) => {
                 const stack = playerStacks[pid] || 0;
                 const delta = playerDeltas[pid] || 0;
                 const username = getPlayerUsername(pid);
+                const truncatedUsername = truncateUsername(username);
                 const isCurrentPlayer = viewMode === 'action' && currentAction && String(currentAction.player) === pid;
                 const { smallBlind, bigBlind } = getBlindPositions();
                 const isSmallBlind = username === smallBlind;
@@ -787,10 +803,11 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId }) => {
                         ? 'border-[#ff00cc] bg-[#ff00cc]/10' 
                         : 'border-[#444] bg-black/30'
                     }`}
+                    title={username !== truncatedUsername ? username : undefined} // Show full username on hover if truncated
                   >
                     <div className="flex items-center gap-2">
                       <span className={isCurrentPlayer ? 'text-[#ff00cc]' : 'text-white'}>
-                        {username}
+                        {truncatedUsername}
                       </span>
                       {isSmallBlind && (
                         <span className="text-xs bg-yellow-500 text-black px-1 rounded">SB</span>
@@ -837,7 +854,9 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId }) => {
                        <div className="space-y-2">
                          {winnerInfo.winners.map((winner, index) => (
                            <div key={index} className="flex justify-between items-center text-base">
-                             <span className="font-mono text-green-300 font-semibold">{winner.username}</span>
+                             <span className="font-mono text-green-300 font-semibold" title={winner.username}>
+                               {truncateUsername(winner.username)}
+                             </span>
                              <div className="text-right">
                                <span className="text-green-400 font-bold text-lg">${winner.amount}</span>
                                <span className="text-green-300 ml-3 text-sm">(+${winner.delta})</span>
@@ -857,7 +876,9 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId }) => {
                        <div className="space-y-2">
                          {winnerInfo.losers.map((loser, index) => (
                            <div key={index} className="flex justify-between items-center text-base">
-                             <span className="font-mono text-red-300 font-semibold">{loser.username}</span>
+                             <span className="font-mono text-red-300 font-semibold" title={loser.username}>
+                               {truncateUsername(loser.username)}
+                             </span>
                              <div className="text-right">
                                <span className="text-red-400 font-bold text-lg">${loser.amount}</span>
                                <span className="text-red-300 ml-3 text-sm">({loser.delta})</span>
