@@ -4,8 +4,10 @@ import { gameAPI } from "../api";
 import FileUploadPanel from "../components/FileUploadPanel";
 import { Copy } from "lucide-react";
 
-const COMPETITION_START = new Date("2025-07-12T00:00:00Z");
-const FINAL_DEADLINE = new Date("2025-07-21T23:59:59Z"); // Updated to new final deadline
+// Updated to use Pacific timezone (America/Los_Angeles)
+// July dates use PDT (UTC-7) due to daylight saving time
+const COMPETITION_START = new Date("2025-07-12T00:00:00-07:00");
+const FINAL_DEADLINE = new Date("2025-07-21T23:59:59-07:00");
 
 const Dashboard: React.FC = () => {
     // job

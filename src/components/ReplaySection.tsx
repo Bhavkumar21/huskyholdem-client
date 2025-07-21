@@ -241,7 +241,7 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId, uploadedGameData 
     
     let completedRounds = 0;
     
-         if (viewMode === 'action') {
+    if (viewMode === 'action') {
        // In action mode, show cards based on which round the current action belongs to
        // Cards are visible during the entire round (revealed at start of round)
        completedRounds = getCurrentActionRound();
@@ -258,7 +258,7 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId, uploadedGameData 
        case 2: return gameData.finalBoard.slice(0, 4); // Turn: show 4 cards (revealed after flop ended)
        case 3: return gameData.finalBoard.slice(0, 5); // River: show 5 cards (revealed after turn ended)
        default: return gameData.finalBoard; // All cards revealed
-     }
+    }
   };
 
   // Convert card string to display format with suit symbols
@@ -343,12 +343,12 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId, uploadedGameData 
                 );
               } else {
                 return (
-                  <div
-                    key={index}
+              <div
+                key={index}
                     className="w-6 h-8 rounded border bg-blue-900 text-blue-300 border-blue-700 text-xs flex items-center justify-center font-mono"
-                  >
+              >
                     🂠
-                  </div>
+              </div>
                 );
               }
             })}
@@ -479,8 +479,8 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId, uploadedGameData 
               Back
             </button>
             <div className="text-center flex-1">
-              <h1 className="text-3xl font-bold font-mono text-[#ff00cc] mb-2">POKER REPLAY</h1>
-              <p className="text-gray-400">Step-by-step game analysis</p>
+          <h1 className="text-3xl font-bold font-mono text-[#ff00cc] mb-2">POKER REPLAY</h1>
+          <p className="text-gray-400">Step-by-step game analysis</p>
             </div>
             <div className="w-20"></div> {/* Spacer to center the title */}
           </div>
@@ -744,13 +744,13 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId, uploadedGameData 
                     boardCards.map((card, index) => {
                       const formattedCard = formatCard(card);
                       return (
-                        <div
-                          key={index}
+                      <div
+                        key={index}
                           className="w-8 h-11 bg-white border border-gray-300 rounded text-xs flex flex-col items-center justify-center font-mono"
-                        >
+                      >
                           <div className="text-black font-bold">{formattedCard.rank}</div>
                           <div className={`text-xs ${formattedCard.suitColor}`}>{formattedCard.suitSymbol}</div>
-                        </div>
+                      </div>
                       );
                     })
                   ) : (
@@ -806,9 +806,9 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId, uploadedGameData 
                     title={username !== truncatedUsername ? username : undefined} // Show full username on hover if truncated
                   >
                     <div className="flex items-center gap-2">
-                      <span className={isCurrentPlayer ? 'text-[#ff00cc]' : 'text-white'}>
+                    <span className={isCurrentPlayer ? 'text-[#ff00cc]' : 'text-white'}>
                         {truncatedUsername}
-                      </span>
+                    </span>
                       {isSmallBlind && (
                         <span className="text-xs bg-yellow-500 text-black px-1 rounded">SB</span>
                       )}
@@ -817,9 +817,9 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId, uploadedGameData 
                       )}
                     </div>
                     <div className="flex flex-col items-end">
-                      <span className={`font-bold ${stack >= 0 ? 'text-[#39ff14]' : 'text-red-500'}`}>
-                        ${stack}
-                      </span>
+                    <span className={`font-bold ${stack >= 0 ? 'text-[#39ff14]' : 'text-red-500'}`}>
+                      ${stack}
+                    </span>
                       <span className={`text-xs ${delta >= 0 ? 'text-[#39ff14]' : 'text-red-500'}`}>
                         {delta >= 0 ? '+' : ''}{delta}
                       </span>
