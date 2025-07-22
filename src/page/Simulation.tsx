@@ -22,19 +22,30 @@ const SimulationPage = () => {
   const fetchUsersSubStatus = async () => {
     setUsersLoading(true)
     try {
-      // Get all users and list of users with final sub
-      const res_users = await userAPI.getAllUsers();
-      const users = res_users.users;
-      const finals = await submissionAPI.getUsersWithFinalSubmission();
+      // Fetch first page to get total pages
+      const firstPage = await userAPI.getAllUsers(1, 25);
+      let users = firstPage.users;
+      const totalPages = firstPage.total_pages || 1;
 
+      if (totalPages > 1) {
+        // Fetch all remaining pages in parallel
+        const pagePromises = [];
+        for (let page = 2; page <= totalPages; page++) {
+          pagePromises.push(userAPI.getAllUsers(page, 25));
+        }
+        const results = await Promise.all(pagePromises);
+        for (const res of results) {
+          users = users.concat(res.users);
+        }
+      }
+
+      const finals = await submissionAPI.getUsersWithFinalSubmission();
       const finalsSet = new Set(finals.users_list || []);
-      
       // Store user -> has_final
       const map: { [key: string]: boolean } = {};
       for (const user of users) {
         map[user.username] = finalsSet.has(user.username);
       }
-      
       setUserFinalMap(map);
       setPage(0);
       setSelectedUsers([]);
