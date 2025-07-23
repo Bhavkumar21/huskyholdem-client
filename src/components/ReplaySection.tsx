@@ -386,10 +386,10 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId, uploadedGameData 
     const firstRoundKey = Object.keys(gameData.rounds).sort((a, b) => parseInt(a) - parseInt(b))[0];
     const firstRound = gameData.rounds[firstRoundKey];
     
-    if (firstRound?.action_sequence && firstRound.action_sequence.length >= 2) {
-      // First action is typically small blind, second is big blind
-      const smallBlindPlayer = String(firstRound.action_sequence[0].player);
-      const bigBlindPlayer = String(firstRound.action_sequence[1].player);
+    if (firstRound?.action_sequence && firstRound.action_sequence.length >= 6) {
+      // 5th play is small blind, 6th play is big blind (0-based index)
+      const smallBlindPlayer = String(firstRound.action_sequence[4].player);
+      const bigBlindPlayer = String(firstRound.action_sequence[5].player);
       
       return {
         smallBlind: getPlayerUsername(smallBlindPlayer),
