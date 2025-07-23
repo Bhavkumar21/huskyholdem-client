@@ -1,6 +1,6 @@
 import { ChevronDown, X, Zap, Users, Play } from "lucide-react";
 import { useEffect, useState } from "react";
-import { submissionAPI, userAPI, gameAPI } from "../api";
+import { submissionAPI, userAPI, gameAPI, adminAPI } from "../api";
 import { useNavigate } from "react-router-dom";
 import JobList from "../components/JobList";
 
@@ -61,7 +61,7 @@ const SimulationPage = () => {
 
   const fetchJobs = async () => {
     try {
-      const data = await gameAPI.get_jobs();
+      const data = await adminAPI.listSimAdminJob();
       setJobs(data);
     } catch (err) {
       console.error("Failed to fetch jobs:", err);
