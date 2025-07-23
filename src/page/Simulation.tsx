@@ -19,6 +19,8 @@ const SimulationPage = () => {
   const [jobs, setJobs] = useState<any[]>([]);
   const [jobsLoading, setJobsLoading] = useState(true);
 
+  const [searchQuery, setSearchQuery] = useState("");
+
   const fetchUsersSubStatus = async () => {
     setUsersLoading(true)
     try {
@@ -110,11 +112,13 @@ const SimulationPage = () => {
   /* ---- pagination helpers ---- */
   const baseEntries = Object.entries(userFinalMap) as [string, boolean][];
 
+  const filteredEntries = baseEntries.filter(([username]) =>
+    username.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   const entries = sortHasFinal
-    ? [...baseEntries].sort((a, b) =>
-        a[1] === b[1] ? 0 : a[1] ? -1 : 1
-      )
-    : baseEntries;
+    ? [...filteredEntries].sort((a, b) => (a[1] === b[1] ? 0 : a[1] ? -1 : 1))
+    : filteredEntries;
 
   const pageCount = Math.ceil(entries.length / PAGE_SIZE);
 
@@ -204,10 +208,27 @@ const SimulationPage = () => {
                   <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#39ff14]"></div>
                   <p className="text-gray-400 mt-2">Loading participants...</p>
                 </div>
-              ) : entries.length === 0 ? (
-                <p className="text-gray-500 text-center py-8">No participants found.</p>
               ) : (
                 <div className="text-sm text-white">
+                  {/* Search */}
+                  <div className="mb-4 flex items-center gap-2">
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Search by username"
+                      className="flex-1 px-3 py-2 bg-gray-800 border border-gray-600 rounded text-white focus:border-[#39ff14] focus:outline-none transition-colors"
+                    />
+                    {searchQuery && (
+                      <button
+                        onClick={() => setSearchQuery("")}
+                        className="px-3 py-2 bg-red-600 text-white rounded hover:bg-red-500 transition"
+                      >
+                        Clear
+                      </button>
+                    )}
+                  </div>
+              
                   {/* Header */}
                   <div className="grid grid-cols-4 gap-4 font-semibold py-3 border-b-2 border-[#39ff14] text-[#39ff14]">
                     <div>SELECT</div>
@@ -224,35 +245,39 @@ const SimulationPage = () => {
                     </div>
                     <div>STATUS</div>
                   </div>
-
+              
                   {/* Data rows */}
-                  <div className="max-h-96 overflow-y-auto">
-                    {pageRows.map(([username, hasFinal]) => (
-                      <div
-                        key={username}
-                        className={`grid grid-cols-4 gap-4 py-3 items-center border-b border-gray-700 hover:bg-gray-800 transition-colors ${
-                          selectedUsers.includes(username) ? 'bg-gray-800 border-[#39ff14]' : ''
-                        }`}
-                      >
-                        <div>
-                          <input
-                            type="checkbox"
-                            checked={selectedUsers.includes(username)}
-                            disabled={!hasFinal}
-                            onChange={() => toggle(username, hasFinal)}
-                            className={`w-4 h-4 ${!hasFinal ? "cursor-not-allowed opacity-40" : "cursor-pointer"}`}
-                          />
+                  {entries.length === 0 ? (
+                    <p className="text-gray-500 text-center py-8">No participants found.</p>
+                  ) : (
+                    <div className="max-h-96 overflow-y-auto">
+                      {pageRows.map(([username, hasFinal]) => (
+                        <div
+                          key={username}
+                          className={`grid grid-cols-4 gap-4 py-3 items-center border-b border-gray-700 hover:bg-gray-800 transition-colors ${
+                            selectedUsers.includes(username) ? 'bg-gray-800 border-[#39ff14]' : ''
+                          }`}
+                        >
+                          <div>
+                            <input
+                              type="checkbox"
+                              checked={selectedUsers.includes(username)}
+                              disabled={!hasFinal}
+                              onChange={() => toggle(username, hasFinal)}
+                              className={`w-4 h-4 ${!hasFinal ? "cursor-not-allowed opacity-40" : "cursor-pointer"}`}
+                            />
+                          </div>
+                          <div className="font-mono">{username}</div>
+                          <div className={hasFinal ? "text-[#39ff14]" : "text-red-400"}>
+                            {hasFinal ? "✓ YES" : "✗ NO"}
+                          </div>
+                          <div className={selectedUsers.includes(username) ? "text-[#39ff14] font-bold" : "text-gray-400"}>
+                            {selectedUsers.includes(username) ? "SELECTED" : "STANDBY"}
+                          </div>
                         </div>
-                        <div className="font-mono">{username}</div>
-                        <div className={hasFinal ? "text-[#39ff14]" : "text-red-400"}>
-                          {hasFinal ? "✓ YES" : "✗ NO"}
-                        </div>
-                        <div className={selectedUsers.includes(username) ? "text-[#39ff14] font-bold" : "text-gray-400"}>
-                          {selectedUsers.includes(username) ? "SELECTED" : "STANDBY"}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
+                  )}
 
                   {/* Pagination */}
                   {pageCount > 1 && (
