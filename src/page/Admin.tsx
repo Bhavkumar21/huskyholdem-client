@@ -154,6 +154,12 @@ const Admin: React.FC = () => {
                     >
                         Go to Container Manager
                     </button>
+                    <button
+                        onClick={() => navigate('/admin/games')}
+                        className="w-fit px-6 py-2 bg-[#39ff14] text-black rounded hover:bg-[#2ecc71] transition-colors"
+                    >
+                        Go to Admin Game Page
+                    </button>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
