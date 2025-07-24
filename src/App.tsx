@@ -23,6 +23,7 @@ import JobGamesPage from "./page/JobGames";
 import Replay from "./page/Replay";
 import UploadReplay from "./page/UploadReplay";
 import DefaultLayout from "./layout/index";
+import AdminGamePage from "./page/AdminGame";
 
 function App() {
   const router = createBrowserRouter([
@@ -178,6 +179,16 @@ function App() {
             <DefaultLayout>
                 <ContainerManagerPage  />
             </DefaultLayout>
+        </VerifiedAdminRoute>
+      ),
+    },
+    {
+      path: "/admin/games",
+      element: (
+        <VerifiedAdminRoute>
+          <DefaultLayout>
+            <AdminGamePage />
+          </DefaultLayout>
         </VerifiedAdminRoute>
       ),
     },
