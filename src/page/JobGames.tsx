@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { liveAPI, gameAPI } from "../api";
 import { Gamepad2, ArrowLeft, Loader2 } from "lucide-react";
+import UserPerformanceChart from "../components/UserPerformanceChart";
 
 interface JobGameInfo {
   game_id: string;
@@ -100,6 +101,12 @@ const JobGamesPage: React.FC = () => {
           </h1>
         </div>
       </div>
+            {/* User Performance Chart */}
+      {jobId && (
+        <div className="mb-8">
+          <UserPerformanceChart jobId={jobId} />
+        </div>
+      )}
       {jobResult && (
         <div className="mb-10 p-0 border-2 border-[#39ff14] rounded-lg overflow-hidden w-full max-w-2xl mx-auto">
           <div className="px-6 py-3 border-b-2 border-[#39ff14] bg-black/80">

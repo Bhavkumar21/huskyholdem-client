@@ -77,6 +77,10 @@ const liveAPI = {
         const response = await apiClient.get(`/live/game/${game_id}`);
         return response.data;
     },
+    get_user_performance: async (job_id: string) => {
+        const response = await apiClient.get(`/live/job/${job_id}/user-performance`);
+        return response.data;
+    },
 }
 
 const gameAPI = {
