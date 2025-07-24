@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { liveAPI } from "../api";
+import { liveAPI, adminAPI } from "../api";
 import { Gamepad2, Users, Calendar, Clock, Trophy, RefreshCw, Upload } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface JobWithPlayers {
   job_id: string;
   players: string[];
   first_game_created_at: string;
+  is_public: boolean;
 }
 
 interface AllJobIdsResponse {
@@ -14,10 +16,12 @@ interface AllJobIdsResponse {
   jobs: JobWithPlayers[];
 }
 
-const GamePage: React.FC = () => {
+const AdminGamePage: React.FC = () => {
+  const navigate = useNavigate(); 
   const [jobs, setJobs] = useState<JobWithPlayers[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [toggling, setToggling] = useState<string | null>(null); 
 
   useEffect(() => {
     fetchJobs();
@@ -27,13 +31,26 @@ const GamePage: React.FC = () => {
     try {
       setLoading(true);
       setError(null);
-      const response: AllJobIdsResponse = await liveAPI.get_public_job_ids();
+      const response: AllJobIdsResponse = await liveAPI.get_all_job_ids();
       setJobs(response.jobs);
     } catch (err) {
       console.error("Error fetching jobs:", err);
       setError("Failed to load games. Please try again later.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleTogglePublic = async (jobId: string) => {
+    try {
+      setToggling(jobId);
+      await adminAPI.toggleJobPublic(jobId);
+      await fetchJobs();
+    } catch (err) {
+      console.error("Error toggling public status:", err);
+      alert("Failed to toggle public status. Please try again.");
+    } finally {
+      setToggling(null);
     }
   };
 
@@ -69,12 +86,18 @@ const GamePage: React.FC = () => {
 
   return (
     <div className="min-h-screen text-white px-4 py-12 max-w-6xl mx-auto">
+        <button
+            onClick={() => navigate("/admin")}
+            className="mb-6 text-sm px-4 py-2 border border-[#39ff14] text-[#39ff14] rounded hover:bg-[#39ff14] hover:text-black transition duration-200 flex items-center gap-2"
+            >
+            ← Back to Admin Dashboard
+        </button>
       {/* Header */}
       <div className="mb-10 border-b border-[#444] pb-6">
         <div className="flex items-center gap-3 mb-4">
           <Gamepad2 className="w-8 h-8 text-[#ff00cc]" />
           <h1 className="text-3xl font-bold font-glitch">
-            Game <span className="text-[#39ff14]">Archive</span>
+            Admin Game Management
           </h1>
         </div>
         <p className="text-gray-400">
@@ -214,6 +237,16 @@ const GamePage: React.FC = () => {
                         </Link>
                       ))}
                     </div>
+                    <button
+                        onClick={() => handleTogglePublic(job.job_id)}
+                        className={`ml-4 px-4 py-2 rounded text-sm font-bold transition-colors ${
+                        job.is_public
+                            ? "bg-red-600 text-white hover:bg-red-500"
+                            : "bg-green-600 text-white hover:bg-green-500"
+                        }`}
+                    >
+                        {job.is_public ? "MAKE PRIVATE" : "MAKE PUBLIC"}
+                    </button>
                   </div>
                 </div>
               ))}
@@ -225,4 +258,4 @@ const GamePage: React.FC = () => {
   );
 };
 
-export default GamePage; 
+export default AdminGamePage; 

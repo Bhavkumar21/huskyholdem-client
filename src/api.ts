@@ -69,6 +69,10 @@ const liveAPI = {
         const response = await apiClient.get('/live/job-ids');
         return response.data;
     },
+    get_public_job_ids: async () => {
+        const response = await apiClient.get('/live/public-job-ids');
+        return response.data;
+    },
     get_job_games: async (job_id: string) => {
         const response = await apiClient.get(`/live/job/${job_id}/games`);
         return response.data;
@@ -273,6 +277,10 @@ const adminAPI = {
     },
     listScalingJob: async () => {
         const res = await apiClient.get('/admin/scaling-jobs');
+        return res.data;
+    },
+    toggleJobPublic: async (job_id: string) => {
+        const res = await apiClient.post(`/admin/toggle-job-public/${job_id}`);
         return res.data;
     }
 }
