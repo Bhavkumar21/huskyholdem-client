@@ -73,19 +73,30 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId, uploadedGameData 
   const [viewMode, setViewMode] = useState<'action' | 'round'>('action');
   const [showPlayerCards, setShowPlayerCards] = useState<boolean>(false);
   const [showPots, setShowPots] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   // Fetch game data or use uploaded data
   useEffect(() => {
     const fetchData = async () => {
-      if (uploadedGameData) {
-        // Use uploaded game data directly
-        setGameData(uploadedGameData);
-      } else if (gameId) {
-        // Fetch from API
-        const data = await liveAPI.get_game_data(gameId);
-        setGameData(data.game_data);
-      } else {
-        setGameData(null);
+      try {
+        if (uploadedGameData) {
+          // Use uploaded game data directly
+          setGameData(uploadedGameData);
+        } else if (gameId) {
+          // Fetch from API
+          const data = await liveAPI.get_game_data(gameId);
+          setGameData(data.game_data);
+        } else {
+          setGameData(null);
+        }
+      } catch (err: any) {
+        if (err.response?.status === 403) {
+          setError("This game is private and cannot be accessed.");
+        } else if (err.response?.status === 404) {
+          setError("Game not found.");
+        } else {
+          setError("Failed to load game data.");
+        }
       }
     };
     fetchData();
@@ -191,6 +202,19 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId, uploadedGameData 
     setPlayerStacks(stacks);
     setPlayerDeltas(deltas);
   }, [gameData, actionList, currentActionIdx, currentRoundIdx, viewMode]);
+
+  // Show error banner if error exists
+  if (error) {
+    return (
+      <div className="min-h-screen flex flex-col items-center">
+        {/* Error box at top center */}
+        <div className="mt-6 bg-red-900/20 border border-red-500 text-red-400 font-mono font-bold text-lg text-center px-6 py-4 rounded-lg shadow-md">
+          {error}
+        </div>
+      </div>
+    );
+  }
+  
 
   if (!gameData) return (
     <div className="min-h-screen flex items-center justify-center">
