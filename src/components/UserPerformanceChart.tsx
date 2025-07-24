@@ -9,7 +9,6 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  Legend as RechartsLegend
 } from 'recharts';
 
 interface UserPerformanceChartProps {
@@ -124,7 +123,7 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
     const finalValue = values[values.length - 1];
     const initialValue = values[0];
     const change = finalValue - initialValue;
-    const changePercent = initialValue !== 0 ? ((change / 10000) * 100) : 0;
+    const changePercent = initialValue !== 0 ? ((finalValue / 10000) * 100) : 0;
     
     return {
       username: user,

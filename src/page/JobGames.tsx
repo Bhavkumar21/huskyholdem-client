@@ -101,14 +101,8 @@ const JobGamesPage: React.FC = () => {
           </h1>
         </div>
       </div>
-            {/* User Performance Chart */}
-      {jobId && (
-        <div className="mb-8">
-          <UserPerformanceChart jobId={jobId} />
-        </div>
-      )}
       {jobResult && (
-        <div className="mb-10 p-0 border-2 border-[#39ff14] rounded-lg overflow-hidden w-full max-w-2xl mx-auto">
+        <div className="mb-10 p-0 border-2 border-[#39ff14] rounded-lg overflow-hidden w-full max-w-6xl mx-auto">
           <div className="px-6 py-3 border-b-2 border-[#39ff14] bg-black/80">
             <span className="text-lg font-mono font-bold tracking-widest text-[#39ff14] uppercase">Job Final Result</span>
           </div>
@@ -131,6 +125,14 @@ const JobGamesPage: React.FC = () => {
           </div>
         </div>
       )}
+
+            {/* User Performance Chart */}
+      {jobId && (
+        <div className="mb-8">
+          <UserPerformanceChart jobId={jobId} />
+        </div>
+      )}
+      
       {loading && (
         <div className="flex items-center justify-center py-12">
           <Loader2 className="w-8 h-8 text-[#ff00cc] animate-spin" />

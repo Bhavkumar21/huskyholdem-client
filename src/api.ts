@@ -109,11 +109,20 @@ const gameAPI = {
         }
         return response.data;
     },
-    submitSimulationUserJob: async (usernames: string[], numRounds: number = 6) => {
-        const payload = {
-            users_list: usernames,
-            num_rounds: numRounds
-        };
+    submitSimulationUserJob: async (
+        usernames: string[],
+        numRounds: number = 6,
+        blind: number = 10,
+        blindMultiplier: number = 1.0,
+        blindIncreaseInterval: number = 1
+      ) => {
+          const payload = {
+              users_list: usernames,
+              num_rounds: numRounds,
+              blind,
+              blind_multiplier: blindMultiplier,
+              blind_increase_interval: blindIncreaseInterval
+          };
         const response = await apiClient.post("/sim/async_run_user", payload);
       
         if (response.data.status_code !== 200) {

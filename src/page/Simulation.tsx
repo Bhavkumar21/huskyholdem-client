@@ -21,6 +21,10 @@ const SimulationPage = () => {
 
   const [searchQuery, setSearchQuery] = useState("");
 
+  const [blind, setBlind] = useState<number>(10);
+  const [blindMultiplier, setBlindMultiplier] = useState<number>(1.0);
+  const [blindIncreaseInterval, setBlindIncreaseInterval] = useState<number>(1);
+
   const fetchUsersSubStatus = async () => {
     setUsersLoading(true)
     try {
@@ -62,7 +66,14 @@ const SimulationPage = () => {
   const fetchJobs = async () => {
     try {
       const data = await adminAPI.listSimAdminJob();
-      setJobs(data);
+      const convertedData = data.map((job: any) => ({
+        job_id: job.id,
+        job_status: job?.status,
+        error: job?.error_message,
+        result_data: job?.result_data,
+        username: job?.username
+      }));
+      setJobs(convertedData);
     } catch (err) {
       console.error("Failed to fetch jobs:", err);
     } finally {
@@ -72,7 +83,13 @@ const SimulationPage = () => {
 
   const runSimulation = async () => {
     try {
-      await gameAPI.submitSimulationUserJob(selectedUsers, numRounds);
+      await gameAPI.submitSimulationUserJob(
+        selectedUsers,
+        numRounds,
+        blind,
+        blindMultiplier,
+        blindIncreaseInterval
+      );
       setSelectedUsers([]);
       fetchJobs();
     } catch (err: any) {
@@ -361,6 +378,55 @@ const SimulationPage = () => {
                   placeholder="Enter number of rounds"
                 />
                 <p className="text-xs text-gray-400 mt-1">Default: 6 rounds</p>
+              </div>
+
+              {/* Blind Input */}
+              <div className="mb-6">
+                <label className="block text-sm font-semibold text-[#ff00cc] mb-2">
+                  INITIAL BLIND
+                </label>
+                <input
+                  type="number"
+                  min="1"
+                  value={blind}
+                  onChange={(e) => setBlind(Math.max(1, parseInt(e.target.value) || 1))}
+                  className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded text-white focus:border-[#39ff14] focus:outline-none transition-colors"
+                  placeholder="Enter initial blind"
+                />
+                <p className="text-xs text-gray-400 mt-1">Default: 10</p>
+              </div>
+
+              {/* Blind Multiplier Input */}
+              <div className="mb-6">
+                <label className="block text-sm font-semibold text-[#ff00cc] mb-2">
+                  BLIND MULTIPLIER
+                </label>
+                <input
+                  type="number"
+                  min="0.1"
+                  step="0.01"
+                  value={blindMultiplier}
+                  onChange={(e) => setBlindMultiplier(Math.max(0.1, parseFloat(e.target.value) || 0.1))}
+                  className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded text-white focus:border-[#39ff14] focus:outline-none transition-colors"
+                  placeholder="Enter blind multiplier"
+                />
+                <p className="text-xs text-gray-400 mt-1">Default: 1.0</p>
+              </div>
+
+              {/* Blind Increase Interval Input */}
+              <div className="mb-6">
+                <label className="block text-sm font-semibold text-[#ff00cc] mb-2">
+                  BLIND INCREASE INTERVAL
+                </label>
+                <input
+                  type="number"
+                  min="1"
+                  value={blindIncreaseInterval}
+                  onChange={(e) => setBlindIncreaseInterval(Math.max(1, parseInt(e.target.value) || 1))}
+                  className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded text-white focus:border-[#39ff14] focus:outline-none transition-colors"
+                  placeholder="Enter blind increase interval"
+                />
+                <p className="text-xs text-gray-400 mt-1">Default: 1</p>
               </div>
 
               <button
