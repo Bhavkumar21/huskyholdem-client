@@ -21,7 +21,7 @@ const AdminGamePage: React.FC = () => {
   const [jobs, setJobs] = useState<JobWithPlayers[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [toggling, setToggling] = useState<string | null>(null); 
+  const [_, setToggling] = useState<string | null>(null); 
 
   useEffect(() => {
     fetchJobs();
