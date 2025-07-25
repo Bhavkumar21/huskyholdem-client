@@ -28,6 +28,7 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
   const [performanceData, setPerformanceData] = useState<UserPerformanceData>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [sampleInterval, setSampleInterval] = useState(1);
 
   const userColors = [
     '#39ff14', // Bright green
@@ -105,13 +106,31 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
 
   // Transform data for Recharts
   const maxIterations = Math.max(...users.map(user => performanceData[user].length));
+  // Downsample by averaging every n points
+  function downsampleUserData(data: number[], n: number): number[] {
+    if (n <= 1) return data;
+    const result = [];
+    for (let i = 0; i < data.length; i += n) {
+      const chunk = data.slice(i, i + n);
+      const avg = chunk.reduce((a, b) => a + b, 0) / chunk.length;
+      result.push(Math.round(avg * 100) / 100);
+    }
+    return result;
+  }
+
+  // Build downsampled chart data
+  const downsampled: Record<string, number[]> = {};
+  let downsampledMax = 0;
+  users.forEach(user => {
+    downsampled[user] = downsampleUserData(performanceData[user], sampleInterval);
+    if (downsampled[user].length > downsampledMax) downsampledMax = downsampled[user].length;
+  });
   const chartData: ChartDataPoint[] = [];
-  
-  for (let i = 0; i < maxIterations; i++) {
-    const dataPoint: ChartDataPoint = { iteration: i + 1 };
+  for (let i = 0; i < downsampledMax; i++) {
+    const dataPoint: ChartDataPoint = { iteration: i * sampleInterval + 1 };
     users.forEach(user => {
-      if (i < performanceData[user].length) {
-        dataPoint[user] = performanceData[user][i];
+      if (i < downsampled[user].length) {
+        dataPoint[user] = downsampled[user][i];
       }
     });
     chartData.push(dataPoint);
@@ -124,7 +143,6 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
     const initialValue = values[0];
     const change = finalValue - initialValue;
     const changePercent = initialValue !== 0 ? ((finalValue / 10000) * 100) : 0;
-    
     return {
       username: user,
       finalValue,
@@ -178,13 +196,28 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
           <BarChart3 className="w-6 h-6 text-[#39ff14]" />
           <h3 className="text-xl font-bold text-white font-mono">USER PERFORMANCE MATRIX</h3>
         </div>
-        <button
-          onClick={fetchPerformanceData}
-          className="flex items-center gap-2 px-3 py-1 text-sm border border-[#39ff14] text-[#39ff14] rounded hover:bg-[#39ff14] hover:text-black transition"
-        >
-          <RefreshCw className="w-4 h-4" />
-          REFRESH
-        </button>
+        <div className="flex items-center gap-4">
+          <label className="text-sm text-gray-300 font-mono flex items-center gap-1">
+            Sample:
+            <select
+              value={sampleInterval}
+              onChange={e => setSampleInterval(Number(e.target.value))}
+              className="ml-1 px-2 py-1 rounded bg-gray-800 border border-gray-600 text-white text-xs font-mono focus:border-[#39ff14] focus:outline-none"
+              style={{ minWidth: 60 }}
+            >
+              {[1,2,3,4,5,10,20,25,50,100].map(n => (
+                <option key={n} value={n}>{n === 1 ? 'Raw' : `Avg ${n}`}</option>
+              ))}
+            </select>
+          </label>
+          <button
+            onClick={fetchPerformanceData}
+            className="flex items-center gap-2 px-3 py-1 text-sm border border-[#39ff14] text-[#39ff14] rounded hover:bg-[#39ff14] hover:text-black transition"
+          >
+            <RefreshCw className="w-4 h-4" />
+            REFRESH
+          </button>
+        </div>
       </div>
 
       {/* Chart */}
@@ -274,7 +307,7 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
                 <div className="flex items-center gap-2">
                   <span className="font-mono text-sm text-white">{stat.finalValue}</span>
                   <div className="flex items-center gap-1">
-                    {stat.change >= 0 ? (
+                    {stat.changePercent >= 0 ? (
                       <TrendingUp className="w-4 h-4 text-green-400" />
                     ) : (
                       <TrendingDown className="w-4 h-4 text-red-400" />
