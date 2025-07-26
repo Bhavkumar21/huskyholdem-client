@@ -47,9 +47,13 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
       setError(null);
       const data = await liveAPI.get_user_performance(jobId);
       setPerformanceData(data);
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error fetching performance data:', err);
-      setError('Failed to load performance data');
+      if (err.response?.status === 403) {
+        setError('PRIVATE');
+      } else {
+        setError('Failed to load performance data');
+      }
     } finally {
       setLoading(false);
     }
@@ -75,17 +79,24 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
   }
 
   if (error) {
+    const isPrivateError = error === 'PRIVATE';
     return (
       <div className="bg-black bg-opacity-30 border border-[#444] rounded-lg p-6">
-        <div className="bg-red-900/20 border border-red-500 rounded-lg p-4">
-          <p className="text-red-300 text-center">{error}</p>
-          <button
-            onClick={fetchPerformanceData}
-            className="mt-4 mx-auto flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-500 transition"
-          >
-            <RefreshCw className="w-4 h-4" />
-            Retry
-          </button>
+        <div className="bg-red-900/20 border border-red-500 rounded-lg p-4 text-center">
+          <p className="text-red-300 text-lg">
+            {isPrivateError
+              ? 'This performance data is private and cannot be accessed.'
+              : error}
+          </p>
+          {!isPrivateError && (
+            <button
+              onClick={fetchPerformanceData}
+              className="mt-4 mx-auto flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-500 transition"
+            >
+              <RefreshCw className="w-4 h-4" />
+              Retry
+            </button>
+          )}
         </div>
       </div>
     );
