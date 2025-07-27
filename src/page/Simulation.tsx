@@ -67,7 +67,7 @@ const SimulationPage = () => {
   };
 
   const fetch2025Statuses = async (jobs: any[]) => {
-    const statusMap: Record<string, boolean> = {};
+    const statusMap: Record<string, boolean | undefined> = {};
     await Promise.all(jobs.map(async (job) => {
       try {
         const res = await adminAPI.get2025JobStatus(job.job_id);
