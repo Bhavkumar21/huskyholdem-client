@@ -328,7 +328,7 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
                         stat.changePercent >= 0 ? 'text-green-400' : 'text-red-400'
                       }`}
                     >
-                      {stat.changePercent >= 0 ? '+' : ''}{Math.round(stat.changePercent)}%
+                      {stat.changePercent >= 0 ? '+' : ''}{Math.round(stat.changePercent * 100) / 100}%
                     </span>
                   </div>
                 </div>
