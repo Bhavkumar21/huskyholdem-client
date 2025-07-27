@@ -291,6 +291,10 @@ const adminAPI = {
     toggleJobPublic: async (job_id: string) => {
         const res = await apiClient.post(`/admin/toggle-job-public/${job_id}`);
         return res.data;
+    },
+    getUserFinalSubmission: async (username: string) => {
+        const res = await apiClient.get(`/admin/user-final-submission/${username}`);
+        return res.data;
     }
 }
 
