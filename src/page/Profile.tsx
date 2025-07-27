@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useParams } from "react-router-dom";
-import { profileAPI } from "../api";
-import { Trophy, TrendingUp, Clock, User, Award } from "lucide-react";
+import { profileAPI, submissionAPI, adminAPI } from "../api";
+import { Trophy, TrendingUp, Clock, User, Award, ChevronDown, ChevronUp, Loader, FileText, Package, Download } from "lucide-react";
 
 interface LeaderboardEntry {
   username: string;
@@ -26,10 +26,24 @@ interface ProfileApiResponse {
   leaderboard_entries: LeaderboardEntry[];
 }
 
+interface FinalSubmission {
+  username: string;
+  has_final_submission: boolean;
+  submission_id?: string;
+  player_file?: string;
+  package_file?: string;
+  created_at?: string;
+  message: string;
+}
+
 const ProfilePage: React.FC = () => {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [leaderboardEntries, setLeaderboardEntries] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(true);
+  const [finalSubmission, setFinalSubmission] = useState<FinalSubmission | null>(null);
+  const [expandedSubmission, setExpandedSubmission] = useState<boolean>(false);
+  const [fileContents, setFileContents] = useState({ player: null, requirements: null });
+  const [loadingContents, setLoadingContents] = useState(false);
 
   const { user } = useAuth();
   const { username } = useParams(); 
@@ -52,6 +66,16 @@ const ProfilePage: React.FC = () => {
                 const data: ProfileApiResponse = await profileAPI.getProfilePublic(username);
                 setProfile(data.profile);
                 setLeaderboardEntries(data.leaderboard_entries || []);
+            }
+
+            // Fetch final submission if user is admin and viewing another user's profile
+            if (user.admin && username) {
+                try {
+                    const finalSubData = await adminAPI.getUserFinalSubmission(username);
+                    setFinalSubmission(finalSubData);
+                } catch (err) {
+                    console.error("Error fetching final submission:", err);
+                }
             }
         } catch (err) {
             console.error("Error fetching profile data:", err);
@@ -119,6 +143,35 @@ const ProfilePage: React.FC = () => {
         setEditMode(false);
     } catch (err) {
         console.error("Error updating profile:", err);
+    }
+  };
+
+  const toggleSubmission = async () => {
+    if (expandedSubmission) {
+      setExpandedSubmission(false);
+      setFileContents({ player: null, requirements: null });
+      return;
+    }
+    
+    if (!finalSubmission?.has_final_submission) return;
+    
+    setExpandedSubmission(true);
+    setLoadingContents(true);
+    
+    try {
+      const [playerContent, requirementsContent] = await Promise.all([
+        submissionAPI.getContentFile(finalSubmission.player_file!),
+        submissionAPI.getContentFile(finalSubmission.package_file!)
+      ]);
+      
+      setFileContents({
+        player: playerContent.file_data,
+        requirements: requirementsContent.file_data
+      });
+    } catch (err) {
+      console.error("Failed to fetch file contents:", err);
+    } finally {
+      setLoadingContents(false);
     }
   };
 
@@ -314,6 +367,103 @@ const ProfilePage: React.FC = () => {
                     </div>
                   ))}
               </div>
+            </div>
+          )}
+
+          {/* Final Submission - Show for admin viewing other users */}
+          {user?.admin && finalSubmission && (
+            <div className="bg-gray-900 border border-[#ff00cc] rounded-lg p-6 md:col-span-2">
+              <div 
+                onClick={toggleSubmission}
+                className="flex justify-between items-center cursor-pointer hover:bg-gray-800 transition duration-200"
+              >
+                <h2 className="text-xl font-bold text-[#ff00cc] flex items-center">
+                  <Package className="h-5 w-5 mr-2" />
+                  Final Submission
+                  {finalSubmission.has_final_submission && (
+                    <span className="ml-2 text-sm bg-green-500 text-black px-2 py-1 rounded">
+                      ✓ Available
+                    </span>
+                  )}
+                </h2>
+                {finalSubmission.has_final_submission && (
+                  expandedSubmission ? (
+                    <ChevronUp className="h-5 w-5 text-gray-400" />
+                  ) : (
+                    <ChevronDown className="h-5 w-5 text-gray-400" />
+                  )
+                )}
+              </div>
+              
+              {!finalSubmission.has_final_submission && (
+                <p className="text-gray-400 mt-2">{finalSubmission.message}</p>
+              )}
+
+              {finalSubmission.has_final_submission && (
+                <div className="mt-4">
+                  <p className="text-gray-300 text-sm">
+                    Submission ID: <span className="font-mono text-[#39ff14]">{finalSubmission.submission_id}</span>
+                  </p>
+                  <p className="text-gray-300 text-sm">
+                    Created: <span className="font-mono text-[#39ff14]">
+                      {finalSubmission.created_at ? new Date(finalSubmission.created_at).toLocaleString() : 'N/A'}
+                    </span>
+                  </p>
+                </div>
+              )}
+              
+              {expandedSubmission && finalSubmission.has_final_submission && (
+                <div className="border-t border-gray-700 mt-4 pt-4">
+                  {loadingContents ? (
+                    <div className="flex justify-center items-center py-8">
+                      <Loader className="h-6 w-6 text-[#ff00cc] animate-spin" />
+                      <span className="ml-3 text-gray-400">Loading file contents...</span>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                      <div className="bg-gray-800 rounded border border-[#39ff14] p-4">
+                        <div className="flex justify-between items-center mb-2">
+                          <h3 className="text-[#39ff14] font-medium flex items-center">
+                            <FileText className="h-4 w-4 mr-2" /> player.py
+                          </h3>
+                          <a
+                            href={`https://api.atcuw.org/submission/file/${finalSubmission.player_file}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-cyan-300 hover:text-cyan-500 transition"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <Download className="h-4 w-4" />
+                          </a>
+                        </div>
+                        <pre className="bg-gray-950 p-3 rounded text-xs font-mono overflow-x-auto whitespace-pre-wrap max-h-72 overflow-y-auto">
+                          {fileContents.player}
+                        </pre>
+                      </div>
+                      
+                      <div className="bg-gray-800 rounded border border-purple-700 p-4">
+                        <div className="flex justify-between items-center mb-2">
+                          <h3 className="text-purple-400 font-medium flex items-center">
+                            <Package className="h-4 w-4 mr-2" /> requirements.txt
+                          </h3>
+                          <a
+                            href={`https://api.atcuw.org/submission/file/${finalSubmission.package_file}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-purple-300 hover:text-purple-500 transition"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <Download className="h-4 w-4" />
+                          </a>
+                        </div>
+                        <pre className="bg-gray-950 p-3 rounded text-xs font-mono overflow-x-auto whitespace-pre-wrap max-h-72 overflow-y-auto">
+                          {fileContents.requirements}
+                        </pre>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           )}
         </div>

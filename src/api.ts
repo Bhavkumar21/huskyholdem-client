@@ -303,6 +303,10 @@ const adminAPI = {
     deleteTournament2025Job: async (job_id: string) => {
         const res = await apiClient.post(`/admin/delete-tournament-2025-job/${job_id}`);
         return res.data;
+    },
+    getUserFinalSubmission: async (username: string) => {
+        const res = await apiClient.get(`/admin/user-final-submission/${username}`);
+        return res.data;
     }
 }
 
