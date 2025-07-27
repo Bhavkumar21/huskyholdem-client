@@ -292,6 +292,18 @@ const adminAPI = {
         const res = await apiClient.post(`/admin/toggle-job-public/${job_id}`);
         return res.data;
     },
+    get2025JobStatus: async (job_id: string) => {
+        const res = await apiClient.get(`/admin/2025-job-status/${job_id}`);
+        return res.data;
+    },
+    processTournament2025Job: async (job_id: string) => {
+        const res = await apiClient.post(`/admin/process-tournament-2025-job/${job_id}`);
+        return res.data;
+    },
+    deleteTournament2025Job: async (job_id: string) => {
+        const res = await apiClient.post(`/admin/delete-tournament-2025-job/${job_id}`);
+        return res.data;
+    },
     getUserFinalSubmission: async (username: string) => {
         const res = await apiClient.get(`/admin/user-final-submission/${username}`);
         return res.data;

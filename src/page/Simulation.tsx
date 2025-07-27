@@ -18,6 +18,9 @@ const SimulationPage = () => {
 
   const [jobs, setJobs] = useState<any[]>([]);
   const [jobsLoading, setJobsLoading] = useState(true);
+  const [job2025Status, setJob2025Status] = useState<Record<string, boolean | undefined>>({});
+  const [processing2025, setProcessing2025] = useState<Record<string, boolean>>({});
+  const [removing2025, setRemoving2025] = useState<Record<string, boolean>>({});
 
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -63,6 +66,19 @@ const SimulationPage = () => {
     }
   };
 
+  const fetch2025Statuses = async (jobs: any[]) => {
+    const statusMap: Record<string, boolean> = {};
+    await Promise.all(jobs.map(async (job) => {
+      try {
+        const res = await adminAPI.get2025JobStatus(job.job_id);
+        statusMap[job.job_id] = !!res.tournaments_2025_added;
+      } catch {
+        statusMap[job.job_id] = undefined;
+      }
+    }));
+    setJob2025Status(statusMap);
+  };
+
   const fetchJobs = async () => {
     try {
       const data = await adminAPI.listSimAdminJob();
@@ -74,6 +90,7 @@ const SimulationPage = () => {
         username: job?.username
       }));
       setJobs(convertedData);
+      await fetch2025Statuses(convertedData);
     } catch (err) {
       console.error("Failed to fetch jobs:", err);
     } finally {
@@ -113,6 +130,30 @@ const SimulationPage = () => {
       // You could add a toast notification here if desired
     } catch (err) {
       console.error("Failed to copy to clipboard:", err);
+    }
+  };
+
+  const process2025Job = async (job_id: string) => {
+    setProcessing2025((prev) => ({ ...prev, [job_id]: true }));
+    try {
+      await adminAPI.processTournament2025Job(job_id);
+      await fetch2025Statuses(jobs); // Refresh status
+    } catch (err: any) {
+      alert(err?.response?.data?.detail || err.message || "Failed to process job for 2025 leaderboard.");
+    } finally {
+      setProcessing2025((prev) => ({ ...prev, [job_id]: false }));
+    }
+  };
+
+  const remove2025Job = async (job_id: string) => {
+    setRemoving2025((prev) => ({ ...prev, [job_id]: true }));
+    try {
+      await adminAPI.deleteTournament2025Job(job_id);
+      await fetch2025Statuses(jobs); // Refresh status
+    } catch (err: any) {
+      alert(err?.response?.data?.detail || err.message || "Failed to remove job from 2025 leaderboard.");
+    } finally {
+      setRemoving2025((prev) => ({ ...prev, [job_id]: false }));
     }
   };
 
@@ -458,6 +499,11 @@ const SimulationPage = () => {
         onCopy={copyToClipboard}
         title="ACTIVE SIMULATION JOBS"
         showDeleteAction={true}
+        job2025Status={job2025Status}
+        onProcess2025={process2025Job}
+        processing2025={processing2025}
+        onRemove2025={remove2025Job}
+        removing2025={removing2025}
       />
     </div>
   );

@@ -17,6 +17,11 @@ interface JobListProps {
   onCopy?: (text: string) => void;
   title?: string;
   showDeleteAction?: boolean;
+  job2025Status?: Record<string, boolean | undefined>;
+  onProcess2025?: (jobId: string) => void;
+  processing2025?: Record<string, boolean>;
+  onRemove2025?: (jobId: string) => void;
+  removing2025?: Record<string, boolean>;
 }
 
 const JobList: React.FC<JobListProps> = ({
@@ -26,7 +31,12 @@ const JobList: React.FC<JobListProps> = ({
   onDelete,
   onCopy,
   title = "ACTIVE SIMULATION JOBS",
-  showDeleteAction = true
+  showDeleteAction = true,
+  job2025Status = {},
+  onProcess2025,
+  processing2025 = {},
+  onRemove2025,
+  removing2025 = {},
 }) => {
   const copyToClipboard = async (text: string) => {
     if (onCopy) {
@@ -85,6 +95,7 @@ const JobList: React.FC<JobListProps> = ({
                 <th className="p-2 w-1/8">Status</th>
                 <th className="p-2 w-1/8">User</th>
                 <th className="p-2 w-1/3">Result/Error</th>
+                <th className="p-2 w-1/8">2025 Leaderboard</th>
                 <th className="p-2 w-1/6">Actions</th>
               </tr>
             </thead>
@@ -101,7 +112,9 @@ const JobList: React.FC<JobListProps> = ({
                         ? JSON.stringify(job.result_data, null, 2) 
                         : job.result_data 
                       : "-");
-                
+                const is2025 = job2025Status[job.job_id];
+                const isProcessing = processing2025[job.job_id];
+                const isRemoving = removing2025[job.job_id];
                 return (
                   <tr key={job.job_id} className="border-b border-[#222]">
                     <td className="p-2 font-mono text-xs text-[#39ff14] break-all w-1/4">{job.job_id}</td>
@@ -131,6 +144,27 @@ const JobList: React.FC<JobListProps> = ({
                           {contentToShow}
                         </pre>
                       </div>
+                    </td>
+                    <td className="p-2 w-1/8">
+                      {is2025 === undefined ? (
+                        <span className="text-gray-400">-</span>
+                      ) : is2025 ? (
+                        <button
+                          className="px-2 py-1 text-xs border border-red-400 text-red-400 rounded hover:bg-red-400 hover:text-black transition disabled:opacity-50"
+                          disabled={isRemoving || !onRemove2025}
+                          onClick={() => onRemove2025 && onRemove2025(job.job_id)}
+                        >
+                          {isRemoving ? 'Removing...' : 'Remove from 2025'}
+                        </button>
+                      ) : (
+                        <button
+                          className="px-2 py-1 text-xs border border-[#ff00cc] text-[#ff00cc] rounded hover:bg-[#ff00cc] hover:text-black transition disabled:opacity-50"
+                          disabled={isProcessing || !onProcess2025}
+                          onClick={() => onProcess2025 && onProcess2025(job.job_id)}
+                        >
+                          {isProcessing ? 'Processing...' : 'Add to 2025'}
+                        </button>
+                      )}
                     </td>
                     <td className="p-2 w-1/6">
                       <div className="flex gap-2">
