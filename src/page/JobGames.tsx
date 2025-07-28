@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { liveAPI, gameAPI } from "../api";
-import { Gamepad2, ArrowLeft, Loader2 } from "lucide-react";
+import { Gamepad2, ArrowLeft, Loader2, ArrowUpDown } from "lucide-react";
 import UserPerformanceChart from "../components/UserPerformanceChart";
 
 interface JobGameInfo {
@@ -19,6 +19,8 @@ interface GameResult {
   [player_id: string]: number;
 }
 
+type SortOrder = 'uuid-asc' | 'uuid-desc' | 'none';
+
 const JobGamesPage: React.FC = () => {
   const { jobId } = useParams<{ jobId: string }>();
   const navigate = useNavigate();
@@ -26,6 +28,7 @@ const JobGamesPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [jobResult, setJobResult] = useState<GameResult | null>(null);
+  const [sortOrder, setSortOrder] = useState<SortOrder>('uuid-asc');
 
   useEffect(() => {
     fetchGames();
@@ -86,6 +89,40 @@ const JobGamesPage: React.FC = () => {
     }
   };
 
+  const handleSortToggle = () => {
+    setSortOrder(prev => {
+      if (prev === 'none') return 'uuid-asc';
+      if (prev === 'uuid-asc') return 'uuid-desc';
+      return 'none';
+    });
+  };
+
+  const getSortedGames = () => {
+    if (sortOrder === 'none') return games;
+    
+    return [...games].sort((a, b) => {
+      const uuidA = parseInt(a.game_uuid);
+      const uuidB = parseInt(b.game_uuid);
+      
+      if (sortOrder === 'uuid-asc') {
+        return uuidA - uuidB;
+      } else {
+        return uuidB - uuidA;
+      }
+    });
+  };
+
+  const getSortButtonText = () => {
+    switch (sortOrder) {
+      case 'uuid-asc': return 'UUID ASC';
+      case 'uuid-desc': return 'UUID DESC';
+      case 'none': return 'SORT BY UUID';
+      default: return 'SORT BY UUID';
+    }
+  };
+
+  const sortedGames = getSortedGames();
+
   return (
     <div className="min-h-screen text-white px-4 py-12 max-w-3xl mx-auto">
       <div className="mb-8 flex items-center gap-3">
@@ -144,9 +181,25 @@ const JobGamesPage: React.FC = () => {
           <p className="text-red-300 text-center">{error}</p>
         </div>
       )}
-      {!loading && !error && games.length > 0 && (
+      {!loading && !error && sortedGames.length > 0 && (
         <div className="space-y-4">
-          {games.map((game) => (
+          {/* Sort Controls */}
+          <div className="flex justify-end mb-4">
+            <button
+              onClick={handleSortToggle}
+              className={`flex items-center gap-2 px-4 py-2 border transition-colors ${
+                sortOrder === 'none' 
+                  ? 'border-[#39ff14] text-[#39ff14] hover:bg-[#39ff14] hover:text-black' 
+                  : 'border-[#ff00cc] text-[#ff00cc] hover:bg-[#ff00cc] hover:text-black'
+              }`}
+            >
+              <ArrowUpDown className="w-4 h-4" />
+              {getSortButtonText()}
+            </button>
+          </div>
+
+          {/* Games List */}
+          {sortedGames.map((game) => (
             <div key={game.game_id} className="bg-black/30 border border-[#444] rounded-lg p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-2">
               <div>
                 <span className="font-mono text-white">Game ID: </span>

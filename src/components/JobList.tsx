@@ -1,5 +1,6 @@
 import React from 'react';
 import { Copy, Trash2, Zap } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 interface Job {
   job_id: string;
@@ -117,7 +118,15 @@ const JobList: React.FC<JobListProps> = ({
                 const isRemoving = removing2025[job.job_id];
                 return (
                   <tr key={job.job_id} className="border-b border-[#222]">
-                    <td className="p-2 font-mono text-xs text-[#39ff14] break-all w-1/4">{job.job_id}</td>
+                    <td className="p-2 font-mono text-xs text-[#39ff14] break-all w-1/4">
+                      <Link
+                        to={`/games/${job.job_id}`}
+                        className="underline underline-offset-2 hover:text-[#2bff00] transition-colors"
+                        title="View game details"
+                      >
+                        {job.job_id}
+                      </Link>
+                    </td>
                     <td className="p-2 w-1/8">
                       <span
                         className={`px-2 py-1 rounded text-xs font-semibold ${

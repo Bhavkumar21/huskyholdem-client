@@ -41,12 +41,31 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
     '#ff0066', // Pink
   ];
 
+  const getAutoSampleInterval = (dataLength: number): number => {
+    if (dataLength >= 100 && dataLength < 500) {
+      return 10;
+    } else if (dataLength >= 500 && dataLength < 1000) {
+      return 25;
+    } else if (dataLength >= 1000) {
+      return 50;
+    }
+    return 1; // Default for smaller datasets
+  };
+
   const fetchPerformanceData = async () => {
     try {
       setLoading(true);
       setError(null);
       const data = await liveAPI.get_user_performance(jobId);
       setPerformanceData(data);
+      
+      // Auto-set sample interval based on data size
+      const users = Object.keys(data);
+      if (users.length > 0) {
+        const maxDataLength = Math.max(...users.map(user => data[user].length));
+        const autoInterval = getAutoSampleInterval(maxDataLength);
+        setSampleInterval(autoInterval);
+      }
     } catch (err: any) {
       console.error('Error fetching performance data:', err);
       if (err.response?.status === 403) {
@@ -153,7 +172,7 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
     const finalValue = values[values.length - 1];
     const initialValue = values[0];
     const change = finalValue - initialValue;
-    const changePercent = initialValue !== 0 ? ((finalValue / 10000) * 100) : 0;
+    const changePercent = ((finalValue / 10000) * 100);
     return {
       username: user,
       finalValue,

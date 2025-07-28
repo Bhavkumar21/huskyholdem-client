@@ -335,12 +335,24 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId, uploadedGameData 
     const truncatedUsername = truncateUsername(username);
     const stack = playerStacks[playerId] || 0;
     const cards = playerHands?.[playerId] || [];
+    const hasFolded = hasPlayerFolded(playerId);
+    const isAllIn = isPlayerAllIn(playerId);
+    
+    // Determine border color based on player state
+    let borderColor = 'border-[#444]';
+    if (hasFolded) {
+      borderColor = 'border-red-500';
+    } else if (isAllIn) {
+      borderColor = 'border-yellow-500';
+    } else if (isCurrentPlayer) {
+      borderColor = 'border-[#ff00cc]';
+    }
     
     return (
       <div 
-        className={`absolute bg-black/30 border rounded-lg p-2 min-w-[140px] ${
-          isCurrentPlayer ? 'border-[#ff00cc] shadow-lg shadow-[#ff00cc]/25' : 'border-[#444]'
-        }`}
+        className={`absolute bg-black/30 border rounded-lg p-2 min-w-[140px] ${borderColor} ${
+          isCurrentPlayer ? 'shadow-lg shadow-[#ff00cc]/25' : ''
+        } ${hasFolded ? 'opacity-60' : ''}`}
         style={style}
         title={username !== truncatedUsername ? username : undefined} // Show full username on hover if truncated
       >
@@ -350,6 +362,15 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId, uploadedGameData 
           </div>
           <div className="text-[#39ff14] font-mono text-xs mt-1">
             ${stack}
+          </div>
+          {/* Status indicators */}
+          <div className="flex justify-center gap-1 mt-1">
+            {hasFolded && (
+              <span className="text-red-500 text-xs font-bold">FOLDED</span>
+            )}
+            {isAllIn && !hasFolded && (
+              <span className="text-yellow-500 text-xs font-bold">ALL-IN</span>
+            )}
           </div>
           {/* Player Cards */}
           <div className="flex justify-center gap-1 mt-2">
@@ -446,6 +467,36 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId, uploadedGameData 
     });
     
     return { winners, losers };
+  };
+
+  // Check if a player has folded up to the current point
+  const hasPlayerFolded = (playerId: string) => {
+    if (!gameData || !actionList.length) return false;
+    
+    const maxActionIndex = viewMode === 'action' ? currentActionIdx : actionList.length - 1;
+    
+    for (let i = 0; i <= maxActionIndex && i < actionList.length; i++) {
+      const action = actionList[i];
+      if (String(action.player) === playerId && action.action === 'FOLD') {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  // Check if a player is all-in (stack is 0 or very close to 0)
+  const isPlayerAllIn = (playerId: string) => {
+    if (!gameData || !actionList.length) return false;
+    
+    const maxActionIndex = viewMode === 'action' ? currentActionIdx : actionList.length - 1;
+    
+    for (let i = 0; i <= maxActionIndex && i < actionList.length; i++) {
+      const action = actionList[i];
+      if (String(action.player) === playerId && action.action === 'ALL IN') {
+        return true;
+      }
+    }
+    return false;
   };
 
   // Check if we're at the end of the game
