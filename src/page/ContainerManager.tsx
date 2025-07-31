@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { dockerAPI, adminAPI } from "../api";
 import { useEffect, useState } from "react";
 import JobList from "../components/JobList";
+import ContainerLogViewer from "../components/ContainerLogViewer";
 
 const ContainerManagerPage = () => {
     const navigate = useNavigate();  
@@ -170,9 +171,12 @@ const ContainerManagerPage = () => {
                 title="ACTIVE SCALING JOBS"
                 showDeleteAction={false}
             />
-        </div>
 
-        
+            {/* Container Log Viewer */}
+            <div className="mt-8">
+                <ContainerLogViewer />
+            </div>
+        </div>
     )
 }
 

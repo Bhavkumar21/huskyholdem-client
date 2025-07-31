@@ -315,6 +315,10 @@ const dockerAPI = {
         const res = await apiClient.get('/docker/pool/status');
         return res.data
     },
+    getPoolDetailed: async () => {
+        const res = await apiClient.get('/docker/pool/detailed');
+        return res.data;
+    },
     submitScalingJob: async (targetSize: number) => {
         const response = await apiClient.post(`/docker/pool/scale?target_size=${targetSize}`);
     
@@ -322,6 +326,10 @@ const dockerAPI = {
             throw new Error(response.data?.detail || 'Failed to scale pool');
         }
     
+        return response.data;
+    },
+    getGameLog: async (port: number) => {
+        const response = await apiClient.get(`/docker/game-log/${port}`);
         return response.data;
     }
 };
