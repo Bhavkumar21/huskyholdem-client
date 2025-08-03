@@ -107,18 +107,24 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
     const users = Object.keys(data);
     if (users.length === 0) return [];
 
-    const maxIterations = Math.max(...users.map(user => data[user].length));
+    // Filter out users with empty or invalid data
+    const validUsers = users.filter(user => data[user] && Array.isArray(data[user]) && data[user].length > 0);
+    if (validUsers.length === 0) return [];
+
+    const maxIterations = Math.max(...validUsers.map(user => data[user].length));
+    if (maxIterations === 0) return [];
+
     const stats: IterationStats[] = [];
     
     // Pre-calculate user arrays for faster access
-    const userArrays = users.map(user => data[user]);
+    const userArrays = validUsers.map(user => data[user]);
 
     for (let i = 0; i < maxIterations; i++) {
       const scores: number[] = [];
       
       // Use pre-calculated arrays for faster iteration
       for (let j = 0; j < userArrays.length; j++) {
-        if (i < userArrays[j].length) {
+        if (i < userArrays[j].length && typeof userArrays[j][i] === 'number') {
           scores.push(userArrays[j][i]);
         }
       }
@@ -152,8 +158,12 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
     const interestingMap = new Map<number, InterestingGame>();
     const users = Object.keys(data);
     
+    // Filter out users with invalid data
+    const validUsers = users.filter(user => data[user] && Array.isArray(data[user]) && data[user].length > 0);
+    if (validUsers.length === 0) return [];
+    
     // Pre-calculate user data arrays for faster access
-    const userDataArrays = users.map(user => data[user]);
+    const userDataArrays = validUsers.map(user => data[user]);
     
     // Early termination threshold - only process significant changes
     const SIGNIFICANCE_THRESHOLD = 0.3;
@@ -198,7 +208,7 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
           
           if (combinedChange > maxPlayerChange) {
             maxPlayerChange = combinedChange;
-            playerWithMaxChange = users[j];
+            playerWithMaxChange = validUsers[j];
             playerChangeType = currentScore > prevScore ? 'breakthrough' : 'collapse';
           }
         }
@@ -236,7 +246,7 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
               gameEntry.reasons.push({
                 reason: 'Underdog Comeback',
                 significance: improvement / (current.mean || 1),
-                description: `${users[j]} staged a remarkable comeback from the bottom (+${Math.round(improvement)} points)`
+                description: `${validUsers[j]} staged a remarkable comeback from the bottom (+${Math.round(improvement)} points)`
               });
               gameEntry.totalSignificance += improvement / (current.mean || 1);
             }
@@ -255,23 +265,25 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
         for (let j = 0; j < userDataArrays.length; j++) {
           const userData = userDataArrays[j];
           if ((i - 1) < userData.length && userData[i - 1] === prevMaxScore) {
-            prevLeader = users[j];
+            prevLeader = validUsers[j];
           }
           if (i < userData.length && userData[i] === currentMaxScore) {
-            currentLeader = users[j];
+            currentLeader = validUsers[j];
           }
         }
         
         if (prevLeader && currentLeader && prevLeader !== currentLeader) {
-          const prevLeaderData = performanceData[prevLeader];
-          const leadershipLoss = prevLeaderData[i - 1] - prevLeaderData[i];
-          if (leadershipLoss > current.mean * 0.3) {
-            gameEntry.reasons.push({
-              reason: 'Leadership Change',
-              significance: leadershipLoss / (current.mean || 1),
-              description: `${prevLeader} lost leadership to ${currentLeader} (${Math.round(leadershipLoss)} point drop)`
-            });
-            gameEntry.totalSignificance += leadershipLoss / (current.mean || 1);
+          const prevLeaderData = data[prevLeader];
+          if (prevLeaderData && (i - 1) < prevLeaderData.length && i < prevLeaderData.length) {
+            const leadershipLoss = prevLeaderData[i - 1] - prevLeaderData[i];
+            if (leadershipLoss > current.mean * 0.3) {
+              gameEntry.reasons.push({
+                reason: 'Leadership Change',
+                significance: leadershipLoss / (current.mean || 1),
+                description: `${prevLeader} lost leadership to ${currentLeader} (${Math.round(leadershipLoss)} point drop)`
+              });
+              gameEntry.totalSignificance += leadershipLoss / (current.mean || 1);
+            }
           }
         }
       }
