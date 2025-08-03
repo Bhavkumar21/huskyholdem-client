@@ -9,6 +9,7 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+  ReferenceArea,
 } from 'recharts';
 
 interface UserPerformanceChartProps {
@@ -63,6 +64,19 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
   const [error, setError] = useState<string | null>(null);
   const [sampleInterval, setSampleInterval] = useState(1);
   const [interestingGames, setInterestingGames] = useState<InterestingGame[]>([]);
+  const [zoomState, setZoomState] = useState<{
+    left: string | number;
+    right: string | number;
+    refAreaLeft: string | number;
+    refAreaRight: string | number;
+    animation: boolean;
+  }>({
+    left: 'dataMin',
+    right: 'dataMax',
+    refAreaLeft: '',
+    refAreaRight: '',
+    animation: true,
+  });
 
   const userColors = [
     '#39ff14', // Bright green
@@ -491,6 +505,17 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
     chartData.push(dataPoint);
   }
 
+  // Filter chart data based on zoom state
+  const filteredChartData = chartData.filter(dataPoint => {
+    if (zoomState.left === 'dataMin' && zoomState.right === 'dataMax') {
+      return true; // Show all data when not zoomed
+    }
+    const iteration = dataPoint.iteration;
+    const leftBound = typeof zoomState.left === 'number' ? zoomState.left : 1;
+    const rightBound = typeof zoomState.right === 'number' ? zoomState.right : chartData[chartData.length - 1]?.iteration || 1;
+    return iteration >= leftBound && iteration <= rightBound;
+  });
+
   // Calculate final performance stats
   const userStats = users.map(user => {
     const values = performanceData[user];
@@ -543,6 +568,61 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
     );
   };
 
+  // Zoom functionality
+  const zoom = () => {
+    if (zoomState.refAreaLeft === zoomState.refAreaRight || zoomState.refAreaRight === '') {
+      setZoomState(prev => ({ ...prev, refAreaLeft: '', refAreaRight: '' }));
+      return;
+    }
+
+    if (zoomState.refAreaLeft > zoomState.refAreaRight) {
+      const temp = zoomState.refAreaLeft;
+      setZoomState(prev => ({
+        ...prev,
+        refAreaLeft: zoomState.refAreaRight,
+        refAreaRight: temp,
+      }));
+    }
+
+    setZoomState(prev => ({
+      ...prev,
+      left: zoomState.refAreaLeft,
+      right: zoomState.refAreaRight,
+      refAreaLeft: '',
+      refAreaRight: '',
+    }));
+  };
+
+  const zoomOut = () => {
+    setZoomState({
+      left: 'dataMin',
+      right: 'dataMax',
+      refAreaLeft: '',
+      refAreaRight: '',
+      animation: true,
+    });
+  };
+
+  const handleMouseDown = (e: { activeLabel?: string | number }) => {
+    if (!e || !e.activeLabel) return;
+    setZoomState(prev => ({
+      ...prev,
+      refAreaLeft: e.activeLabel as string | number,
+    }));
+  };
+
+  const handleMouseMove = (e: { activeLabel?: string | number }) => {
+    if (!e || !e.activeLabel || !zoomState.refAreaLeft) return;
+    setZoomState(prev => ({
+      ...prev,
+      refAreaRight: e.activeLabel as string | number,
+    }));
+  };
+
+  const handleMouseUp = () => {
+    zoom();
+  };
+
   return (
     <div className="bg-black bg-opacity-30 border border-[#444] rounded-lg p-6">
       {/* Header */}
@@ -576,52 +656,123 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
       </div>
 
       {/* Chart */}
-      <div className="mb-6 h-96 bg-gray-900/50 border border-gray-700 rounded p-4">
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
-            <CartesianGrid 
-              strokeDasharray="2 2" 
-              stroke="#444" 
-              opacity={0.5}
-            />
-            <XAxis 
-              dataKey="iteration" 
-              stroke="#39ff14"
-              fontSize={12}
-              fontFamily="monospace"
-              tick={{ fill: '#9ca3af' }}
-              axisLine={{ stroke: '#666', strokeWidth: 2 }}
-              tickLine={{ stroke: '#666' }}
-            />
-            <YAxis 
-              stroke="#39ff14"
-              fontSize={12}
-              fontFamily="monospace"
-              tick={{ fill: '#9ca3af' }}
-              axisLine={{ stroke: '#666', strokeWidth: 2 }}
-              tickLine={{ stroke: '#666' }}
-            />
-            <Tooltip content={<CustomTooltip />} />
-            
-            {users.map((user, index) => (
-              <Line
-                key={user}
-                type="monotone"
-                dataKey={user}
-                stroke={userColors[index % userColors.length]}
-                strokeWidth={2}
-                dot={CustomDot}
-                activeDot={{ 
-                  r: 5, 
-                  stroke: '#000', 
-                  strokeWidth: 1,
-                  fill: userColors[index % userColors.length]
+      <div className="mb-6 bg-gray-900/50 border border-gray-700 rounded p-4">
+        {/* Zoom Controls */}
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-gray-300 font-mono">ZOOM CONTROLS:</span>
+            <button
+              onClick={zoomOut}
+              className="px-3 py-1 text-xs border border-[#39ff14] text-[#39ff14] rounded hover:bg-[#39ff14] hover:text-black transition font-mono"
+            >
+              RESET ZOOM
+            </button>
+            <div className="flex items-center gap-1">
+              <input
+                type="number"
+                placeholder="From"
+                className="w-16 px-2 py-1 text-xs bg-gray-800 border border-gray-600 text-white rounded font-mono"
+                onChange={(e) => {
+                  const value = parseInt(e.target.value);
+                  if (!isNaN(value)) {
+                    setZoomState(prev => ({ ...prev, left: value }));
+                  }
                 }}
-                connectNulls={false}
               />
-            ))}
-          </LineChart>
-        </ResponsiveContainer>
+              <span className="text-gray-400 text-xs">to</span>
+              <input
+                type="number"
+                placeholder="To"
+                className="w-16 px-2 py-1 text-xs bg-gray-800 border border-gray-600 text-white rounded font-mono"
+                onChange={(e) => {
+                  const value = parseInt(e.target.value);
+                  if (!isNaN(value)) {
+                    setZoomState(prev => ({ ...prev, right: value }));
+                  }
+                }}
+              />
+            </div>
+          </div>
+          <div className="text-xs text-gray-400 font-mono">
+            {zoomState.left !== 'dataMin' || zoomState.right !== 'dataMax' ? (
+              <span>
+                ZOOMED: {zoomState.left} → {zoomState.right}
+              </span>
+            ) : (
+              <span>FULL RANGE</span>
+            )}
+          </div>
+        </div>
+        
+        <div className="h-96">
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart 
+              data={filteredChartData} 
+              margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+              onMouseDown={handleMouseDown}
+              onMouseMove={handleMouseMove}
+              onMouseUp={handleMouseUp}
+              onDoubleClick={zoomOut}
+            >
+              <CartesianGrid 
+                strokeDasharray="2 2" 
+                stroke="#444" 
+                opacity={0.5}
+              />
+              <XAxis 
+                dataKey="iteration" 
+                stroke="#39ff14"
+                fontSize={12}
+                fontFamily="monospace"
+                tick={{ fill: '#9ca3af' }}
+                axisLine={{ stroke: '#666', strokeWidth: 2 }}
+                tickLine={{ stroke: '#666' }}
+              />
+              <YAxis 
+                stroke="#39ff14"
+                fontSize={12}
+                fontFamily="monospace"
+                tick={{ fill: '#9ca3af' }}
+                axisLine={{ stroke: '#666', strokeWidth: 2 }}
+                tickLine={{ stroke: '#666' }}
+              />
+              <Tooltip content={<CustomTooltip />} />
+              
+              {users.map((user, index) => (
+                <Line
+                  key={user}
+                  type="monotone"
+                  dataKey={user}
+                  stroke={userColors[index % userColors.length]}
+                  strokeWidth={2}
+                  dot={CustomDot}
+                  activeDot={{ 
+                    r: 5, 
+                    stroke: '#000', 
+                    strokeWidth: 1,
+                    fill: userColors[index % userColors.length]
+                  }}
+                  connectNulls={false}
+                />
+              ))}
+              
+              {zoomState.refAreaLeft && zoomState.refAreaRight ? (
+                <ReferenceArea
+                  x1={zoomState.refAreaLeft}
+                  x2={zoomState.refAreaRight}
+                  strokeOpacity={0.3}
+                  fill="#39ff14"
+                  fillOpacity={0.1}
+                />
+              ) : null}
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+        
+        {/* Zoom Instructions */}
+        <div className="mt-2 text-xs text-gray-500 font-mono text-center">
+          Click and drag to zoom • Double-click to reset • Current range: {zoomState.left} - {zoomState.right}
+        </div>
       </div>
 
       {/* Interesting Games */}
