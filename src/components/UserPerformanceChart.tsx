@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import React, { useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import { liveAPI } from '../api';
 import { TrendingUp, TrendingDown, Users, BarChart3, RefreshCw, Star, Zap } from 'lucide-react';
 import {
@@ -62,6 +62,8 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
   const [error, setError] = useState<string | null>(null);
   const [sampleInterval, setSampleInterval] = useState(1);
   const [interestingGames, setInterestingGames] = useState<InterestingGame[]>([]);
+  const [activeGameIndex, setActiveGameIndex] = useState(0);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [zoomState, setZoomState] = useState<{
     left: string | number;
     right: string | number;
@@ -298,6 +300,7 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
       const stats = calculateIterationStats(data);
       const interesting = detectInterestingGames(stats, data);
       setInterestingGames(interesting);
+      setActiveGameIndex(0); // Reset to first game when data changes
       
       // Auto-set sample interval based on data size
       const users = Object.keys(data);
@@ -698,11 +701,24 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
           
           {/* Swipeable Container */}
           <div className="relative overflow-hidden">
-            <div className="flex gap-4 overflow-x-auto pb-4" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+            <div 
+              ref={scrollContainerRef}
+              className="flex gap-4 overflow-x-auto pb-4 scroll-smooth" 
+              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+              onScroll={(e) => {
+                const container = e.currentTarget;
+                const scrollLeft = container.scrollLeft;
+                const cardWidth = 500 + 16; // card width + gap
+                const currentIndex = Math.round(scrollLeft / cardWidth);
+                
+                // Update active dot
+                setActiveGameIndex(Math.min(currentIndex, interestingGames.length - 1));
+              }}
+            >
               {interestingGames.map((game, index) => (
                 <div 
                   key={index} 
-                  className="bg-gray-800/50 p-4 rounded-lg border border-gray-700 min-w-[320px] max-w-[320px] flex-shrink-0 hover:border-[#39ff14] transition-all duration-300 cursor-pointer group"
+                  className="bg-gray-800/50 p-4 rounded-lg border border-gray-700 min-w-[500px] max-w-[500px] flex-shrink-0 hover:border-[#39ff14] transition-all duration-300 cursor-pointer group"
                   onClick={() => {
                     // Navigate to game replay
                     const gameId = `${jobId}_${game.iteration}`;
@@ -767,10 +783,19 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
             {/* Scroll Indicators */}
             <div className="flex justify-center gap-2 mt-4">
               {interestingGames.map((_, index) => (
-                <div 
+                <button
                   key={index}
-                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                    index === 0 ? 'bg-[#39ff14] opacity-100' : 'bg-gray-600 opacity-50'
+                  onClick={() => {
+                    if (scrollContainerRef.current) {
+                      const cardWidth = 500 + 16; // card width + gap
+                      scrollContainerRef.current.scrollTo({
+                        left: index * cardWidth,
+                        behavior: 'smooth'
+                      });
+                    }
+                  }}
+                  className={`w-2 h-2 rounded-full transition-all duration-300 cursor-pointer hover:scale-125 ${
+                    index === activeGameIndex ? 'bg-[#39ff14] opacity-100' : 'bg-gray-600 opacity-50 hover:opacity-75'
                   }`}
                 />
               ))}

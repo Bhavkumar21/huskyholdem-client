@@ -42,6 +42,33 @@ const JobGamesPage: React.FC = () => {
     // eslint-disable-next-line
   }, [games]);
 
+  // Scroll to specific game if hash is present
+  useEffect(() => {
+    if (!loading && games.length > 0) {
+      const hash = window.location.hash;
+      if (hash) {
+        const gameId = hash.substring(1); // Remove the # symbol
+        const targetElement = document.getElementById(gameId);
+        if (targetElement) {
+          // Add a small delay to ensure the page is fully rendered
+          setTimeout(() => {
+            targetElement.scrollIntoView({ 
+              behavior: 'smooth', 
+              block: 'center' 
+            });
+            // Add a highlight effect
+            targetElement.style.border = '2px solid #39ff14';
+            targetElement.style.boxShadow = '0 0 20px rgba(57, 255, 20, 0.5)';
+            setTimeout(() => {
+              targetElement.style.border = '';
+              targetElement.style.boxShadow = '';
+            }, 3000);
+          }, 500);
+        }
+      }
+    }
+  }, [loading, games]);
+
   const fetchGames = async () => {
     setLoading(true);
     setError(null);
@@ -200,7 +227,11 @@ const JobGamesPage: React.FC = () => {
 
           {/* Games List */}
           {sortedGames.map((game) => (
-            <div key={game.game_id} className="bg-black/30 border border-[#444] rounded-lg p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+            <div 
+              key={game.game_id} 
+              id={`game-${game.game_uuid}`}
+              className="bg-black/30 border border-[#444] rounded-lg p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-2"
+            >
               <div>
                 <span className="font-mono text-white">Game ID: </span>
                 <span className="font-mono text-[#ff00cc]">{game.game_id}</span>
