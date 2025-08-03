@@ -49,9 +49,12 @@ interface IterationStats {
 
 interface InterestingGame {
   iteration: number;
-  reason: string;
-  significance: number;
-  description: string;
+  reasons: Array<{
+    reason: string;
+    significance: number;
+    description: string;
+  }>;
+  totalSignificance: number;
 }
 
 const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) => {
@@ -122,16 +125,27 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
   const detectInterestingGames = (stats: IterationStats[]): InterestingGame[] => {
     if (stats.length < 3) return [];
 
-    const interesting: InterestingGame[] = [];
+    const interestingMap = new Map<number, InterestingGame>();
     const users = Object.keys(performanceData);
     
     for (let i = 1; i < stats.length - 1; i++) {
       const current = stats[i];
       const prev = stats[i - 1];
+      const iteration = current.iteration;
 
       // Calculate various change metrics
       const varianceChange = Math.abs(current.variance - prev.variance) / (prev.variance || 1);
       const meanChange = Math.abs(current.mean - prev.mean) / (prev.mean || 1);
+      
+      // Initialize or get existing game entry
+      if (!interestingMap.has(iteration)) {
+        interestingMap.set(iteration, {
+          iteration,
+          reasons: [],
+          totalSignificance: 0
+        });
+      }
+      const gameEntry = interestingMap.get(iteration)!;
       
       // 1. Individual Player Breakthroughs/Collapses
       let maxPlayerChange = 0;
@@ -158,12 +172,12 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
       if (maxPlayerChange > 0.4) {
         const userData = performanceData[playerWithMaxChange];
         const changeAmount = Math.abs(userData[i] - userData[i - 1]);
-        interesting.push({
-          iteration: current.iteration,
+        gameEntry.reasons.push({
           reason: playerChangeType === 'breakthrough' ? 'Player Breakthrough' : 'Player Collapse',
           significance: maxPlayerChange,
           description: `${playerWithMaxChange} had a major ${playerChangeType} (${Math.round(changeAmount)} points, ${Math.round(maxPlayerChange * 100)}% change)`
         });
+        gameEntry.totalSignificance += maxPlayerChange;
       }
 
       // 2. Comeback Detection (player moving from bottom to competitive)
@@ -180,12 +194,12 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
             const significantImprovement = improvement > current.mean * 0.5;
             
             if (wasLowest && significantImprovement) {
-              interesting.push({
-                iteration: current.iteration,
+              gameEntry.reasons.push({
                 reason: 'Underdog Comeback',
                 significance: improvement / (current.mean || 1),
                 description: `${user} staged a remarkable comeback from the bottom (+${Math.round(improvement)} points)`
               });
+              gameEntry.totalSignificance += improvement / (current.mean || 1);
             }
           }
         });
@@ -207,12 +221,12 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
           const prevLeaderData = performanceData[prevLeader];
           const leadershipLoss = prevLeaderData[i - 1] - prevLeaderData[i];
           if (leadershipLoss > current.mean * 0.3) {
-            interesting.push({
-              iteration: current.iteration,
+            gameEntry.reasons.push({
               reason: 'Leadership Change',
               significance: leadershipLoss / (current.mean || 1),
               description: `${prevLeader} lost leadership to ${currentLeader} (${Math.round(leadershipLoss)} point drop)`
             });
+            gameEntry.totalSignificance += leadershipLoss / (current.mean || 1);
           }
         }
       }
@@ -224,33 +238,49 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
       ).length;
       
       if (closeCount >= Math.min(3, users.length) && current.standardDeviation < prev.standardDeviation * 0.7) {
-        interesting.push({
-          iteration: current.iteration,
+        gameEntry.reasons.push({
           reason: 'Dead Heat Formation',
           significance: closeCount / users.length,
           description: `${closeCount} players bunched together within ${Math.round(closeThreshold)} points`
         });
+        gameEntry.totalSignificance += closeCount / users.length;
       }
 
       // 5. Breakaway Leader
-      const maxScore = Math.max(...current.scores);
-      const secondMax = current.scores.sort((a, b) => b - a)[1];
+      const sortedCurrentScores = [...current.scores].sort((a, b) => b - a);
+      const maxScore = sortedCurrentScores[0];
+      const secondMax = sortedCurrentScores[1] || 0;
       const leadGap = maxScore - secondMax;
-      const prevMaxScore = Math.max(...prev.scores);
-      const prevSecondMax = prev.scores.sort((a, b) => b - a)[1];
+      
+      const sortedPrevScores = [...prev.scores].sort((a, b) => b - a);
+      const prevMaxScore = sortedPrevScores[0];
+      const prevSecondMax = sortedPrevScores[1] || 0;
       const prevLeadGap = prevMaxScore - prevSecondMax;
       
       if (leadGap > prevLeadGap * 2 && leadGap > current.mean * 0.4) {
-        const leader = users.find(user => {
+        // Find leader more robustly
+        let leader = '';
+        let maxFoundScore = -Infinity;
+        
+        users.forEach(user => {
           const userData = performanceData[user];
-          return i < userData.length && userData[i] === maxScore;
+          if (i < userData.length) {
+            const userScore = userData[i];
+            if (userScore > maxFoundScore) {
+              maxFoundScore = userScore;
+              leader = user;
+            }
+          }
         });
-        interesting.push({
-          iteration: current.iteration,
-          reason: 'Breakaway Leader',
-          significance: leadGap / (current.mean || 1),
-          description: `${leader} broke away from the pack (+${Math.round(leadGap - prevLeadGap)} point lead increase)`
-        });
+        
+        if (leader) {
+          gameEntry.reasons.push({
+            reason: 'Breakaway Leader',
+            significance: leadGap / (current.mean || 1),
+            description: `${leader} broke away from the pack (+${Math.round(leadGap - prevLeadGap)} point lead increase)`
+          });
+          gameEntry.totalSignificance += leadGap / (current.mean || 1);
+        }
       }
 
       // 6. Score Stagnation (everyone stopped improving)
@@ -259,12 +289,12 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
         const prevAvgChange = Math.abs(prev.mean - stats[i - 2].mean);
         
         if (avgChange < prevAvgChange * 0.3 && avgChange < current.mean * 0.05) {
-          interesting.push({
-            iteration: current.iteration,
+          gameEntry.reasons.push({
             reason: 'Score Stagnation',
             significance: prevAvgChange / (avgChange || 1),
             description: `Competition plateaued - minimal score changes across all players`
           });
+          gameEntry.totalSignificance += prevAvgChange / (avgChange || 1);
         }
       }
 
@@ -275,12 +305,12 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
         const volatilityIncrease = currentVolatility - prevVolatility;
         
         if (volatilityIncrease > 0.3 && currentVolatility > 0.5) {
-          interesting.push({
-            iteration: current.iteration,
+          gameEntry.reasons.push({
             reason: 'Volatility Explosion',
             significance: volatilityIncrease,
             description: `Scores became highly unstable - ${Math.round(volatilityIncrease * 100)}% volatility increase`
           });
+          gameEntry.totalSignificance += volatilityIncrease;
         }
       }
 
@@ -294,48 +324,51 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
       if (exceptionalPlayers.length > 0 && current.standardDeviation > 0) {
         const topPlayer = exceptionalPlayers[0];
         const topScore = performanceData[topPlayer][i];
-        interesting.push({
-          iteration: current.iteration,
+        gameEntry.reasons.push({
           reason: 'Exceptional Performance',
           significance: (topScore - current.mean) / (current.standardDeviation || 1),
           description: `${topPlayer} achieved exceptional score of ${Math.round(topScore)} (${Math.round((topScore - current.mean) / (current.standardDeviation || 1) * 10) / 10}σ above mean)`
         });
+        gameEntry.totalSignificance += (topScore - current.mean) / (current.standardDeviation || 1);
       }
 
       // Original metrics (refined)
       if (varianceChange > 0.5 && current.variance > prev.variance) {
-        interesting.push({
-          iteration: current.iteration,
+        gameEntry.reasons.push({
           reason: 'Competition Chaos',
           significance: varianceChange,
           description: `Score distribution exploded - ${Math.round(varianceChange * 100)}% variance increase`
         });
+        gameEntry.totalSignificance += varianceChange;
       }
 
       if (varianceChange > 0.4 && current.variance < prev.variance && current.standardDeviation < 1000) {
-        interesting.push({
-          iteration: current.iteration,
+        gameEntry.reasons.push({
           reason: 'Pack Convergence',
           significance: varianceChange,
           description: `Players clustered together - ${Math.round(varianceChange * 100)}% variance decrease`
         });
+        gameEntry.totalSignificance += varianceChange;
       }
 
       if (meanChange > 0.3) {
         const direction = current.mean > prev.mean ? 'surged' : 'crashed';
-        interesting.push({
-          iteration: current.iteration,
+        gameEntry.reasons.push({
           reason: 'Market Movement',
           significance: meanChange,
           description: `All scores ${direction} together - ${Math.round(meanChange * 100)}% average change`
         });
+        gameEntry.totalSignificance += meanChange;
       }
     }
 
-    // Sort by significance and take top 7 (increased from 5)
-    return interesting
-      .sort((a, b) => b.significance - a.significance)
-      .slice(0, 7);
+    // Convert map to array, filter out games with no reasons, sort by total significance
+    const interesting = Array.from(interestingMap.values())
+      .filter(game => game.reasons.length > 0)
+      .sort((a, b) => b.totalSignificance - a.totalSignificance)
+      .slice(0, 10);
+
+    return interesting;
   };
 
   const fetchPerformanceData = useCallback(async () => {
@@ -597,14 +630,29 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
           <h4 className="text-lg font-bold text-[#ff00cc] mb-3 font-mono flex items-center gap-2">
             <Zap className="w-5 h-5 text-[#ff00cc]" /> Interesting Games
           </h4>
-          <div className="space-y-2">
+          <div className="space-y-3">
             {interestingGames.map((game, index) => (
-              <div key={index} className="bg-gray-800/50 p-3 rounded-lg">
-                <p className="text-white font-mono text-sm font-bold mb-1">
-                  <Star className="w-4 h-4 text-[#ff00cc] inline mr-2" /> Game {game.iteration}
-                </p>
-                <p className="text-gray-400 font-mono text-sm">{game.reason}</p>
-                <p className="text-gray-500 font-mono text-xs mt-1">{game.description}</p>
+              <div key={index} className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-white font-mono text-sm font-bold">
+                    <Star className="w-4 h-4 text-[#ff00cc] inline mr-2" /> Game {game.iteration}
+                  </p>
+                  <span className="text-xs text-gray-400 font-mono">
+                    Significance: {Math.round(game.totalSignificance * 100) / 100}
+                  </span>
+                </div>
+                <div className="space-y-2">
+                  {game.reasons.map((reason, reasonIndex) => (
+                    <div key={reasonIndex} className="bg-gray-900/50 p-2 rounded border-l-2 border-[#39ff14]">
+                      <p className="text-[#39ff14] font-mono text-xs font-bold mb-1">
+                        {reason.reason}
+                      </p>
+                      <p className="text-gray-300 font-mono text-xs">
+                        {reason.description}
+                      </p>
+                    </div>
+                  ))}
+                </div>
               </div>
             ))}
           </div>
