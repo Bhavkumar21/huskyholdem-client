@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { liveAPI } from "../api";
-import { Gamepad2, Users, Calendar, Clock, Trophy, RefreshCw, Upload } from "lucide-react";
+import { Gamepad2, Users, Calendar, Clock, Trophy, RefreshCw, Upload, ArrowUpDown } from "lucide-react";
 
 interface JobWithPlayers {
   job_id: string;
@@ -14,10 +14,13 @@ interface AllJobIdsResponse {
   jobs: JobWithPlayers[];
 }
 
+type SortOrder = 'newest' | 'oldest' | 'none';
+
 const GamePage: React.FC = () => {
   const [jobs, setJobs] = useState<JobWithPlayers[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [sortOrder, setSortOrder] = useState<SortOrder>('newest');
 
   useEffect(() => {
     fetchJobs();
@@ -67,6 +70,40 @@ const GamePage: React.FC = () => {
     return `${players[0]} vs ${players[1]} (+${players.length - 2} more)`;
   };
 
+  const handleSortToggle = () => {
+    setSortOrder(prev => {
+      if (prev === 'none') return 'newest';
+      if (prev === 'newest') return 'oldest';
+      return 'none';
+    });
+  };
+
+  const getSortedJobs = () => {
+    if (sortOrder === 'none') return jobs;
+    
+    return [...jobs].sort((a, b) => {
+      const dateA = new Date(a.first_game_created_at).getTime();
+      const dateB = new Date(b.first_game_created_at).getTime();
+      
+      if (sortOrder === 'newest') {
+        return dateB - dateA;
+      } else {
+        return dateA - dateB;
+      }
+    });
+  };
+
+  const getSortButtonText = () => {
+    switch (sortOrder) {
+      case 'newest': return 'NEWEST FIRST';
+      case 'oldest': return 'OLDEST FIRST';
+      case 'none': return 'SORT BY DATE';
+      default: return 'SORT BY DATE';
+    }
+  };
+
+  const sortedJobs = getSortedJobs();
+
   return (
     <div className="min-h-screen text-white px-4 py-12 max-w-6xl mx-auto">
       {/* Header */}
@@ -95,7 +132,7 @@ const GamePage: React.FC = () => {
       </div>
 
       {/* Refresh Button */}
-      <div className="mb-6">
+      <div className="mb-6 flex flex-wrap gap-4">
         <button
           onClick={fetchJobs}
           disabled={loading}
@@ -103,6 +140,18 @@ const GamePage: React.FC = () => {
         >
           <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
           Refresh
+        </button>
+        
+        <button
+          onClick={handleSortToggle}
+          className={`flex items-center gap-2 px-4 py-2 border transition-colors ${
+            sortOrder === 'none' 
+              ? 'border-[#39ff14] text-[#39ff14] hover:bg-[#39ff14] hover:text-black' 
+              : 'border-[#ff00cc] text-[#ff00cc] hover:bg-[#ff00cc] hover:text-black'
+          }`}
+        >
+          <ArrowUpDown className="w-4 h-4" />
+          {getSortButtonText()}
         </button>
       </div>
 
@@ -159,7 +208,7 @@ const GamePage: React.FC = () => {
           </div>
 
           {/* Games List */}
-          {jobs.length === 0 ? (
+          {sortedJobs.length === 0 ? (
             <div className="text-center py-12">
               <Gamepad2 className="w-16 h-16 text-gray-600 mx-auto mb-4" />
               <p className="text-gray-400 text-lg">No games found</p>
@@ -167,7 +216,7 @@ const GamePage: React.FC = () => {
             </div>
           ) : (
             <div className="space-y-4">
-              {jobs.map((job) => (
+              {sortedJobs.map((job) => (
                 <div
                   key={job.job_id}
                   className="bg-black/30 border border-[#444] rounded-lg p-6 hover:border-[#ff00cc]/50 transition-colors"
