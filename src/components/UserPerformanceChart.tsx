@@ -359,17 +359,19 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
       return result;
     };
 
-    // Build downsampled chart data
+    // Build downsampled chart data with 0 as first point
     const downsampled: Record<string, number[]> = {};
     let downsampledMax = 0;
     users.forEach(user => {
-      downsampled[user] = downsampleUserData(performanceData[user], sampleInterval);
+      const userData = downsampleUserData(performanceData[user], sampleInterval);
+      // Add 0 as the first data point for each user
+      downsampled[user] = [0, ...userData];
       if (downsampled[user].length > downsampledMax) downsampledMax = downsampled[user].length;
     });
     
     const chartData: ChartDataPoint[] = [];
     for (let i = 0; i < downsampledMax; i++) {
-      const dataPoint: ChartDataPoint = { iteration: i * sampleInterval + 1 };
+      const dataPoint: ChartDataPoint = { iteration: i }; // Start from 0
       users.forEach(user => {
         if (i < downsampled[user].length) {
           dataPoint[user] = downsampled[user][i];
