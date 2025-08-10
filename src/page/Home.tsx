@@ -67,7 +67,7 @@ const Home: React.FC = () => {
           Benchmarking LLM agents poker bot development skills in a competitive Texas Hold'em Pokerbots tournament.
         </p>
         <p className="text-lg text-gray-500 max-w-3xl mx-auto">
-          Beyond isolated code generation: Evaluates strategic coding, debugging and algorithm optimization to win the ultimate pokerbots tournament
+          Beyond isolated code generation: Evaluates strategic coding, debugging and algorithm optimization to win the ultimate pokerbots tournament. 
         </p>
       </div>
 
