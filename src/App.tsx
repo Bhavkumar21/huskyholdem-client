@@ -13,6 +13,7 @@ import VerificationSuccess from "./page/VerificationSuccess";
 import LeaderboardPage from "./page/Leaderboard";
 import Admin from "./page/Admin";
 import SimulationPage from "./page/Simulation";
+import LLMBatchPage from "./page/LLMBatch";
 import DirectoryPage from "./page/Directory";
 import VerifyAccount from "./page/VerifyAccount";
 import VerifiedRoute from "./components/VerifiedRoute";
@@ -168,6 +169,16 @@ function App() {
         <VerifiedAdminRoute>              
             <DefaultLayout>
                 <SimulationPage  />
+            </DefaultLayout>
+        </VerifiedAdminRoute>
+      ),
+    },
+    {
+      path: "/llm-batch",
+      element: (
+        <VerifiedAdminRoute>              
+            <DefaultLayout>
+                <LLMBatchPage  />
             </DefaultLayout>
         </VerifiedAdminRoute>
       ),

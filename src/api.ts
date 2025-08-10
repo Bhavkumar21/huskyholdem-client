@@ -310,6 +310,21 @@ const adminAPI = {
     }
 }
 
+const llmAPI = {
+    batchRun: async (user_ids: string[]) => {
+        const res = await apiClient.post('/llm/batch-run', user_ids);
+        return res.data;
+    },
+    listBatches: async () => {
+        const res = await apiClient.get('/llm/batches');
+        return res.data;
+    },
+    deleteBatch: async (batch_id: string) => {
+        const res = await apiClient.delete(`/llm/batch/${batch_id}`);
+        return res.data;
+    }
+}
+
 const dockerAPI = {
     getPoolStatus: async () => {
         const res = await apiClient.get('/docker/pool/status');
@@ -344,5 +359,6 @@ export {
     userAPI,
     adminAPI,
     dockerAPI,
-    liveAPI
+    liveAPI,
+    llmAPI
 }

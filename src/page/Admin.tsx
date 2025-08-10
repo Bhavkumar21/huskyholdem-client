@@ -149,6 +149,12 @@ const Admin: React.FC = () => {
                         Go to Simulation Page
                     </button>
                     <button
+                        onClick={() => navigate('/llm-batch')}
+                        className="w-fit px-6 py-2 bg-[#ff00cc] text-black rounded hover:bg-[#e91e63] transition-colors"
+                    >
+                        Go to LLM Batch Page
+                    </button>
+                    <button
                         onClick={() => navigate('/container-manager')}
                         className="w-fit px-6 py-2 bg-[#39ff14] text-black rounded hover:bg-[#2ecc71] transition-colors"
                     >
