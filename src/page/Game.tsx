@@ -111,24 +111,12 @@ const GamePage: React.FC = () => {
         <div className="flex items-center gap-3 mb-4">
           <Gamepad2 className="w-8 h-8 text-[#ff00cc]" />
           <h1 className="text-3xl font-bold font-glitch">
-            Game <span className="text-[#39ff14]">Archive</span>
+            Game <span className="text-[#39ff14]">Replay</span>
           </h1>
         </div>
         <p className="text-gray-400">
-          All poker games and tournaments run on the platform
+          Full tournament results with clickable game analysis: watch any 1,000-hand match and examine exactly how each bot performed across all competitive tables.
         </p>
-        <div className="mt-4">
-          <Link
-            to="/upload-replay"
-            style={{
-              color: "black"
-            }}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-[#39ff14] font-bold rounded-none hover:bg-[#39ff14]/80 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <Upload className="w-4 h-4" />
-            Upload your own local run
-          </Link>
-        </div>
       </div>
 
       {/* Refresh Button */}

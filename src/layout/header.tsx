@@ -30,7 +30,7 @@ const DefaultHeader = () => {
               to="/"
               className="text-[#ff00cc] glitch font-glitch text-xl sm:text-2xl uppercase glitch-move"
             >
-              HUSKYHOLDEM <span className="text-[#39ff14]">@UW</span>
+              HUSKY HOLDEM <span className="text-[#39ff14]">BENCH</span>
             </Link>
 
             {/* Desktop Menu */}
@@ -42,31 +42,19 @@ const DefaultHeader = () => {
                 Home
               </Link>
               <Link
-                to="/about"
-                className="hover:text-[#ff00cc] text-white transition-all glitch-hover"
-              >
-                About
-              </Link>
-              <Link
-                to="/directory"
-                className="hover:text-[#39ff14] text-white transition-all glitch-hover"
-              >
-                ~/
-              </Link>
-              <Link
                 to="/games"
                 className="hover:text-[#39ff14] text-white transition-all glitch-hover"
               >
                 Games
               </Link>
 
-              {isAuthenticated ? (
+              {isAuthenticated && (
                 <>
                   <Link
-                      to="/submission"
-                      className="hover:text-[#39ff14] text-white transition-all glitch-hover"
-                    >
-                      Submission
+                    to="/submission"
+                    className="hover:text-[#39ff14] text-white transition-all glitch-hover"
+                  >
+                    Submission
                   </Link>
                   <Link
                     to="/dashboard"
@@ -94,7 +82,8 @@ const DefaultHeader = () => {
                     className="hover:text-[#39ff14] text-white transition-all glitch-hover"
                   >
                     <span className="text-gray-300">
-                      Hi, <span className="text-[#ff00cc]">{user?.username}</span>
+                      Hi,{" "}
+                      <span className="text-[#ff00cc]">{user?.username}</span>
                     </span>
                   </Link>
 
@@ -105,13 +94,6 @@ const DefaultHeader = () => {
                     Logout
                   </button>
                 </>
-              ) : (
-                <Link
-                  to="/login"
-                  className="border border-[#ff00cc] px-4 py-1 text-[#ff00cc] hover:bg-[#ff00cc] hover:text-black transition uppercase"
-                >
-                  Login
-                </Link>
               )}
             </div>
 
@@ -166,26 +148,20 @@ const DefaultHeader = () => {
               Home
             </Link>
             <Link
-              to="/about"
-              className="block text-white hover:text-[#ff00cc] glitch-hover"
+              to="/games"
+              className="block text-white hover:text-[#39ff14] glitch-hover"
               onClick={() => setIsMenuOpen(false)}
             >
-              About
-            </Link>
-            <Link
-              to="/directory"
-              className="hover:text-[#39ff14] text-white transition-all glitch-hover"
-            >
-              Directory
+              Games
             </Link>
 
-            {isAuthenticated ? (
+            {isAuthenticated && (
               <>
                 <Link
-                    to="/submission"
-                    className="block text-white hover:text-[#39ff14] glitch-hover"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
+                  to="/submission"
+                  className="block text-white hover:text-[#39ff14] glitch-hover"
+                  onClick={() => setIsMenuOpen(false)}
+                >
                   Submission
                 </Link>
                 <Link
@@ -202,13 +178,6 @@ const DefaultHeader = () => {
                 >
                   Leaderboard
                 </Link>
-                <Link
-                  to="/games"
-                  className="block text-white hover:text-[#39ff14] glitch-hover"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Games
-                </Link>
 
                 {user?.admin && (
                   <Link
@@ -221,7 +190,8 @@ const DefaultHeader = () => {
                 )}
 
                 <span className="block text-gray-300">
-                  Hi, <span className="text-[#ff00cc]">{user?.username}</span>
+                  Hi,{" "}
+                  <span className="text-[#ff00cc]">{user?.username}</span>
                 </span>
                 <button
                   onClick={() => {
@@ -233,14 +203,6 @@ const DefaultHeader = () => {
                   Logout
                 </button>
               </>
-            ) : (
-              <Link
-                to="/login"
-                className="block border border-[#ff00cc] text-center py-2 text-[#ff00cc] hover:bg-[#ff00cc] hover:text-black transition"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Login
-              </Link>
             )}
           </div>
         )}
