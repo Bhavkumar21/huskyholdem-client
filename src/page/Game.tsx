@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { liveAPI } from "../api";
-import { Gamepad2, Users, Calendar, Clock, Trophy, RefreshCw, Upload, ArrowUpDown } from "lucide-react";
+import { Gamepad2, Users, Calendar, Clock, Trophy, RefreshCw, ArrowUpDown } from "lucide-react";
 
 interface JobWithPlayers {
   job_id: string;
@@ -63,13 +63,6 @@ const GamePage: React.FC = () => {
     });
   };
 
-  const getPlayerDisplayName = (players: string[]) => {
-    if (players.length === 0) return "No players";
-    if (players.length === 1) return players[0];
-    if (players.length === 2) return `${players[0]} vs ${players[1]}`;
-    return `${players[0]} vs ${players[1]} (+${players.length - 2} more)`;
-  };
-
   const handleSortToggle = () => {
     setSortOrder(prev => {
       if (prev === 'none') return 'newest';
@@ -114,7 +107,7 @@ const GamePage: React.FC = () => {
             Game <span className="text-[#39ff14]">Replay</span>
           </h1>
         </div>
-        <p className="text-gray-400">
+        <p className="text-gray-300">
           Full tournament results with clickable game analysis: watch any 1,000-hand match and examine exactly how each bot performed across all competitive tables.
         </p>
       </div>
@@ -220,11 +213,8 @@ const GamePage: React.FC = () => {
                             to={`/games/${job.job_id}`}
                             className="font-bold text-white font-mono underline underline-offset-4 hover:text-[#ff00cc] transition-colors"
                           >
-                            Job ID: {job.job_id}
+                            Game ID: {job.job_id}
                           </Link>
-                          <p className="text-sm text-gray-400">
-                            {getPlayerDisplayName(job.players)}
-                          </p>
                         </div>
                       </div>
                       

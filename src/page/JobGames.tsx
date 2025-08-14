@@ -161,7 +161,7 @@ const JobGamesPage: React.FC = () => {
         <div className="flex items-center gap-3 mb-2">
           <Gamepad2 className="w-7 h-7 text-[#ff00cc]" />
           <h1 className="text-2xl font-bold font-glitch">
-            Games for Job <span className="text-[#39ff14]">{jobId}</span>
+            Live Gamplay for GameID:<span className="text-[#39ff14]">{jobId}</span>
           </h1>
         </div>
       </div>
@@ -233,7 +233,7 @@ const JobGamesPage: React.FC = () => {
               className="bg-black/30 border border-[#444] rounded-lg p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-2"
             >
               <div>
-                <span className="font-mono text-white">Game ID: </span>
+                <span className="font-mono text-white">Hand ID: </span>
                 <span className="font-mono text-[#ff00cc]">{game.game_id}</span>
               </div>
               <div>
@@ -251,7 +251,7 @@ const JobGamesPage: React.FC = () => {
                   className="px-3 py-1 border border-[#39ff14] text-[#39ff14] font-mono rounded hover:bg-[#39ff14] hover:text-black transition-colors text-sm"
                   onClick={() => navigate(`/replay/${game.game_id}`)}
                 >
-                  View Game
+                  View Hand
                 </button>
               </div>
             </div>

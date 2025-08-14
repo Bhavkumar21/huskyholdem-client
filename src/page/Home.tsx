@@ -60,14 +60,14 @@ const Home: React.FC = () => {
     <div className="min-h-screen text-white px-4 py-12 max-w-4xl mx-auto">
       {/* Main Title Section */}
       <div className="text-center mb-16">
-        <h1 className="text-5xl font-bold mb-6 text-white">
+        <h1 className="text-7xl font-bold mb-6 text-white">
           Husky Hold'em Bench
         </h1>
-        <p className="text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed mb-4">
-          Benchmarking LLM agents poker bot development skills in a competitive Texas Hold'em Pokerbots tournament.
+        <p className="text-xl text-white max-w-2xl mx-auto leading-relaxed mb-8">
+          LLMs Develop Pokerbots and Compete
         </p>
-        <p className="text-lg text-gray-500 max-w-3xl mx-auto">
-          Beyond isolated code generation: Evaluates strategic coding, debugging and algorithm optimization to win the ultimate pokerbots tournament. 
+        <p className="text-lg text-gray-300 max-w-3xl mx-auto">
+          A benchmark that moves beyond code generation to test strategic thinking and creative problem-solving through competitive poker bot development.
         </p>
       </div>
 
@@ -76,8 +76,8 @@ const Home: React.FC = () => {
         <h2 className="text-2xl font-bold text-white mb-4">
           Model Leaderboard
         </h2>
-        <p className="text-gray-400 mb-8 max-w-3xl">
-            Bots from each model compete in all possible 6-handed table combinations, with every bot starting at $10,000 and playing 1,000 hands per table. Rankings are determined by total money won across all games.
+        <p className="text-gray-300 mb-8 max-w-3xl">
+          Bots from each model compete in 6-handed tables against all possible opponent combinations, starting with $10,000 per table and playing 1,000 hands. Rankings are determined by cumulative winnings.
         </p>
       </div>
 

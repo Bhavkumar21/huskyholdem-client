@@ -220,7 +220,7 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId, uploadedGameData 
     <div className="min-h-screen flex items-center justify-center">
       <div className="text-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#ff00cc] mb-4"></div>
-        <p className="text-gray-400">Loading game replay...</p>
+        <p className="text-gray-400">Loading round replay...</p>
       </div>
     </div>
   );
@@ -555,7 +555,7 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId, uploadedGameData 
             </button>
             <div className="text-center flex-1">
           <h1 className="text-3xl font-bold font-mono text-[#ff00cc] mb-2">POKER REPLAY</h1>
-          <p className="text-gray-400">Step-by-step game analysis</p>
+          <p className="text-gray-400">Action-by-Action hand vizualization</p>
             </div>
             <div className="w-20"></div> {/* Spacer to center the title */}
           </div>
@@ -572,7 +572,7 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId, uploadedGameData 
                   : 'text-[#ff00cc] hover:bg-[#ff00cc]/20'
               }`}
             >
-              Action by Action
+              Actions this Hand
             </button>
             <button
               onClick={() => setViewMode('round')}
@@ -582,7 +582,7 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId, uploadedGameData 
                   : 'text-[#39ff14] hover:bg-[#39ff14]/20'
               }`}
             >
-              Round by Round
+              Results 
             </button>
           </div>
         </div>

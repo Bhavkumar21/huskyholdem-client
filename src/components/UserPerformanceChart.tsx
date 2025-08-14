@@ -474,7 +474,7 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
       return (
         <div className="bg-gray-900 border border-[#39ff14] rounded-lg p-3 shadow-lg">
           <p className="text-[#39ff14] font-mono text-sm font-bold mb-2">
-            Iteration {label}
+            Sample {label}
           </p>
           {payload.map((entry: TooltipPayload, index: number) => (
             <p key={index} className="text-white font-mono text-sm">
@@ -657,6 +657,12 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
                 tick={{ fill: '#9ca3af' }}
                 axisLine={{ stroke: '#666', strokeWidth: 2 }}
                 tickLine={{ stroke: '#666' }}
+                label={{ 
+                  value: 'Interval', 
+                  position: 'insideBottom', 
+                  offset: -10,
+                  style: { textAnchor: 'middle', fill: '#E0E0E0', fontSize: '12px', fontFamily: 'monospace' }
+                }}
               />
               <YAxis 
                 stroke="#39ff14"
@@ -665,6 +671,12 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
                 tick={{ fill: '#9ca3af' }}
                 axisLine={{ stroke: '#666', strokeWidth: 2 }}
                 tickLine={{ stroke: '#666' }}
+                label={{ 
+                  value: 'Delta Money ($)', 
+                  angle: -90, 
+                  position: 'insideLeft',
+                  style: { textAnchor: 'middle', fill: '#E0E0E0', fontSize: '12px', fontFamily: 'monospace' }
+                }}
               />
               <Tooltip content={<CustomTooltip />} />
               
@@ -710,7 +722,7 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
       {interestingGames.length > 0 && (
         <div className="bg-black bg-opacity-30 border border-[#444] rounded-lg p-6 mb-6">
           <h4 className="text-lg font-bold text-[#ff00cc] mb-3 font-mono flex items-center gap-2">
-            <Zap className="w-5 h-5 text-[#ff00cc]" /> Interesting Games
+            <Zap className="w-5 h-5 text-[#ff00cc]" /> Interesting Hands
           </h4>
           
           {/* Swipeable Container */}
@@ -732,19 +744,14 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
               {interestingGames.map((game, index) => (
                 <div 
                   key={index} 
-                  className="bg-gray-800/50 p-4 rounded-lg border border-gray-700 min-w-[500px] max-w-[500px] flex-shrink-0 hover:border-[#39ff14] transition-all duration-300 cursor-pointer group"
-                  onClick={() => {
-                    // Navigate to game replay
-                    const gameId = `${jobId}_${game.iteration}`;
-                    window.open(`/replay/${gameId}`, '_blank');
-                  }}
+                  className="bg-gray-800/50 p-4 rounded-lg border border-gray-700 min-w-[500px] max-w-[500px] flex-shrink-0"
                 >
                   {/* Game Header */}
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2">
                       <Star className="w-4 h-4 text-[#ff00cc]" />
                       <p className="text-white font-mono text-sm font-bold">
-                        Game {game.iteration}
+                        Hand {game.iteration}
                       </p>
                     </div>
                     <div className="flex items-center gap-2">
@@ -775,21 +782,6 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
                       </div>
                     )}
                   </div>
-
-                  {/* Action Button */}
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1">
-                      <span className="text-xs text-gray-400 font-mono">Click to</span>
-                      <span className="text-xs text-[#39ff14] font-mono font-bold group-hover:text-white transition-colors">
-                        WATCH REPLAY
-                      </span>
-                    </div>
-                    <div className="w-6 h-6 bg-[#39ff14] rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                      <svg className="w-3 h-3 text-black" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                  </div>
                 </div>
               ))}
             </div>
@@ -818,7 +810,7 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
             {/* Swipe Instructions */}
             <div className="text-center mt-3">
               <p className="text-xs text-gray-500 font-mono">
-                ← Swipe to explore more interesting games →
+                ← Swipe to explore more interesting hands →
               </p>
             </div>
           </div>
@@ -888,9 +880,9 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
         <div className="flex items-center justify-between text-sm text-gray-400 font-mono">
           <div className="flex items-center gap-4">
             <span><Users className="w-4 h-4 inline mr-1" />{users.length} PLAYERS</span>
-            <span>{maxIterations} ROUNDS</span>
+            <span>{maxIterations} HANDS</span>
           </div>
-          <span>JOB_ID: {jobId}</span>
+          <span>GAME_ID: {jobId}</span>
         </div>
       </div>
     </div>
