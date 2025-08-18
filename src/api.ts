@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const apiClient = axios.create({
-  baseURL: 'http://13.52.78.12:8002',
+  baseURL: 'https://api.huskybench.com',
 //   baseURL: 'http://localhost:8002',
   headers: {
     'Content-Type': 'application/json',
