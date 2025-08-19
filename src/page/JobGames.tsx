@@ -278,13 +278,10 @@ const JobGamesPage: React.FC = () => {
                 className="bg-black/30 border border-[#444] rounded-lg p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-2"
               >
                 <div>
-                  <span className="font-mono text-white">Game #{index + 1}: </span>
+                  <span className="font-mono text-white">Hand #{index + 1}: </span>
                   <span className="font-mono text-[#ff00cc]">{game.game_id}</span>
                 </div>
                 <div>
-                  <div className="font-mono text-gray-400 ml-2">
-                    Hand {game.game_uuid}
-                  </div>
                   <span className="font-mono text-gray-400">
                     {batchOrder ? `Batch ${batchOrder.batch_order}` : 'No Batch Info'}
                   </span>

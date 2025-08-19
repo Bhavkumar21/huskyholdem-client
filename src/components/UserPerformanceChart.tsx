@@ -10,6 +10,7 @@ import {
   Tooltip,
   ResponsiveContainer,
   ReferenceArea,
+  ReferenceDot,
 } from 'recharts';
 
 interface UserPerformanceChartProps {
@@ -471,10 +472,20 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
   // Memoized tooltip component
   const CustomTooltip = useCallback<React.FC<CustomTooltipProps>>(({ active, payload, label }) => {
     if (active && payload && payload.length) {
+      // Check if this is an interesting game
+      const currentIteration = typeof label === 'number' ? label : parseInt(label as string);
+      const interestingGame = interestingGames.find(game => game.iteration === currentIteration);
+      
       return (
-        <div className="bg-gray-900 border border-[#39ff14] rounded-lg p-3 shadow-lg">
+        <div className="bg-gray-900 border border-[#39ff14] rounded-lg p-3 shadow-lg max-w-md">
           <p className="text-[#39ff14] font-mono text-sm font-bold mb-2">
             Sample {label}
+            {interestingGame && (
+              <span className="ml-2 text-[#ff00cc]">
+                <Star className="w-3 h-3 inline ml-1" />
+                Interesting Game
+              </span>
+            )}
           </p>
           {payload.map((entry: TooltipPayload, index: number) => (
             <p key={index} className="text-white font-mono text-sm">
@@ -485,7 +496,7 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
       );
     }
     return null;
-  }, []);
+  }, [interestingGames]);
 
   // Memoized dot component
   const CustomDot = useCallback((props: { cx: number; cy: number; fill: string }) => {
@@ -502,6 +513,42 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
       />
     );
   }, []);
+
+  // Custom star component for interesting games
+  const InterestingGameStar = useCallback((props: { cx: number; cy: number; payload?: any }) => {
+    const { cx, cy, payload } = props;
+    
+    // Check if this iteration has an interesting game
+    const hasInterestingGame = interestingGames.some(game => game.iteration === payload?.iteration);
+    
+    if (!hasInterestingGame) return null;
+
+    // Create star shape path
+    const size = 4;
+    const starPath = `M${cx},${cy - size} L${cx + size * 0.3},${cy - size * 0.3} L${cx + size},${cy - size * 0.3} L${cx + size * 0.5},${cy + size * 0.1} L${cx + size * 0.8},${cy + size} L${cx},${cy + size * 0.6} L${cx - size * 0.8},${cy + size} L${cx - size * 0.5},${cy + size * 0.1} L${cx - size},${cy - size * 0.3} L${cx - size * 0.3},${cy - size * 0.3} Z`;
+    
+    return (
+      <g>
+        {/* Star background */}
+        <path
+          d={starPath}
+          fill="#ff00cc"
+          stroke="#ffffff"
+          strokeWidth={1}
+          className="drop-shadow-lg"
+        />
+        {/* Star inner glow */}
+        <path
+          d={starPath}
+          fill="none"
+          stroke="#ff00cc"
+          strokeWidth={2}
+          opacity={0.6}
+          className="animate-pulse"
+        />
+      </g>
+    );
+  }, [interestingGames]);
 
   if (loading) {
     return (
@@ -699,6 +746,31 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
                 />
               ))}
               
+              {/* Add star markers for interesting games using ReferenceDot */}
+              {interestingGames.map((game, index) => {
+                // Find the chart data point for this iteration
+                const dataPoint = filteredChartData.find(d => d.iteration === game.iteration);
+                if (!dataPoint) return null;
+                
+                // Calculate the average y-position for all users at this iteration
+                const userValues = users.map(user => dataPoint[user]).filter(val => val !== undefined);
+                if (userValues.length === 0) return null;
+                
+                const avgValue = userValues.reduce((sum, val) => sum + val, 0) / userValues.length;
+                
+                return (
+                  <ReferenceDot 
+                    key={`star-${index}`}
+                    x={game.iteration} 
+                    y={avgValue}
+                    r={0}
+                    shape={(props: any) => <InterestingGameStar {...props} payload={{ iteration: game.iteration }} />}
+                    fill="transparent"
+                    stroke="transparent"
+                  />
+                );
+              })}
+              
               {zoomState.refAreaLeft && zoomState.refAreaRight ? (
                 <ReferenceArea
                   x1={zoomState.refAreaLeft}
@@ -835,6 +907,19 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
                 </div>
               );
             })}
+            
+            {/* Add star legend if there are interesting games */}
+            {interestingGames.length > 0 && (
+              <div className="pt-2 mt-2 border-t border-gray-700">
+                <div className="flex items-center gap-3">
+                  <Star className="w-4 h-4 text-[#ff00cc]" />
+                  <span className="font-mono text-sm text-gray-300">Interesting Games</span>
+                </div>
+                <p className="text-xs text-gray-500 font-mono mt-1 ml-7">
+                  Pink stars mark significant events in the game
+                </p>
+              </div>
+            )}
           </div>
         </div>
 
