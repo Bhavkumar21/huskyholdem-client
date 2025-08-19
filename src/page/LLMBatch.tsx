@@ -30,6 +30,9 @@ const LLMBatchPage = () => {
   const [batches, setBatches] = useState<Batch[]>([]);
   const [batchesLoading, setBatchesLoading] = useState(true);
   const [deletingBatch, setDeletingBatch] = useState<Record<string, boolean>>({});
+  const [processingLeaderboard, setProcessingLeaderboard] = useState<Record<string, boolean>>({});
+  const [removingLeaderboard, setRemovingLeaderboard] = useState<Record<string, boolean>>({});
+  const [allAddedMap, setAllAddedMap] = useState<Record<string, boolean>>({});
 
   const [searchQuery, setSearchQuery] = useState("");
   const [submittingBatch, setSubmittingBatch] = useState(false);
@@ -76,6 +79,25 @@ const LLMBatchPage = () => {
     try {
       const data = await llmAPI.listBatches();
       setBatches(data.batches || []);
+      const ids: string[] = (data.batches || []).map((b: Batch) => b.batch_id);
+      if (ids.length > 0) {
+        // Fetch arena statuses in parallel
+        const results = await Promise.all(
+          ids.map(async (id) => {
+            try {
+              const status = await llmAPI.getBatchArenaStatus(id);
+              return [id, !!status.all_added] as [string, boolean];
+            } catch {
+              return [id, false] as [string, boolean];
+            }
+          })
+        );
+        const map: Record<string, boolean> = {};
+        for (const [id, val] of results) map[id] = val;
+        setAllAddedMap(map);
+      } else {
+        setAllAddedMap({});
+      }
     } catch (err) {
       console.error("Failed to fetch batches:", err);
     } finally {
@@ -111,6 +133,42 @@ const LLMBatchPage = () => {
       alert("Failed to delete batch: " + (err?.response?.data?.detail || err.message || "Unknown error"));
     } finally {
       setDeletingBatch(prev => ({ ...prev, [batchId]: false }));
+    }
+  };
+
+  const addBatchToLeaderboard = async (batchId: string) => {
+    setProcessingLeaderboard(prev => ({ ...prev, [batchId]: true }));
+    try {
+      await llmAPI.processBatchLeaderboard(batchId);
+      alert("Batch scores added to LLM leaderboard.");
+      // refresh status for this batch
+      try {
+        const status = await llmAPI.getBatchArenaStatus(batchId);
+        setAllAddedMap(prev => ({ ...prev, [batchId]: !!status.all_added }));
+      } catch {}
+    } catch (err: any) {
+      console.error("Failed to process batch to leaderboard:", err);
+      alert("Failed to add to leaderboard: " + (err?.response?.data?.detail || err.message || "Unknown error"));
+    } finally {
+      setProcessingLeaderboard(prev => ({ ...prev, [batchId]: false }));
+    }
+  };
+
+  const removeBatchFromLeaderboard = async (batchId: string) => {
+    setRemovingLeaderboard(prev => ({ ...prev, [batchId]: true }));
+    try {
+      await llmAPI.deleteBatchLeaderboard(batchId);
+      alert("Batch scores removed from LLM leaderboard.");
+      // refresh status for this batch
+      try {
+        const status = await llmAPI.getBatchArenaStatus(batchId);
+        setAllAddedMap(prev => ({ ...prev, [batchId]: !!status.all_added }));
+      } catch {}
+    } catch (err: any) {
+      console.error("Failed to delete batch from leaderboard:", err);
+      alert("Failed to remove from leaderboard: " + (err?.response?.data?.detail || err.message || "Unknown error"));
+    } finally {
+      setRemovingLeaderboard(prev => ({ ...prev, [batchId]: false }));
     }
   };
 
@@ -441,23 +499,53 @@ const LLMBatchPage = () => {
                       Created: {batch.created_at ? formatDate(batch.created_at) : 'Unknown'}
                     </p>
                   </div>
-                  <button
-                    onClick={() => deleteBatch(batch.batch_id)}
-                    disabled={deletingBatch[batch.batch_id]}
-                    className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-500 transition disabled:opacity-50 flex items-center gap-2"
-                  >
-                    {deletingBatch[batch.batch_id] ? (
-                      <>
-                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                        Deleting...
-                      </>
-                    ) : (
-                      <>
-                        <Trash2 className="w-4 h-4" />
-                        Delete Batch
-                      </>
-                    )}
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => addBatchToLeaderboard(batch.batch_id)}
+                      disabled={!!processingLeaderboard[batch.batch_id] || !!allAddedMap[batch.batch_id]}
+                      className="px-2 py-1 text-xs border border-[#ff00cc] text-[#ff00cc] rounded hover:bg-[#ff00cc] hover:text-black transition disabled:opacity-50"
+                    >
+                      {processingLeaderboard[batch.batch_id] ? (
+                        <div className="flex items-center gap-2">
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current"></div>
+                          Processing...
+                        </div>
+                      ) : (
+                        "Add to Leaderboard"
+                      )}
+                    </button>
+                    <button
+                      onClick={() => removeBatchFromLeaderboard(batch.batch_id)}
+                      disabled={!!removingLeaderboard[batch.batch_id] || !allAddedMap[batch.batch_id]}
+                      className="px-2 py-1 text-xs border border-red-400 text-red-400 rounded hover:bg-red-400 hover:text-black transition disabled:opacity-50"
+                    >
+                      {removingLeaderboard[batch.batch_id] ? (
+                        <div className="flex items-center gap-2">
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current"></div>
+                          Removing...
+                        </div>
+                      ) : (
+                        "Remove from Leaderboard"
+                      )}
+                    </button>
+                    <button
+                      onClick={() => deleteBatch(batch.batch_id)}
+                      disabled={deletingBatch[batch.batch_id] || !!allAddedMap[batch.batch_id]}
+                      className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-500 transition disabled:opacity-50 flex items-center gap-2"
+                    >
+                      {deletingBatch[batch.batch_id] ? (
+                        <>
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                          Deleting...
+                        </>
+                      ) : (
+                        <>
+                          <Trash2 className="w-4 h-4" />
+                          Delete Batch
+                        </>
+                      )}
+                    </button>
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-4">

@@ -7,6 +7,7 @@ interface JobWithPlayers {
   job_id: string;
   players: string[];
   first_game_created_at: string;
+  gameNumber?: number; // Add game number for display
 }
 
 interface AllJobIdsResponse {
@@ -31,7 +32,21 @@ const GamePage: React.FC = () => {
       setLoading(true);
       setError(null);
       const response: AllJobIdsResponse = await liveAPI.get_public_job_ids();
-      setJobs(response.jobs);
+      
+      // Sort jobs by creation time and assign game numbers
+      const sortedJobs = response.jobs.sort((a, b) => {
+        const dateA = new Date(a.first_game_created_at).getTime();
+        const dateB = new Date(b.first_game_created_at).getTime();
+        return dateA - dateB; // Oldest first for numbering
+      });
+      
+      // Assign sequential game numbers starting from 1
+      const jobsWithNumbers = sortedJobs.map((job, index) => ({
+        ...job,
+        gameNumber: index + 1
+      }));
+      
+      setJobs(jobsWithNumbers);
     } catch (err) {
       console.error("Error fetching jobs:", err);
       setError("Failed to load games. Please try again later.");
@@ -197,7 +212,7 @@ const GamePage: React.FC = () => {
             </div>
           ) : (
             <div className="space-y-4">
-              {sortedJobs.map((job) => (
+              {sortedJobs.map((job, index) => (
                 <div
                   key={job.job_id}
                   className="bg-black/30 border border-[#444] rounded-lg p-6 hover:border-[#ff00cc]/50 transition-colors"
@@ -210,11 +225,14 @@ const GamePage: React.FC = () => {
                         </div>
                         <div>
                           <Link
-                            to={`/games/${job.job_id}`}
+                            to={`/games/${job.job_id}?gameNumber=${index + 1}`}
                             className="font-bold text-white font-mono underline underline-offset-4 hover:text-[#ff00cc] transition-colors"
                           >
-                            Game ID: {job.job_id}
+                            Game #{index + 1} Batch #1
                           </Link>
+                          <div className="text-xs text-gray-500 font-mono mt-1">
+                            ID: {job.job_id}
+                          </div>
                         </div>
                       </div>
                       

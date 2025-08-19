@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
-import { liveAPI, gameAPI } from "../api";
+import { useParams, Link, useNavigate, useSearchParams } from "react-router-dom";
+import { liveAPI, gameAPI, llmAPI } from "../api";
 import { Gamepad2, ArrowLeft, Loader2, ArrowUpDown } from "lucide-react";
 import UserPerformanceChart from "../components/UserPerformanceChart";
 
@@ -19,16 +19,30 @@ interface GameResult {
   [player_id: string]: number;
 }
 
+interface BatchOrderResponse {
+  game_log_id: string;
+  batch_id: string;
+  batch_order: number;
+  total_batches: number;
+}
+
+
+
 type SortOrder = 'uuid-asc' | 'uuid-desc' | 'none';
 
 const JobGamesPage: React.FC = () => {
   const { jobId } = useParams<{ jobId: string }>();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [games, setGames] = useState<JobGameInfo[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [jobResult, setJobResult] = useState<GameResult | null>(null);
-  const [sortOrder, setSortOrder] = useState<SortOrder>('uuid-asc');
+  const [sortOrder, setSortOrder] = useState<SortOrder>('none');
+  const [batchOrders, setBatchOrders] = useState<Record<string, BatchOrderResponse | null>>({});
+  
+  // Get game number from URL parameter
+  const gameNumber = searchParams.get('gameNumber');
 
   useEffect(() => {
     fetchGames();
@@ -38,6 +52,7 @@ const JobGamesPage: React.FC = () => {
   useEffect(() => {
     if (games.length > 0) {
       fetchAllResults();
+      fetchBatchOrders();
     }
     // eslint-disable-next-line
   }, [games]);
@@ -98,6 +113,34 @@ const JobGamesPage: React.FC = () => {
     }
     setJobResult(jobLevelResult);
   };
+
+  const fetchBatchOrders = async () => {
+    if (games.length === 0) return;
+    
+    try {
+      // Since all games in a job have the same batch order, fetch once using the first game
+      const firstGame = games[0];
+      const res: BatchOrderResponse = await llmAPI.get_batch_order_for_game_log(firstGame.game_id);
+      
+      // Apply the same batch order to all games
+      const newBatchOrders: Record<string, BatchOrderResponse | null> = {};
+      games.forEach(game => {
+        newBatchOrders[game.game_id] = res;
+      });
+      
+      setBatchOrders(newBatchOrders);
+    } catch (err: any) {
+      // If batch order fetch fails, set all games to null
+      const newBatchOrders: Record<string, BatchOrderResponse | null> = {};
+      games.forEach(game => {
+        newBatchOrders[game.game_id] = null;
+      });
+      setBatchOrders(newBatchOrders);
+      console.error(`Failed to fetch batch order for job:`, err);
+    }
+  };
+
+
 
   const handleDownloadRawLog = async (gameId: string) => {
     try {
@@ -161,7 +204,7 @@ const JobGamesPage: React.FC = () => {
         <div className="flex items-center gap-3 mb-2">
           <Gamepad2 className="w-7 h-7 text-[#ff00cc]" />
           <h1 className="text-2xl font-bold font-glitch">
-            Live Gamplay for GameID:<span className="text-[#39ff14]">{jobId}</span>
+            Live Gamplay for {gameNumber ? `Game #${gameNumber} Batch 1` : 'Game'}: <span className="text-[#39ff14]">{jobId}</span>
           </h1>
         </div>
       </div>
@@ -226,36 +269,43 @@ const JobGamesPage: React.FC = () => {
           </div>
 
           {/* Games List */}
-          {sortedGames.map((game) => (
-            <div 
-              key={game.game_id} 
-              id={`game-${game.game_uuid}`}
-              className="bg-black/30 border border-[#444] rounded-lg p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-2"
-            >
-              <div>
-                <span className="font-mono text-white">Hand ID: </span>
-                <span className="font-mono text-[#ff00cc]">{game.game_id}</span>
+          {sortedGames.map((game, index) => {
+            const batchOrder = batchOrders[game.game_id];
+            return (
+              <div 
+                key={game.game_id} 
+                id={`game-${game.game_uuid}`}
+                className="bg-black/30 border border-[#444] rounded-lg p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-2"
+              >
+                <div>
+                  <span className="font-mono text-white">Game #{index + 1}: </span>
+                  <span className="font-mono text-[#ff00cc]">{game.game_id}</span>
+                </div>
+                <div>
+                  <div className="font-mono text-gray-400 ml-2">
+                    Hand {game.game_uuid}
+                  </div>
+                  <span className="font-mono text-gray-400">
+                    {batchOrder ? `Batch ${batchOrder.batch_order}` : 'No Batch Info'}
+                  </span>
+                </div>
+                <div className="flex gap-3 mt-2 md:mt-0">
+                  <button
+                    className="px-3 py-1 border border-[#ff00cc] text-[#ff00cc] font-mono rounded hover:bg-[#ff00cc] hover:text-black transition-colors text-sm"
+                    onClick={() => handleDownloadRawLog(game.game_id)}
+                  >
+                    Get Raw Log
+                  </button>
+                  <button
+                    className="px-3 py-1 border border-[#39ff14] text-[#39ff14] font-mono rounded hover:bg-[#39ff14] hover:text-black transition-colors text-sm"
+                    onClick={() => navigate(`/replay/${game.game_id}`)}
+                  >
+                    View Hand
+                  </button>
+                </div>
               </div>
-              <div>
-                <span className="font-mono text-gray-400">UUID: </span>
-                <span className="font-mono text-[#39ff14]">{game.game_uuid}</span>
-              </div>
-              <div className="flex gap-3 mt-2 md:mt-0">
-                <button
-                  className="px-3 py-1 border border-[#ff00cc] text-[#ff00cc] font-mono rounded hover:bg-[#ff00cc] hover:text-black transition-colors text-sm"
-                  onClick={() => handleDownloadRawLog(game.game_id)}
-                >
-                  Get Raw Log
-                </button>
-                <button
-                  className="px-3 py-1 border border-[#39ff14] text-[#39ff14] font-mono rounded hover:bg-[#39ff14] hover:text-black transition-colors text-sm"
-                  onClick={() => navigate(`/replay/${game.game_id}`)}
-                >
-                  View Hand
-                </button>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>

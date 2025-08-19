@@ -84,7 +84,7 @@ const liveAPI = {
     get_user_performance: async (job_id: string) => {
         const response = await apiClient.get(`/live/job/${job_id}/user-performance`);
         return response.data;
-    },
+    }
 }
 
 const gameAPI = {
@@ -322,7 +322,23 @@ const llmAPI = {
     deleteBatch: async (batch_id: string) => {
         const res = await apiClient.delete(`/llm/batch/${batch_id}`);
         return res.data;
-    }
+    },
+    getBatchArenaStatus: async (batch_id: string) => {
+        const res = await apiClient.get(`/llm/batch/${batch_id}/arena-status`);
+        return res.data;
+    },
+    processBatchLeaderboard: async (batch_id: string) => {
+        const res = await apiClient.post(`/llm/process-batch/${batch_id}`);
+        return res.data;
+    },
+    deleteBatchLeaderboard: async (batch_id: string) => {
+        const res = await apiClient.post(`/llm/delete-batch-leaderboard/${batch_id}`);
+        return res.data;
+    }, 
+    get_batch_order_for_game_log: async (game_log_id: string) => {
+        const response = await apiClient.get(`llm/game-log/${game_log_id}/batch-order`);
+        return response.data;
+    },
 }
 
 const dockerAPI = {
