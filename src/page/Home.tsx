@@ -112,7 +112,7 @@ const Home: React.FC = () => {
               return (
                 <div
                   key={entry.id}
-                  className={`bg-gray-900 border rounded-lg p-4 transition-all hover:bg-gray-800 ${
+                  className={`bg-gray-900 border rounded-lg p-4 transition-all ${
                     isCurrentUser 
                       ? "border-[#ff00cc] bg-gray-900/80" 
                       : rank <= 3 
