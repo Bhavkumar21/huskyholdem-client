@@ -13,6 +13,11 @@ interface JobGamesResponse {
   message: string;
   job_id: string;
   games: JobGameInfo[];
+  total_count?: number;
+  page?: number;
+  page_size?: number;
+  has_next?: boolean;
+  has_previous?: boolean;
 }
 
 interface GameResult {
@@ -41,11 +46,22 @@ const JobGamesPage: React.FC = () => {
   const [sortOrder, setSortOrder] = useState<SortOrder>('none');
   const [batchOrders, setBatchOrders] = useState<Record<string, BatchOrderResponse | null>>({});
   
+  const [page, setPage] = useState<number>(1);
+  const [pageSize] = useState<number>(100);
+  const [hasNext, setHasNext] = useState<boolean>(false);
+  const [_hasPrevious, setHasPrevious] = useState<boolean>(false);
+  const [loadingMore, setLoadingMore] = useState<boolean>(false);
+  
   // Get game number from URL parameter
   const gameNumber = searchParams.get('gameNumber');
 
   useEffect(() => {
-    fetchGames();
+    // reset on job change
+    setGames([]);
+    setPage(1);
+    setHasNext(false);
+    setHasPrevious(false);
+    fetchGames(1, pageSize, false);
     // eslint-disable-next-line
   }, [jobId]);
 
@@ -84,17 +100,36 @@ const JobGamesPage: React.FC = () => {
     }
   }, [loading, games]);
 
-  const fetchGames = async () => {
-    setLoading(true);
+  const fetchGames = async (pageToLoad: number, pageSizeToUse: number, append: boolean) => {
     setError(null);
     try {
       if (!jobId) throw new Error("No job ID provided");
-      const response: JobGamesResponse = await liveAPI.get_job_games(jobId);
-      setGames(response.games);
+      if (!append) setLoading(true);
+      const response: JobGamesResponse = await liveAPI.get_job_games_paginated(jobId, pageToLoad, pageSizeToUse);
+
+      setHasNext(!!response.has_next);
+      setHasPrevious(!!response.has_previous);
+      setPage(response.page ?? pageToLoad);
+
+      if (append) {
+        setGames(prev => [...prev, ...response.games]);
+      } else {
+        setGames(response.games);
+      }
     } catch (err: any) {
       setError(err?.response?.data?.detail || err.message || "Failed to load games.");
     } finally {
-      setLoading(false);
+      if (!append) setLoading(false);
+    }
+  };
+
+  const handleLoadMore = async () => {
+    if (!hasNext || loadingMore) return;
+    setLoadingMore(true);
+    try {
+      await fetchGames(page + 1, pageSize, true);
+    } finally {
+      setLoadingMore(false);
     }
   };
 
@@ -233,7 +268,7 @@ const JobGamesPage: React.FC = () => {
         </div>
       )}
 
-            {/* User Performance Chart */}
+      {/* User Performance Chart */}
       {jobId && (
         <div className="mb-8">
           <UserPerformanceChart jobId={jobId} />
@@ -303,6 +338,18 @@ const JobGamesPage: React.FC = () => {
               </div>
             );
           })}
+
+          {hasNext && (
+            <div className="flex justify-center pt-2">
+              <button
+                onClick={handleLoadMore}
+                disabled={loadingMore}
+                className="px-6 py-2 border border-[#39ff14] text-[#39ff14] rounded hover:bg-[#39ff14] hover:text-black transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loadingMore ? 'Loading...' : 'Load more'}
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>

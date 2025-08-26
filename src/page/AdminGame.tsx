@@ -14,6 +14,11 @@ interface JobWithPlayers {
 interface AllJobIdsResponse {
   message: string;
   jobs: JobWithPlayers[];
+  total_count: number;
+  page: number;
+  page_size: number;
+  has_next: boolean;
+  has_previous: boolean;
 }
 
 type SortOrder = 'newest' | 'oldest' | 'none';
@@ -26,29 +31,61 @@ const AdminGamePage: React.FC = () => {
   const [_, setToggling] = useState<string | null>(null); 
   const [sortOrder, setSortOrder] = useState<SortOrder>('newest');
 
+  const [page, setPage] = useState<number>(1);
+  const [pageSize] = useState<number>(100);
+  const [hasNext, setHasNext] = useState<boolean>(false);
+  const [_hasPrevious, setHasPrevious] = useState<boolean>(false);
+  const [totalCount, setTotalCount] = useState<number>(0);
+  const [loadingMore, setLoadingMore] = useState<boolean>(false);
+
   useEffect(() => {
-    fetchJobs();
+    fetchJobs(1, pageSize, false);
   }, []);
 
-  const fetchJobs = async () => {
+  const fetchJobs = async (pageToLoad: number, pageSizeToUse: number, append: boolean) => {
     try {
-      setLoading(true);
+      if (!append) setLoading(true);
       setError(null);
-      const response: AllJobIdsResponse = await liveAPI.get_all_job_ids();
-      setJobs(response.jobs);
+      const response: AllJobIdsResponse = await liveAPI.get_all_job_ids(pageToLoad, pageSizeToUse);
+
+      setTotalCount(response.total_count);
+      setHasNext(response.has_next);
+      setHasPrevious(response.has_previous);
+      setPage(response.page);
+
+      if (append) {
+        setJobs(prev => [...prev, ...response.jobs]);
+      } else {
+        setJobs(response.jobs);
+      }
     } catch (err) {
       console.error("Error fetching jobs:", err);
       setError("Failed to load games. Please try again later.");
     } finally {
-      setLoading(false);
+      if (!append) setLoading(false);
     }
+  };
+
+  const handleLoadMore = async () => {
+    if (!hasNext || loadingMore) return;
+    setLoadingMore(true);
+    try {
+      await fetchJobs(page + 1, pageSize, true);
+    } finally {
+      setLoadingMore(false);
+    }
+  };
+
+  const handleRefresh = async () => {
+    setPage(1);
+    await fetchJobs(1, pageSize, false);
   };
 
   const handleTogglePublic = async (jobId: string) => {
     try {
       setToggling(jobId);
       await adminAPI.toggleJobPublic(jobId);
-      await fetchJobs();
+      await fetchJobs(page, pageSize, false); // Refresh current page
     } catch (err) {
       console.error("Error toggling public status:", err);
       alert("Failed to toggle public status. Please try again.");
@@ -157,7 +194,7 @@ const AdminGamePage: React.FC = () => {
       {/* Controls */}
       <div className="mb-6 flex flex-wrap gap-4">
         <button
-          onClick={fetchJobs}
+          onClick={handleRefresh}
           disabled={loading}
           className="flex items-center gap-2 px-4 py-2 bg-[#ff00cc] text-black hover:bg-[#ff00cc]/80 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
@@ -203,7 +240,7 @@ const AdminGamePage: React.FC = () => {
                 <Trophy className="w-5 h-5 text-[#ff00cc]" />
                 <span className="text-sm text-gray-400">Total Games</span>
               </div>
-              <p className="text-2xl font-bold text-white">{jobs.length}</p>
+              <p className="text-2xl font-bold text-white">{totalCount}</p>
             </div>
             
             <div className="bg-black/30 border border-[#444] rounded-lg p-4">
@@ -299,6 +336,18 @@ const AdminGamePage: React.FC = () => {
                   </div>
                 </div>
               ))}
+
+              {hasNext && (
+                <div className="flex justify-center pt-2">
+                  <button
+                    onClick={handleLoadMore}
+                    disabled={loadingMore}
+                    className="px-6 py-2 border border-[#39ff14] text-[#39ff14] rounded hover:bg-[#39ff14] hover:text-black transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {loadingMore ? 'Loading...' : 'Load more'}
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </>

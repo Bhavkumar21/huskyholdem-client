@@ -65,8 +65,8 @@ const authAPI = {
 }
 
 const liveAPI = {
-    get_all_job_ids: async () => {
-        const response = await apiClient.get('/live/job-ids');
+    get_all_job_ids: async (page: number = 1, pageSize: number = 100) => {
+        const response = await apiClient.get(`/live/job-ids?page=${page}&page_size=${pageSize}`);
         return response.data;
     },
     get_public_job_ids: async () => {
@@ -75,6 +75,10 @@ const liveAPI = {
     },
     get_job_games: async (job_id: string) => {
         const response = await apiClient.get(`/live/job/${job_id}/games`);
+        return response.data;
+    },
+    get_job_games_paginated: async (job_id: string, page: number = 1, pageSize: number = 100) => {
+        const response = await apiClient.get(`/live/job/${job_id}/games/paginated?page=${page}&page_size=${pageSize}`);
         return response.data;
     },
     get_game_data: async (game_id: string) => {
