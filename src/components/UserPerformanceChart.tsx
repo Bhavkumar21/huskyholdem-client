@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback, useMemo, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { liveAPI } from '../api';
 import { TrendingUp, TrendingDown, Users, BarChart3, RefreshCw, Star, Zap } from 'lucide-react';
 import {
@@ -10,11 +11,12 @@ import {
   Tooltip,
   ResponsiveContainer,
   ReferenceArea,
-  ReferenceDot,
+  ReferenceLine,
 } from 'recharts';
 
 interface UserPerformanceChartProps {
   jobId: string;
+  games?: Array<{ game_id: string; game_uuid: string }>;
 }
 
 interface UserPerformanceData {
@@ -57,7 +59,8 @@ interface InterestingGame {
   totalSignificance: number;
 }
 
-const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) => {
+const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId, games = [] }) => {
+  const navigate = useNavigate();
   const [performanceData, setPerformanceData] = useState<UserPerformanceData>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -90,6 +93,24 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
     '#00ff66', // Light green
     '#ff0066', // Pink
   ], []);
+
+  // Function to handle clicking on an interesting game
+  const handleInterestingGameClick = useCallback((iteration: number) => {
+    // Find the game that corresponds to this iteration
+    // The iteration corresponds to the hand number (starting from 1)
+    // The game_uuid should match the iteration number
+    const targetGame = games.find(game => {
+      // Parse game_uuid as number and compare with iteration
+      const gameNumber = parseInt(game.game_uuid);
+      return gameNumber === iteration;
+    });
+
+    if (targetGame) {
+      navigate(`/replay/${targetGame.game_id}`);
+    } else {
+      console.warn(`No game found for iteration ${iteration}`);
+    }
+  }, [games, navigate]);
 
   // Memoized auto sample interval calculation
   const getAutoSampleInterval = useCallback((dataLength: number): number => {
@@ -482,7 +503,7 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
             Sample {label}
             {interestingGame && (
               <span className="ml-2 text-[#559CF8]">
-                <Star className="w-3 h-3 inline ml-1" />
+                <Zap className="w-3 h-3 inline ml-1" />
                 Interesting Game
               </span>
             )}
@@ -514,41 +535,7 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
     );
   }, []);
 
-  // Custom star component for interesting games
-  const InterestingGameStar = useCallback((props: { cx: number; cy: number; payload?: any }) => {
-    const { cx, cy, payload } = props;
-    
-    // Check if this iteration has an interesting game
-    const hasInterestingGame = interestingGames.some(game => game.iteration === payload?.iteration);
-    
-    if (!hasInterestingGame) return null;
 
-    // Create star shape path
-    const size = 4;
-    const starPath = `M${cx},${cy - size} L${cx + size * 0.3},${cy - size * 0.3} L${cx + size},${cy - size * 0.3} L${cx + size * 0.5},${cy + size * 0.1} L${cx + size * 0.8},${cy + size} L${cx},${cy + size * 0.6} L${cx - size * 0.8},${cy + size} L${cx - size * 0.5},${cy + size * 0.1} L${cx - size},${cy - size * 0.3} L${cx - size * 0.3},${cy - size * 0.3} Z`;
-    
-    return (
-      <g>
-        {/* Star background */}
-        <path
-          d={starPath}
-          fill="#559CF8"
-          stroke="#ffffff"
-          strokeWidth={1}
-          className="drop-shadow-lg"
-        />
-        {/* Star inner glow */}
-        <path
-          d={starPath}
-          fill="none"
-          stroke="#559CF8"
-          strokeWidth={2}
-          opacity={0.6}
-          className="animate-pulse"
-        />
-      </g>
-    );
-  }, [interestingGames]);
 
   if (loading) {
     return (
@@ -606,7 +593,7 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <BarChart3 className="w-6 h-6 text-[#FFFFFF]" />
-          <h3 className="text-xl font-bold text-white font-mono">USER PERFORMANCE MATRIX</h3>
+          <h3 className="text-xl font-bold text-white font-mono">USER PERFORMANCE GRAPH</h3>
         </div>
         <div className="flex items-center gap-4">
           <label className="text-sm text-gray-300 font-mono flex items-center gap-1">
@@ -617,7 +604,7 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
               className="ml-1 px-2 py-1 rounded bg-gray-800 border border-gray-600 text-white text-xs font-mono focus:border-[#FFFFFF] focus:outline-none"
               style={{ minWidth: 60 }}
             >
-              {[1,2,3,4,5,10,20,25,50,100].map(n => (
+              {[25,50,75,100,200].map(n => (
                 <option key={n} value={n}>{n === 1 ? 'Raw' : `Avg ${n}`}</option>
               ))}
             </select>
@@ -746,30 +733,17 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
                 />
               ))}
               
-              {/* Add star markers for interesting games using ReferenceDot */}
-              {interestingGames.map((game, index) => {
-                // Find the chart data point for this iteration
-                const dataPoint = filteredChartData.find(d => d.iteration === game.iteration);
-                if (!dataPoint) return null;
-                
-                // Calculate the average y-position for all users at this iteration
-                const userValues = users.map(user => dataPoint[user]).filter(val => val !== undefined);
-                if (userValues.length === 0) return null;
-                
-                const avgValue = userValues.reduce((sum, val) => sum + val, 0) / userValues.length;
-                
-                return (
-                  <ReferenceDot 
-                    key={`star-${index}`}
-                    x={game.iteration} 
-                    y={avgValue}
-                    r={0}
-                    shape={(props: any) => <InterestingGameStar {...props} payload={{ iteration: game.iteration }} />}
-                    fill="transparent"
-                    stroke="transparent"
-                  />
-                );
-              })}
+              {/* Add highlighted vertical lines for interesting games */}
+              {interestingGames.map((game, index) => (
+                <ReferenceLine
+                  key={`interesting-${index}`}
+                  x={game.iteration}
+                  stroke="#7C98B8"
+                  strokeWidth={1}
+                  strokeDasharray="4 4"
+                  opacity={0.8}
+                />
+              ))}
               
               {zoomState.refAreaLeft && zoomState.refAreaRight ? (
                 <ReferenceArea
@@ -790,105 +764,6 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
         </div>
       </div>
 
-      {/* Interesting Games Swipeable List */}
-      {interestingGames.length > 0 && (
-        <div className="bg-black bg-opacity-30 border border-[#444] rounded-lg p-6 mb-6">
-          <h4 className="text-lg font-bold text-[#559CF8] mb-3 font-mono flex items-center gap-2">
-            <Zap className="w-5 h-5 text-[#559CF8]" /> Interesting Hands
-          </h4>
-          
-          {/* Swipeable Container */}
-          <div className="relative overflow-hidden">
-            <div 
-              ref={scrollContainerRef}
-              className="flex gap-4 overflow-x-auto pb-4 scroll-smooth" 
-              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-              onScroll={(e) => {
-                const container = e.currentTarget;
-                const scrollLeft = container.scrollLeft;
-                const cardWidth = 500 + 16; // card width + gap
-                const currentIndex = Math.round(scrollLeft / cardWidth);
-                
-                // Update active dot
-                setActiveGameIndex(Math.min(currentIndex, interestingGames.length - 1));
-              }}
-            >
-              {interestingGames.map((game, index) => (
-                <div 
-                  key={index} 
-                  className="bg-gray-800/50 p-4 rounded-lg border border-gray-700 min-w-[500px] max-w-[500px] flex-shrink-0"
-                >
-                  {/* Game Header */}
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-2">
-                      <Star className="w-4 h-4 text-[#559CF8]" />
-                      <p className="text-white font-mono text-sm font-bold">
-                        Hand {game.iteration}
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs text-gray-400 font-mono">
-                        {Math.round(game.totalSignificance * 100) / 100}
-                      </span>
-                      <div className="w-2 h-2 bg-[#FFFFFF] rounded-full animate-pulse"></div>
-                    </div>
-                  </div>
-
-                  {/* Game Reasons */}
-                  <div className="space-y-2 mb-3">
-                    {game.reasons.slice(0, 2).map((reason, reasonIndex) => (
-                      <div key={reasonIndex} className="bg-gray-900/50 p-2 rounded border-l-2 border-[#FFFFFF]">
-                        <p className="text-[#FFFFFF] font-mono text-xs font-bold mb-1">
-                          {reason.reason}
-                        </p>
-                        <p className="text-gray-300 font-mono text-xs leading-tight">
-                          {reason.description}
-                        </p>
-                      </div>
-                    ))}
-                    {game.reasons.length > 2 && (
-                      <div className="text-center">
-                        <span className="text-xs text-gray-500 font-mono">
-                          +{game.reasons.length - 2} more events
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Scroll Indicators */}
-            <div className="flex justify-center gap-2 mt-4">
-              {interestingGames.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => {
-                    if (scrollContainerRef.current) {
-                      const cardWidth = 500 + 16; // card width + gap
-                      scrollContainerRef.current.scrollTo({
-                        left: index * cardWidth,
-                        behavior: 'smooth'
-                      });
-                    }
-                  }}
-                  className={`w-2 h-2 rounded-full transition-all duration-300 cursor-pointer hover:scale-125 ${
-                    index === activeGameIndex ? 'bg-[#FFFFFF] opacity-100' : 'bg-gray-600 opacity-50 hover:opacity-75'
-                  }`}
-                />
-              ))}
-            </div>
-
-            {/* Swipe Instructions */}
-            <div className="text-center mt-3">
-              <p className="text-xs text-gray-500 font-mono">
-                ← Swipe to explore more interesting hands →
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* Legend and Stats */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Legend */}
@@ -908,15 +783,15 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
               );
             })}
             
-            {/* Add star legend if there are interesting games */}
+            {/* Add vertical line legend if there are interesting games */}
             {interestingGames.length > 0 && (
               <div className="pt-2 mt-2 border-t border-gray-700">
                 <div className="flex items-center gap-3">
-                  <Star className="w-4 h-4 text-[#559CF8]" />
+                  <div className="w-4 h-0 border-t-2 border-dashed border-[#559CF8]" />
                   <span className="font-mono text-sm text-gray-300">Interesting Games</span>
                 </div>
                 <p className="text-xs text-gray-500 font-mono mt-1 ml-7">
-                  Pink stars mark significant events in the game
+                  Dashed vertical lines mark significant events in the game
                 </p>
               </div>
             )}
@@ -959,6 +834,113 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
           </div>
         </div>
       </div>
+
+      {/* Interesting Games Swipeable List */}
+      {interestingGames.length > 0 && (
+        <div className="bg-black bg-opacity-30 border border-[#444] rounded-lg p-6 mb-6 mt-6">
+          <h4 className="text-lg font-bold text-[#559CF8] mb-3 font-mono flex items-center gap-2">
+            <Zap className="w-5 h-5 text-[#559CF8]" /> Interesting Hands
+          </h4>
+          
+          {/* Swipeable Container */}
+          <div className="relative overflow-hidden">
+            <div 
+              ref={scrollContainerRef}
+              className="flex gap-4 overflow-x-auto pb-4 scroll-smooth" 
+              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+              onScroll={(e) => {
+                const container = e.currentTarget;
+                const scrollLeft = container.scrollLeft;
+                const cardWidth = 500 + 16; // card width + gap
+                const currentIndex = Math.round(scrollLeft / cardWidth);
+                
+                // Update active dot
+                setActiveGameIndex(Math.min(currentIndex, interestingGames.length - 1));
+              }}
+            >
+              {interestingGames.map((game, index) => (
+                <div 
+                  key={index} 
+                  className="bg-gray-800/50 p-4 rounded-lg border border-gray-700 min-w-[500px] max-w-[500px] flex-shrink-0 cursor-pointer hover:border-[#559CF8] hover:bg-gray-800/70 transition-all duration-200"
+                  onClick={() => handleInterestingGameClick(game.iteration)}
+                >
+                  {/* Game Header */}
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2">
+                      <Star className="w-4 h-4 text-[#559CF8]" />
+                      <p className="text-white font-mono text-sm font-bold">
+                        Hand {game.iteration}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-gray-400 font-mono">
+                        {Math.round(game.totalSignificance * 100) / 100}
+                      </span>
+                      <div className="w-2 h-2 bg-[#FFFFFF] rounded-full animate-pulse"></div>
+                    </div>
+                  </div>
+
+                  {/* Game Reasons */}
+                  <div className="space-y-2 mb-3">
+                    {game.reasons.slice(0, 2).map((reason, reasonIndex) => (
+                      <div key={reasonIndex} className="bg-gray-900/50 p-2 rounded border-l-2 border-[#7C98B8]">
+                        <p className="text-[#559CF8] font-mono text-xs font-bold mb-1">
+                          {reason.reason}
+                        </p>
+                        <p className="text-gray-300 font-mono text-xs leading-tight">
+                          {reason.description}
+                        </p>
+                      </div>
+                    ))}
+                    {game.reasons.length > 2 && (
+                      <div className="text-center">
+                        <span className="text-xs text-gray-500 font-mono">
+                          +{game.reasons.length - 2} more events
+                        </span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Click to view indicator */}
+                  <div className="text-center pt-2 border-t border-gray-600">
+                    <span className="text-xs text-[#559CF8] font-mono hover:text-[#FFFFFF] transition-colors">
+                      👆 Click to view hand replay
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Scroll Indicators */}
+            <div className="flex justify-center gap-2 mt-4">
+              {interestingGames.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => {
+                    if (scrollContainerRef.current) {
+                      const cardWidth = 500 + 16; // card width + gap
+                      scrollContainerRef.current.scrollTo({
+                        left: index * cardWidth,
+                        behavior: 'smooth'
+                      });
+                    }
+                  }}
+                  className={`w-2 h-2 rounded-full transition-all duration-300 cursor-pointer hover:scale-125 ${
+                    index === activeGameIndex ? 'bg-[#FFFFFF] opacity-100' : 'bg-gray-600 opacity-50 hover:opacity-75'
+                  }`}
+                />
+              ))}
+            </div>
+
+            {/* Swipe Instructions */}
+            <div className="text-center mt-3">
+              <p className="text-xs text-gray-500 font-mono">
+                ← Swipe to explore more hands • Click any card to view hand replay →
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Footer info */}
       <div className="mt-6 pt-4 border-t border-gray-700">

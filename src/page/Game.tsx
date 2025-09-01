@@ -228,7 +228,7 @@ const GamePage: React.FC = () => {
                             to={`/games/${job.job_id}?gameNumber=${index + 1}`}
                             className="font-bold text-white font-mono underline underline-offset-4 hover:text-[#559CF8] transition-colors"
                           >
-                            Game #{index + 1} Batch #1
+                            Batch #1 Game #{index + 1} 
                           </Link>
                           <div className="text-xs text-gray-500 font-mono mt-1">
                             ID: {job.job_id}
@@ -236,7 +236,7 @@ const GamePage: React.FC = () => {
                         </div>
                       </div>
                       
-                      <div className="flex flex-wrap gap-4 text-sm text-gray-400">
+                      <div className="flex flex-wrap gap-4 text-sm text-[#7C98B8]">
                         <div className="flex items-center gap-1">
                           <Users className="w-4 h-4" />
                           <span>{job.players.length} player{job.players.length !== 1 ? 's' : ''}</span>
@@ -250,13 +250,12 @@ const GamePage: React.FC = () => {
                     
                     <div className="flex flex-wrap gap-2">
                       {job.players.map((player, index) => (
-                        <Link
+                        <span
                           key={index}
-                          to={`/profile/${player}`}
-                          className="border border-[#FFFFFF] px-2 py-1 text-[#FFFFFF] rounded text-sm font-mono hover:bg-[#FFFFFF]/60 hover:text-[#FFFFFF] transition-colors cursor-pointer"
+                          className="border border-[#7C98B8] px-2 py-1 text-[#FFFFFF] rounded text-sm font-mono"
                         >
                           {player}
-                        </Link>
+                        </span>
                       ))}
                     </div>
                   </div>

@@ -8,7 +8,7 @@ const DefaultFooter = () => {
               <span className="text-[#559CF8]">[SYSTEM::COPYRIGHT]</span> <a target="_blank" href="https://nousresearch.com/" className="underline">Nous Research</a>
             </div>
             <div>
-              <span className="text-[#559CF8]">[SYSTEM::CODE]</span> <a target="_blank" href="https://github.com/NousResearch/huskyholdem-bench" className="underline">CODE REPO</a>
+              <span className="text-[#559CF8]">[SYSTEM::CODE]</span> <a target="_blank" href="https://github.com/NousResearch/huskyholdem-bench" className="underline">GITHUB</a>
             </div>
             </div>
         </div>
@@ -16,7 +16,7 @@ const DefaultFooter = () => {
             <div className="flex flex-col items-start">
             <div>
               <span className="text-[#FFFFFF]">[SYS::CRED]</span>
-              <span className="text-[#559CF8]"> Built by [<a href="https://www.linkedin.com/in/bhavkumar/" target="_blank" className="text-[#559CF8] underline">Bhavesh</a>]</span>
+              <span className="text-[#559CF8]"> Built by [<a href="https://x.com/bha_ku21" target="_blank" className="text-[#559CF8] underline">Bhavesh</a>]</span>
             </div>
             <div>
               <span className="text-[#FFFFFF]">[SYS::CRED]</span>

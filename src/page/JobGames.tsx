@@ -46,11 +46,12 @@ const JobGamesPage: React.FC = () => {
   const [sortOrder, setSortOrder] = useState<SortOrder>('none');
   const [batchOrders, setBatchOrders] = useState<Record<string, BatchOrderResponse | null>>({});
   
-  const [page, setPage] = useState<number>(1);
-  const [pageSize] = useState<number>(100);
-  const [hasNext, setHasNext] = useState<boolean>(false);
-  const [_hasPrevious, setHasPrevious] = useState<boolean>(false);
-  const [loadingMore, setLoadingMore] = useState<boolean>(false);
+  // PAGINATION STATE VARIABLES COMMENTED OUT FOR NOW
+  // const [page, setPage] = useState<number>(1);
+  // const [pageSize] = useState<number>(100);
+  // const [hasNext, setHasNext] = useState<boolean>(false);
+  // const [_hasPrevious, setHasPrevious] = useState<boolean>(false);
+  // const [loadingMore, setLoadingMore] = useState<boolean>(false);
   
   // Get game number from URL parameter
   const gameNumber = searchParams.get('gameNumber');
@@ -58,10 +59,7 @@ const JobGamesPage: React.FC = () => {
   useEffect(() => {
     // reset on job change
     setGames([]);
-    setPage(1);
-    setHasNext(false);
-    setHasPrevious(false);
-    fetchGames(1, pageSize, false);
+    fetchGames();
     // eslint-disable-next-line
   }, [jobId]);
 
@@ -100,38 +98,31 @@ const JobGamesPage: React.FC = () => {
     }
   }, [loading, games]);
 
-  const fetchGames = async (pageToLoad: number, pageSizeToUse: number, append: boolean) => {
+  const fetchGames = async () => {
     setError(null);
     try {
       if (!jobId) throw new Error("No job ID provided");
-      if (!append) setLoading(true);
-      const response: JobGamesResponse = await liveAPI.get_job_games_paginated(jobId, pageToLoad, pageSizeToUse);
-
-      setHasNext(!!response.has_next);
-      setHasPrevious(!!response.has_previous);
-      setPage(response.page ?? pageToLoad);
-
-      if (append) {
-        setGames(prev => [...prev, ...response.games]);
-      } else {
-        setGames(response.games);
-      }
+      setLoading(true);
+      // Use regular API call instead of paginated one to get all games
+      const response = await liveAPI.get_job_games(jobId);
+      setGames(response.games || []);
     } catch (err: any) {
       setError(err?.response?.data?.detail || err.message || "Failed to load games.");
     } finally {
-      if (!append) setLoading(false);
+      setLoading(false);
     }
   };
 
-  const handleLoadMore = async () => {
-    if (!hasNext || loadingMore) return;
-    setLoadingMore(true);
-    try {
-      await fetchGames(page + 1, pageSize, true);
-    } finally {
-      setLoadingMore(false);
-    }
-  };
+  // PAGINATION LOAD MORE FUNCTION COMMENTED OUT FOR NOW
+  // const handleLoadMore = async () => {
+  //   if (!hasNext || loadingMore) return;
+  //   setLoadingMore(true);
+  //   try {
+  //     await fetchGames(page + 1, pageSize, true);
+  //   } finally {
+  //     setLoadingMore(false);
+  //   }
+  // };
 
   const fetchAllResults = async () => {
     let jobLevelResult: GameResult | null = null;
@@ -271,7 +262,7 @@ const JobGamesPage: React.FC = () => {
       {/* User Performance Chart */}
       {jobId && (
         <div className="mb-8">
-          <UserPerformanceChart jobId={jobId} />
+          <UserPerformanceChart jobId={jobId} games={games} />
         </div>
       )}
       
@@ -339,7 +330,8 @@ const JobGamesPage: React.FC = () => {
             );
           })}
 
-          {hasNext && (
+          {/* PAGINATION COMMENTED OUT FOR NOW */}
+          {/* {hasNext && (
             <div className="flex justify-center pt-2">
               <button
                 onClick={handleLoadMore}
@@ -349,7 +341,7 @@ const JobGamesPage: React.FC = () => {
                 {loadingMore ? 'Loading...' : 'Load more'}
               </button>
             </div>
-          )}
+          )} */}
         </div>
       )}
     </div>
