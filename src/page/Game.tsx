@@ -1,18 +1,34 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { liveAPI } from "../api";
+import { liveAPI, llmAPI } from "../api";
 import { Gamepad2, Users, Calendar, Clock, Trophy, RefreshCw, ArrowUpDown } from "lucide-react";
 
 interface JobWithPlayers {
   job_id: string;
   players: string[];
   first_game_created_at: string;
-  gameNumber?: number; // Add game number for display
+  gameNumber?: number; // Add game number for display within batch
+  batchNumber?: number; // Add batch number for grouping
 }
 
 interface AllJobIdsResponse {
   message: string;
   jobs: JobWithPlayers[];
+}
+
+interface BatchOrderResponse {
+  game_log_id: string;
+  batch_id: string;
+  batch_order: number;
+  total_batches: number;
+}
+
+interface BatchMetadata {
+  batch_id: string;
+  metadata_id?: string;
+  batch_metadata: Record<string, any>;
+  batch_entries_count?: number;
+  created_at?: string;
 }
 
 type SortOrder = 'newest' | 'oldest' | 'none';
@@ -40,19 +56,96 @@ const GamePage: React.FC = () => {
         return dateA - dateB; // Oldest first for numbering
       });
       
-      // Assign sequential game numbers starting from 1
-      const jobsWithNumbers = sortedJobs.map((job, index) => ({
-        ...job,
-        gameNumber: index + 1
-      }));
+      // Don't assign game numbers here - they will be assigned within batches
+      setJobs(sortedJobs);
       
-      setJobs(jobsWithNumbers);
+      // Fetch batch metadata for each job and assign batch-specific game numbers
+      await fetchBatchMetadataForJobs(sortedJobs);
     } catch (err) {
       console.error("Error fetching jobs:", err);
       setError("Failed to load games. Please try again later.");
     } finally {
       setLoading(false);
     }
+  };
+
+  const fetchBatchMetadataForJobs = async (jobs: JobWithPlayers[]) => {
+    const jobsWithBatchInfo: JobWithPlayers[] = [];
+    
+    // Fetch batch metadata for each job in parallel
+    const promises = jobs.map(async (job) => {
+      try {
+        // Get the first game from the job to get batch info
+        const gamesResponse = await liveAPI.get_job_games(job.job_id);
+        if (gamesResponse.games && gamesResponse.games.length > 0) {
+          const firstGame = gamesResponse.games[0];
+          
+          // Get batch order info
+          const batchOrderResponse: BatchOrderResponse = await llmAPI.get_batch_order_for_game_log(firstGame.game_id);
+          
+          if (batchOrderResponse.batch_id) {
+            // Get batch metadata
+            const metadata: BatchMetadata = await llmAPI.getBatchMetadata(batchOrderResponse.batch_id);
+            
+            // Add batch number to job
+            jobsWithBatchInfo.push({
+              ...job,
+              batchNumber: metadata.batch_metadata?.batch_number || batchOrderResponse.batch_order
+            });
+          } else {
+            jobsWithBatchInfo.push({
+              ...job,
+              batchNumber: 1 // Default batch number
+            });
+          }
+        } else {
+          jobsWithBatchInfo.push({
+            ...job,
+            batchNumber: 1 // Default batch number
+          });
+        }
+      } catch (err) {
+        console.error(`Failed to fetch batch metadata for job ${job.job_id}:`, err);
+        jobsWithBatchInfo.push({
+          ...job,
+          batchNumber: 1 // Default batch number
+        });
+      }
+    });
+    
+    await Promise.all(promises);
+    
+    // Group jobs by batch and assign game numbers within each batch
+    const jobsGroupedByBatch = jobsWithBatchInfo.reduce((acc, job) => {
+      const batchNum = job.batchNumber || 1;
+      if (!acc[batchNum]) {
+        acc[batchNum] = [];
+      }
+      acc[batchNum].push(job);
+      return acc;
+    }, {} as Record<number, JobWithPlayers[]>);
+    
+    // Sort jobs within each batch by creation time and assign game numbers
+    const finalJobs: JobWithPlayers[] = [];
+    Object.keys(jobsGroupedByBatch).sort((a, b) => Number(a) - Number(b)).forEach(batchNum => {
+      const batchJobs = jobsGroupedByBatch[Number(batchNum)];
+      // Sort by creation time within the batch
+      const sortedBatchJobs = batchJobs.sort((a, b) => {
+        const dateA = new Date(a.first_game_created_at).getTime();
+        const dateB = new Date(b.first_game_created_at).getTime();
+        return dateA - dateB;
+      });
+      
+      // Assign game numbers within this batch
+      sortedBatchJobs.forEach((job, index) => {
+        finalJobs.push({
+          ...job,
+          gameNumber: index + 1
+        });
+      });
+    });
+    
+    setJobs(finalJobs);
   };
 
   const formatDate = (dateString: string) => {
@@ -225,10 +318,10 @@ const GamePage: React.FC = () => {
                         </div>
                         <div>
                           <Link
-                            to={`/games/${job.job_id}?gameNumber=${index + 1}`}
+                            to={`/games/${job.job_id}?gameNumber=${job.gameNumber || index + 1}`}
                             className="font-bold text-white font-mono underline underline-offset-4 hover:text-[#559CF8] transition-colors"
                           >
-                            Batch #1 Game #{index + 1} 
+                            {job.batchNumber ? `Batch #${job.batchNumber}` : 'Batch #1'} Game #{job.gameNumber || index + 1} 
                           </Link>
                           <div className="text-xs text-gray-500 font-mono mt-1">
                             ID: {job.job_id}
