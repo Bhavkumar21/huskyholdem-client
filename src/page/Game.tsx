@@ -11,9 +11,14 @@ interface JobWithPlayers {
   batchNumber?: number; // Add batch number for grouping
 }
 
-interface AllJobIdsResponse {
+interface PaginatedJobIdsResponse {
   message: string;
   jobs: JobWithPlayers[];
+  total_count: number;
+  page: number;
+  page_size: number;
+  has_next: boolean;
+  has_previous: boolean;
 }
 
 interface BatchOrderResponse {
@@ -38,6 +43,9 @@ const GamePage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<SortOrder>('newest');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [hasNext, setHasNext] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
 
   useEffect(() => {
     fetchJobs();
@@ -47,17 +55,19 @@ const GamePage: React.FC = () => {
     try {
       setLoading(true);
       setError(null);
-      const response: AllJobIdsResponse = await liveAPI.get_public_job_ids();
+      setCurrentPage(1);
+      const response: PaginatedJobIdsResponse = await liveAPI.get_public_job_ids_paginated(1, 500);
       
-      // Sort jobs by creation time and assign game numbers
+      // Sort jobs by creation time (newest first - server already returns newest first)
       const sortedJobs = response.jobs.sort((a, b) => {
         const dateA = new Date(a.first_game_created_at).getTime();
         const dateB = new Date(b.first_game_created_at).getTime();
-        return dateA - dateB; // Oldest first for numbering
+        return dateB - dateA; // Newest first (descending order)
       });
       
       // Don't assign game numbers here - they will be assigned within batches
       setJobs(sortedJobs);
+      setHasNext(response.has_next);
       
       // Fetch batch metadata for each job and assign batch-specific game numbers
       await fetchBatchMetadataForJobs(sortedJobs);
@@ -115,8 +125,14 @@ const GamePage: React.FC = () => {
     
     await Promise.all(promises);
     
+    // Recalculate all game numbers within batches
+    const finalJobs = recalculateGameNumbers(jobsWithBatchInfo);
+    setJobs(finalJobs);
+  };
+
+  const recalculateGameNumbers = (allJobs: JobWithPlayers[]) => {
     // Group jobs by batch and assign game numbers within each batch
-    const jobsGroupedByBatch = jobsWithBatchInfo.reduce((acc, job) => {
+    const jobsGroupedByBatch = allJobs.reduce((acc, job) => {
       const batchNum = job.batchNumber || 1;
       if (!acc[batchNum]) {
         acc[batchNum] = [];
@@ -125,27 +141,104 @@ const GamePage: React.FC = () => {
       return acc;
     }, {} as Record<number, JobWithPlayers[]>);
     
-    // Sort jobs within each batch by creation time and assign game numbers
+    // Sort jobs within each batch by creation time (newest first) and assign descending game numbers
     const finalJobs: JobWithPlayers[] = [];
     Object.keys(jobsGroupedByBatch).sort((a, b) => Number(a) - Number(b)).forEach(batchNum => {
       const batchJobs = jobsGroupedByBatch[Number(batchNum)];
-      // Sort by creation time within the batch
+      // Sort by creation time within the batch (newest first - server already returns newest first)
       const sortedBatchJobs = batchJobs.sort((a, b) => {
         const dateA = new Date(a.first_game_created_at).getTime();
         const dateB = new Date(b.first_game_created_at).getTime();
-        return dateA - dateB;
+        return dateB - dateA; // Newest first (descending order)
       });
       
-      // Assign game numbers within this batch
+      // Assign descending game numbers within this batch (highest number down to 1)
       sortedBatchJobs.forEach((job, index) => {
         finalJobs.push({
           ...job,
-          gameNumber: index + 1
+          gameNumber: 924 - index // e.g., if 50 games: 50, 49, 48... 1
         });
       });
     });
     
-    setJobs(finalJobs);
+    return finalJobs;
+  };
+
+  const loadMoreGames = async () => {
+    if (!hasNext || loadingMore) return;
+    
+    try {
+      setLoadingMore(true);
+      const nextPage = currentPage + 1;
+      const response: PaginatedJobIdsResponse = await liveAPI.get_public_job_ids_paginated(nextPage, 2);
+      
+      // Sort new jobs by creation time (newest first - server already returns newest first)
+      const sortedNewJobs = response.jobs.sort((a, b) => {
+        const dateA = new Date(a.first_game_created_at).getTime();
+        const dateB = new Date(b.first_game_created_at).getTime();
+        return dateB - dateA; // Newest first (descending order)
+      });
+      
+      // Fetch batch metadata for new jobs
+      const jobsWithBatchInfo: JobWithPlayers[] = [];
+      
+      const promises = sortedNewJobs.map(async (job) => {
+        try {
+          // Get the first game from the job to get batch info
+          const gamesResponse = await liveAPI.get_job_games(job.job_id);
+          if (gamesResponse.games && gamesResponse.games.length > 0) {
+            const firstGame = gamesResponse.games[0];
+            
+            // Get batch order info
+            const batchOrderResponse: BatchOrderResponse = await llmAPI.get_batch_order_for_game_log(firstGame.game_id);
+            
+            if (batchOrderResponse.batch_id) {
+              // Get batch metadata
+              const metadata: BatchMetadata = await llmAPI.getBatchMetadata(batchOrderResponse.batch_id);
+              
+              // Add batch number to job
+              jobsWithBatchInfo.push({
+                ...job,
+                batchNumber: metadata.batch_metadata?.batch_number || batchOrderResponse.batch_order
+              });
+            } else {
+              jobsWithBatchInfo.push({
+                ...job,
+                batchNumber: 1 // Default batch number
+              });
+            }
+          } else {
+            jobsWithBatchInfo.push({
+              ...job,
+              batchNumber: 1 // Default batch number
+            });
+          }
+        } catch (err) {
+          console.error(`Failed to fetch batch metadata for job ${job.job_id}:`, err);
+          jobsWithBatchInfo.push({
+            ...job,
+            batchNumber: 1 // Default batch number
+          });
+        }
+      });
+      
+      await Promise.all(promises);
+      
+      // Combine existing jobs with new jobs
+      const allJobs = [...jobs, ...jobsWithBatchInfo];
+      
+      // Recalculate all game numbers within batches
+      const finalJobs = recalculateGameNumbers(allJobs);
+      
+      setJobs(finalJobs);
+      setCurrentPage(nextPage);
+      setHasNext(response.has_next);
+    } catch (err) {
+      console.error("Error loading more games:", err);
+      setError("Failed to load more games. Please try again later.");
+    } finally {
+      setLoadingMore(false);
+    }
   };
 
   const formatDate = (dateString: string) => {
@@ -354,6 +447,29 @@ const GamePage: React.FC = () => {
                   </div>
                 </div>
               ))}
+            </div>
+          )}
+
+          {/* Load More Button */}
+          {hasNext && (
+            <div className="flex justify-center mt-8">
+              <button
+                onClick={loadMoreGames}
+                disabled={loadingMore}
+                className="flex items-center gap-2 px-6 py-3 bg-[#559CF8] text-black hover:bg-[#559CF8]/80 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-semibold"
+              >
+                {loadingMore ? (
+                  <>
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-black"></div>
+                    Loading More Games...
+                  </>
+                ) : (
+                  <>
+                    <RefreshCw className="w-5 h-5" />
+                    Load More Games
+                  </>
+                )}
+              </button>
             </div>
           )}
         </>

@@ -73,6 +73,10 @@ const liveAPI = {
         const response = await apiClient.get('/live/public-job-ids');
         return response.data;
     },
+    get_public_job_ids_paginated: async (page: number = 1, pageSize: number = 500) => {
+        const response = await apiClient.get(`/live/public-job-ids/paginated?page=${page}&page_size=${pageSize}`);
+        return response.data;
+    },
     get_job_games: async (job_id: string) => {
         const response = await apiClient.get(`/live/job/${job_id}/games`);
         return response.data;
