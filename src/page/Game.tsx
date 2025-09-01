@@ -7,6 +7,8 @@ interface JobWithPlayers {
   job_id: string;
   players: string[];
   first_game_created_at: string;
+  is_public?: boolean;
+  batch_id?: string; // Optional batch_id from pagination response
   gameNumber?: number; // Add game number for display within batch
   batchNumber?: number; // Add batch number for grouping
 }
@@ -21,12 +23,6 @@ interface PaginatedJobIdsResponse {
   has_previous: boolean;
 }
 
-interface BatchOrderResponse {
-  game_log_id: string;
-  batch_id: string;
-  batch_order: number;
-  total_batches: number;
-}
 
 interface BatchMetadata {
   batch_id: string;
@@ -46,6 +42,9 @@ const GamePage: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [hasNext, setHasNext] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
+  
+  // Cache for batch ID to batch number mapping
+  const [batchCache, setBatchCache] = useState<Map<string, number>>(new Map());
 
   useEffect(() => {
     fetchJobs();
@@ -80,50 +79,63 @@ const GamePage: React.FC = () => {
   };
 
   const fetchBatchMetadataForJobs = async (jobs: JobWithPlayers[]) => {
-    const jobsWithBatchInfo: JobWithPlayers[] = [];
+    const newBatchIds = new Set<string>();
     
-    // Fetch batch metadata for each job in parallel
-    const promises = jobs.map(async (job) => {
-      try {
-        // Get the first game from the job to get batch info
-        const gamesResponse = await liveAPI.get_job_games(job.job_id);
-        if (gamesResponse.games && gamesResponse.games.length > 0) {
-          const firstGame = gamesResponse.games[0];
-          
-          // Get batch order info
-          const batchOrderResponse: BatchOrderResponse = await llmAPI.get_batch_order_for_game_log(firstGame.game_id);
-          
-          if (batchOrderResponse.batch_id) {
-            // Get batch metadata
-            const metadata: BatchMetadata = await llmAPI.getBatchMetadata(batchOrderResponse.batch_id);
-            
-            // Add batch number to job
-            jobsWithBatchInfo.push({
-              ...job,
-              batchNumber: metadata.batch_metadata?.batch_number || batchOrderResponse.batch_order
-            });
-          } else {
-            jobsWithBatchInfo.push({
-              ...job,
-              batchNumber: 1 // Default batch number
-            });
-          }
-        } else {
-          jobsWithBatchInfo.push({
-            ...job,
-            batchNumber: 1 // Default batch number
-          });
-        }
-      } catch (err) {
-        console.error(`Failed to fetch batch metadata for job ${job.job_id}:`, err);
-        jobsWithBatchInfo.push({
-          ...job,
-          batchNumber: 1 // Default batch number
-        });
+    // First pass: collect all unique batch IDs from the jobs
+    jobs.forEach(job => {
+      if (job.batch_id && !batchCache.has(job.batch_id)) {
+        newBatchIds.add(job.batch_id);
       }
     });
     
-    await Promise.all(promises);
+    // Fetch metadata for new batch IDs only
+    const newBatchMetadata = new Map<string, number>();
+    if (newBatchIds.size > 0) {
+      const metadataPromises = Array.from(newBatchIds).map(async (batchId) => {
+        try {
+          const metadata: BatchMetadata = await llmAPI.getBatchMetadata(batchId);
+          return {
+            batchId,
+            batchNumber: metadata.batch_metadata?.batch_number || 1
+          };
+        } catch (err) {
+          console.error(`Failed to fetch metadata for batch ${batchId}:`, err);
+          return {
+            batchId,
+            batchNumber: 1
+          };
+        }
+      });
+      
+      const metadataResults = await Promise.all(metadataPromises);
+      metadataResults.forEach(({ batchId, batchNumber }) => {
+        newBatchMetadata.set(batchId, batchNumber);
+      });
+      
+      // Update cache with new batch metadata
+      setBatchCache(prevCache => {
+        const newCache = new Map(prevCache);
+        newBatchMetadata.forEach((batchNumber, batchId) => {
+          newCache.set(batchId, batchNumber);
+        });
+        return newCache;
+      });
+    }
+    
+    // Assign batch numbers using cache and new metadata
+    const jobsWithBatchInfo: JobWithPlayers[] = jobs.map(job => {
+      let batchNumber = -1; // Default for jobs without batch_id
+      
+      if (job.batch_id) {
+        // Check cache first, then new metadata
+        batchNumber = batchCache.get(job.batch_id) || newBatchMetadata.get(job.batch_id) || 1;
+      }
+      
+      return {
+        ...job,
+        batchNumber
+      };
+    });
     
     // Recalculate all game numbers within batches
     const finalJobs = recalculateGameNumbers(jobsWithBatchInfo);
@@ -170,7 +182,7 @@ const GamePage: React.FC = () => {
     try {
       setLoadingMore(true);
       const nextPage = currentPage + 1;
-      const response: PaginatedJobIdsResponse = await liveAPI.get_public_job_ids_paginated(nextPage, 2);
+      const response: PaginatedJobIdsResponse = await liveAPI.get_public_job_ids_paginated(nextPage, 100);
       
       // Sort new jobs by creation time (newest first - server already returns newest first)
       const sortedNewJobs = response.jobs.sort((a, b) => {
@@ -179,50 +191,64 @@ const GamePage: React.FC = () => {
         return dateB - dateA; // Newest first (descending order)
       });
       
-      // Fetch batch metadata for new jobs
-      const jobsWithBatchInfo: JobWithPlayers[] = [];
+      // Fetch batch metadata for new jobs using cache
+      const newBatchIds = new Set<string>();
       
-      const promises = sortedNewJobs.map(async (job) => {
-        try {
-          // Get the first game from the job to get batch info
-          const gamesResponse = await liveAPI.get_job_games(job.job_id);
-          if (gamesResponse.games && gamesResponse.games.length > 0) {
-            const firstGame = gamesResponse.games[0];
-            
-            // Get batch order info
-            const batchOrderResponse: BatchOrderResponse = await llmAPI.get_batch_order_for_game_log(firstGame.game_id);
-            
-            if (batchOrderResponse.batch_id) {
-              // Get batch metadata
-              const metadata: BatchMetadata = await llmAPI.getBatchMetadata(batchOrderResponse.batch_id);
-              
-              // Add batch number to job
-              jobsWithBatchInfo.push({
-                ...job,
-                batchNumber: metadata.batch_metadata?.batch_number || batchOrderResponse.batch_order
-              });
-            } else {
-              jobsWithBatchInfo.push({
-                ...job,
-                batchNumber: 1 // Default batch number
-              });
-            }
-          } else {
-            jobsWithBatchInfo.push({
-              ...job,
-              batchNumber: 1 // Default batch number
-            });
-          }
-        } catch (err) {
-          console.error(`Failed to fetch batch metadata for job ${job.job_id}:`, err);
-          jobsWithBatchInfo.push({
-            ...job,
-            batchNumber: 1 // Default batch number
-          });
+      // First pass: collect all unique batch IDs from the jobs
+      sortedNewJobs.forEach(job => {
+        if (job.batch_id && !batchCache.has(job.batch_id)) {
+          newBatchIds.add(job.batch_id);
         }
       });
       
-      await Promise.all(promises);
+      // Fetch metadata for new batch IDs only
+      const newBatchMetadata = new Map<string, number>();
+      if (newBatchIds.size > 0) {
+        const metadataPromises = Array.from(newBatchIds).map(async (batchId) => {
+          try {
+            const metadata: BatchMetadata = await llmAPI.getBatchMetadata(batchId);
+            return {
+              batchId,
+              batchNumber: metadata.batch_metadata?.batch_number || 1
+            };
+          } catch (err) {
+            console.error(`Failed to fetch metadata for batch ${batchId}:`, err);
+            return {
+              batchId,
+              batchNumber: 1
+            };
+          }
+        });
+        
+        const metadataResults = await Promise.all(metadataPromises);
+        metadataResults.forEach(({ batchId, batchNumber }) => {
+          newBatchMetadata.set(batchId, batchNumber);
+        });
+        
+        // Update cache with new batch metadata
+        setBatchCache(prevCache => {
+          const newCache = new Map(prevCache);
+          newBatchMetadata.forEach((batchNumber, batchId) => {
+            newCache.set(batchId, batchNumber);
+          });
+          return newCache;
+        });
+      }
+      
+      // Assign batch numbers using cache and new metadata
+      const jobsWithBatchInfo: JobWithPlayers[] = sortedNewJobs.map(job => {
+        let batchNumber = -1; // Default for jobs without batch_id
+        
+        if (job.batch_id) {
+          // Check cache first, then new metadata
+          batchNumber = batchCache.get(job.batch_id) || newBatchMetadata.get(job.batch_id) || 1;
+        }
+        
+        return {
+          ...job,
+          batchNumber
+        };
+      });
       
       // Combine existing jobs with new jobs
       const allJobs = [...jobs, ...jobsWithBatchInfo];
@@ -311,9 +337,9 @@ const GamePage: React.FC = () => {
         <p className="text-gray-300">
           Full tournament results with clickable game analysis: watch any 1,000-hand match and examine exactly how each bot performed across all competitive tables.
         </p>
-      </div>
+              </div>
 
-      {/* Refresh Button */}
+        {/* Refresh Button */}
       <div className="mb-6 flex flex-wrap gap-4">
         <button
           onClick={fetchJobs}
