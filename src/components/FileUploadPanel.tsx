@@ -65,7 +65,7 @@ const FileUploadPanel: React.FC<Props> = ({ playerFile, setPlayerFile, requireme
       <div
         onDrop={handleDrop}
         onDragOver={(e) => e.preventDefault()}
-        className="border-2 border-dashed border-[#ff00cc] bg-black/30 p-6 rounded-lg text-center cursor-pointer hover:bg-white/5 transition"
+        className="border-2 border-dashed border-[#559CF8] bg-black/30 p-6 rounded-lg text-center cursor-pointer hover:bg-white/5 transition"
       >
         <p className="text-lg mb-2">Drag & drop <code>player.py</code> and <code>requirements.txt</code></p>
         <p className="text-sm text-gray-400">Or select files manually below</p>
@@ -88,7 +88,7 @@ const FileUploadPanel: React.FC<Props> = ({ playerFile, setPlayerFile, requireme
           <div className="flex border-b border-[#333]">
             {playerFile && (
               <button
-                className={`px-4 py-2 ${activeTab === "player" ? "bg-[#222] text-[#39ff14]" : "text-gray-400"}`}
+                className={`px-4 py-2 ${activeTab === "player" ? "bg-[#222] text-[#FFFFFF]" : "text-gray-400"}`}
                 onClick={() => setActiveTab("player")}
               >
                 player.py
@@ -96,7 +96,7 @@ const FileUploadPanel: React.FC<Props> = ({ playerFile, setPlayerFile, requireme
             )}
             {requirementsFile && (
               <button
-                className={`px-4 py-2 ${activeTab === "requirements" ? "bg-[#222] text-[#ff00cc]" : "text-gray-400"}`}
+                className={`px-4 py-2 ${activeTab === "requirements" ? "bg-[#222] text-[#559CF8]" : "text-gray-400"}`}
                 onClick={() => setActiveTab("requirements")}
               >
                 requirements.txt
@@ -122,7 +122,7 @@ const FileUploadPanel: React.FC<Props> = ({ playerFile, setPlayerFile, requireme
           onSubmit(formData);
         }}
         disabled={status === "submitting" || cooldownRemaining > 0}
-        className={`mt-6 w-full py-2 border border-[#ff00cc] text-[#ff00cc] hover:bg-[#ff00cc] hover:text-black transition-all ${
+        className={`mt-6 w-full py-2 border border-[#559CF8] text-[#559CF8] hover:bg-[#559CF8] hover:text-black transition-all ${
           status === "submitting" || cooldownRemaining > 0 ? "opacity-50 cursor-not-allowed" : ""
         }`}
       >

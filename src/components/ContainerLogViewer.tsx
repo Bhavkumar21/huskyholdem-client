@@ -112,7 +112,7 @@ const ContainerLogViewer: React.FC<ContainerLogViewerProps> = ({ className = '' 
   return (
     <div className={`bg-black/30 border border-[#444] rounded-xl p-6 ${className}`}>
       <div className="flex items-center gap-3 mb-6">
-        <FileText className="w-6 h-6 text-[#ff00cc]" />
+        <FileText className="w-6 h-6 text-[#559CF8]" />
         <h3 className="text-xl font-bold text-white">CONTAINER LOG VIEWER</h3>
       </div>
 
@@ -127,7 +127,7 @@ const ContainerLogViewer: React.FC<ContainerLogViewerProps> = ({ className = '' 
               const container = containers.find(c => c.port === port);
               setSelectedContainer(container || null);
             }}
-            className="px-3 py-2 bg-black border border-[#444] text-white rounded-lg focus:outline-none focus:border-[#ff00cc] font-mono text-sm min-w-48"
+            className="px-3 py-2 bg-black border border-[#444] text-white rounded-lg focus:outline-none focus:border-[#559CF8] font-mono text-sm min-w-48"
             disabled={containersLoading}
           >
             <option value="">Select a container...</option>
@@ -155,7 +155,7 @@ const ContainerLogViewer: React.FC<ContainerLogViewerProps> = ({ className = '' 
         <button
           onClick={fetchLog}
           disabled={loading || !selectedContainer}
-          className="flex items-center gap-2 px-4 py-2 bg-[#ff00cc]/20 border border-[#ff00cc] text-[#ff00cc] rounded-lg hover:bg-[#ff00cc]/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex items-center gap-2 px-4 py-2 bg-[#559CF8]/20 border border-[#559CF8] text-[#559CF8] rounded-lg hover:bg-[#559CF8]/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {loading ? (
             <RefreshCw className="w-4 h-4 animate-spin" />
@@ -168,7 +168,7 @@ const ContainerLogViewer: React.FC<ContainerLogViewerProps> = ({ className = '' 
         {logData && (
           <button
             onClick={downloadLog}
-            className="flex items-center gap-2 px-4 py-2 bg-[#39ff14]/20 border border-[#39ff14] text-[#39ff14] rounded-lg hover:bg-[#39ff14]/30 transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-[#FFFFFF]/20 border border-[#FFFFFF] text-[#FFFFFF] rounded-lg hover:bg-[#FFFFFF]/30 transition-colors"
           >
             <Download className="w-4 h-4" />
             Download
@@ -199,11 +199,11 @@ const ContainerLogViewer: React.FC<ContainerLogViewerProps> = ({ className = '' 
             <div className="flex items-center gap-4">
               <div>
                 <span className="text-gray-400 text-sm">Container:</span>
-                <span className="text-[#39ff14] font-mono ml-2">{logData.container_name}</span>
+                <span className="text-[#FFFFFF] font-mono ml-2">{logData.container_name}</span>
               </div>
               <div>
                 <span className="text-gray-400 text-sm">Port:</span>
-                <span className="text-[#ff00cc] font-mono ml-2">{logData.port}</span>
+                <span className="text-[#559CF8] font-mono ml-2">{logData.port}</span>
               </div>
               <div>
                 <span className="text-gray-400 text-sm">State:</span>

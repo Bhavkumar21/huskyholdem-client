@@ -1,13 +1,13 @@
 .hero-title {
   font-size: 4rem;
-  color: #ff00cc;
-  text-shadow: 0 0 5px #ff00cc, 0 0 15px #39ff14;
+  color: #559CF8;
+  text-shadow: 0 0 5px #559CF8, 0 0 15px #FFFFFF;
   animation: neon-flicker 2.5s infinite alternate;
 }
 
 .hero-countdown {
   font-size: 1.25rem;
-  color: #39ff14;
+  color: #FFFFFF;
   margin-top: 1rem;
 }
 
@@ -15,16 +15,16 @@
   margin-top: 2rem;
   padding: 0.6rem 2rem;
   font-size: 1.1rem;
-  border: 2px solid #ff00cc;
+  border: 2px solid #559CF8;
   background: transparent;
-  color: #ff00cc;
+  color: #559CF8;
   text-transform: uppercase;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
 }
 
 .hero-button:hover {
-  background: #ff00cc;
+  background: #559CF8;
   color: black;
 }
 

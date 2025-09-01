@@ -62,7 +62,7 @@ const Login: React.FC = () => {
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="w-full px-4 py-2 bg-white/10 text-white placeholder-gray-400 border border-white/10 focus:outline-none focus:ring-2 focus:ring-[#ff00cc]"
+              className="w-full px-4 py-2 bg-white/10 text-white placeholder-gray-400 border border-white/10 focus:outline-none focus:ring-2 focus:ring-[#559CF8]"
               placeholder="Your username"
             />
           </div>
@@ -73,7 +73,7 @@ const Login: React.FC = () => {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 bg-white/10 text-white placeholder-gray-400 border border-white/10 focus:outline-none focus:ring-2 focus:ring-[#ff00cc]"
+              className="w-full px-4 py-2 bg-white/10 text-white placeholder-gray-400 border border-white/10 focus:outline-none focus:ring-2 focus:ring-[#559CF8]"
               placeholder="••••••••"
             />
           </div>
@@ -84,7 +84,7 @@ const Login: React.FC = () => {
           <button
             type="submit"
             disabled={loading}
-            className={`w-full mt-6 cursor-pointer border border-[#ff00cc] text-center text-[#ff00cc] hover:bg-[#ff00cc] hover:text-black transition-colors duration-200 py-2 ${
+            className={`w-full mt-6 cursor-pointer border border-[#559CF8] text-center text-[#559CF8] hover:bg-[#559CF8] hover:text-black transition-colors duration-200 py-2 ${
               loading ? "opacity-50 cursor-not-allowed" : ""
             }`}
           >
@@ -92,8 +92,8 @@ const Login: React.FC = () => {
                   </button>
             <Link
             to={"/register"}
-            className="text-sm text-[#ff00cc] hover:text-[#39ff14] transition duration-200 mt-4 block text-center">
-            Don't have an account? <span className="underline hover:text-fuchsia-400 text-[#ff00cc]">Register here.</span>
+            className="text-sm text-[#559CF8] hover:text-[#FFFFFF] transition duration-200 mt-4 block text-center">
+            Don't have an account? <span className="underline hover:text-fuchsia-400 text-[#559CF8]">Register here.</span>
             </Link>
         </form>
       </div>

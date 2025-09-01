@@ -81,8 +81,8 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
 
   // Memoized user colors to prevent recalculation
   const userColors = useMemo(() => [
-    '#39ff14', // Bright green
-    '#ff00cc', // Magenta
+    '#FFFFFF', // Bright green
+    '#559CF8', // Magenta
     '#00ffff', // Cyan
     '#ffcc00', // Yellow
     '#ff6600', // Orange
@@ -477,11 +477,11 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
       const interestingGame = interestingGames.find(game => game.iteration === currentIteration);
       
       return (
-        <div className="bg-gray-900 border border-[#39ff14] rounded-lg p-3 shadow-lg max-w-md">
-          <p className="text-[#39ff14] font-mono text-sm font-bold mb-2">
+        <div className="bg-gray-900 border border-[#FFFFFF] rounded-lg p-3 shadow-lg max-w-md">
+          <p className="text-[#FFFFFF] font-mono text-sm font-bold mb-2">
             Sample {label}
             {interestingGame && (
-              <span className="ml-2 text-[#ff00cc]">
+              <span className="ml-2 text-[#559CF8]">
                 <Star className="w-3 h-3 inline ml-1" />
                 Interesting Game
               </span>
@@ -532,7 +532,7 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
         {/* Star background */}
         <path
           d={starPath}
-          fill="#ff00cc"
+          fill="#559CF8"
           stroke="#ffffff"
           strokeWidth={1}
           className="drop-shadow-lg"
@@ -541,7 +541,7 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
         <path
           d={starPath}
           fill="none"
-          stroke="#ff00cc"
+          stroke="#559CF8"
           strokeWidth={2}
           opacity={0.6}
           className="animate-pulse"
@@ -555,7 +555,7 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
       <div className="bg-black bg-opacity-30 border border-[#444] rounded-lg p-6">
         <div className="flex items-center justify-center py-12">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#39ff14] mb-4"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FFFFFF] mb-4"></div>
             <p className="text-gray-400">Loading performance data...</p>
           </div>
         </div>
@@ -605,7 +605,7 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <BarChart3 className="w-6 h-6 text-[#39ff14]" />
+          <BarChart3 className="w-6 h-6 text-[#FFFFFF]" />
           <h3 className="text-xl font-bold text-white font-mono">USER PERFORMANCE MATRIX</h3>
         </div>
         <div className="flex items-center gap-4">
@@ -614,7 +614,7 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
             <select
               value={sampleInterval}
               onChange={e => setSampleInterval(Number(e.target.value))}
-              className="ml-1 px-2 py-1 rounded bg-gray-800 border border-gray-600 text-white text-xs font-mono focus:border-[#39ff14] focus:outline-none"
+              className="ml-1 px-2 py-1 rounded bg-gray-800 border border-gray-600 text-white text-xs font-mono focus:border-[#FFFFFF] focus:outline-none"
               style={{ minWidth: 60 }}
             >
               {[1,2,3,4,5,10,20,25,50,100].map(n => (
@@ -624,7 +624,7 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
           </label>
           <button
             onClick={fetchPerformanceData}
-            className="flex items-center gap-2 px-3 py-1 text-sm border border-[#39ff14] text-[#39ff14] rounded hover:bg-[#39ff14] hover:text-black transition"
+            className="flex items-center gap-2 px-3 py-1 text-sm border border-[#FFFFFF] text-[#FFFFFF] rounded hover:bg-[#FFFFFF] hover:text-black transition"
           >
             <RefreshCw className="w-4 h-4" />
             REFRESH
@@ -640,7 +640,7 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
             <span className="text-sm text-gray-300 font-mono">ZOOM CONTROLS:</span>
             <button
               onClick={zoomOut}
-              className="px-3 py-1 text-xs border border-[#39ff14] text-[#39ff14] rounded hover:bg-[#39ff14] hover:text-black transition font-mono"
+              className="px-3 py-1 text-xs border border-[#FFFFFF] text-[#FFFFFF] rounded hover:bg-[#FFFFFF] hover:text-black transition font-mono"
             >
               RESET ZOOM
             </button>
@@ -698,7 +698,7 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
               />
               <XAxis 
                 dataKey="iteration" 
-                stroke="#39ff14"
+                stroke="#FFFFFF"
                 fontSize={12}
                 fontFamily="monospace"
                 tick={{ fill: '#9ca3af' }}
@@ -712,7 +712,7 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
                 }}
               />
               <YAxis 
-                stroke="#39ff14"
+                stroke="#FFFFFF"
                 fontSize={12}
                 fontFamily="monospace"
                 tick={{ fill: '#9ca3af' }}
@@ -776,7 +776,7 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
                   x1={zoomState.refAreaLeft}
                   x2={zoomState.refAreaRight}
                   strokeOpacity={0.3}
-                  fill="#39ff14"
+                  fill="#FFFFFF"
                   fillOpacity={0.1}
                 />
               ) : null}
@@ -793,8 +793,8 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
       {/* Interesting Games Swipeable List */}
       {interestingGames.length > 0 && (
         <div className="bg-black bg-opacity-30 border border-[#444] rounded-lg p-6 mb-6">
-          <h4 className="text-lg font-bold text-[#ff00cc] mb-3 font-mono flex items-center gap-2">
-            <Zap className="w-5 h-5 text-[#ff00cc]" /> Interesting Hands
+          <h4 className="text-lg font-bold text-[#559CF8] mb-3 font-mono flex items-center gap-2">
+            <Zap className="w-5 h-5 text-[#559CF8]" /> Interesting Hands
           </h4>
           
           {/* Swipeable Container */}
@@ -821,7 +821,7 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
                   {/* Game Header */}
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2">
-                      <Star className="w-4 h-4 text-[#ff00cc]" />
+                      <Star className="w-4 h-4 text-[#559CF8]" />
                       <p className="text-white font-mono text-sm font-bold">
                         Hand {game.iteration}
                       </p>
@@ -830,15 +830,15 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
                       <span className="text-xs text-gray-400 font-mono">
                         {Math.round(game.totalSignificance * 100) / 100}
                       </span>
-                      <div className="w-2 h-2 bg-[#39ff14] rounded-full animate-pulse"></div>
+                      <div className="w-2 h-2 bg-[#FFFFFF] rounded-full animate-pulse"></div>
                     </div>
                   </div>
 
                   {/* Game Reasons */}
                   <div className="space-y-2 mb-3">
                     {game.reasons.slice(0, 2).map((reason, reasonIndex) => (
-                      <div key={reasonIndex} className="bg-gray-900/50 p-2 rounded border-l-2 border-[#39ff14]">
-                        <p className="text-[#39ff14] font-mono text-xs font-bold mb-1">
+                      <div key={reasonIndex} className="bg-gray-900/50 p-2 rounded border-l-2 border-[#FFFFFF]">
+                        <p className="text-[#FFFFFF] font-mono text-xs font-bold mb-1">
                           {reason.reason}
                         </p>
                         <p className="text-gray-300 font-mono text-xs leading-tight">
@@ -873,7 +873,7 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
                     }
                   }}
                   className={`w-2 h-2 rounded-full transition-all duration-300 cursor-pointer hover:scale-125 ${
-                    index === activeGameIndex ? 'bg-[#39ff14] opacity-100' : 'bg-gray-600 opacity-50 hover:opacity-75'
+                    index === activeGameIndex ? 'bg-[#FFFFFF] opacity-100' : 'bg-gray-600 opacity-50 hover:opacity-75'
                   }`}
                 />
               ))}
@@ -893,7 +893,7 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Legend */}
         <div>
-          <h4 className="text-lg font-bold text-[#ff00cc] mb-3 font-mono">PLAYER LEGEND</h4>
+          <h4 className="text-lg font-bold text-[#559CF8] mb-3 font-mono">PLAYER LEGEND</h4>
           <div className="space-y-2">
             {users.map((user, index) => {
               const color = userColors[index % userColors.length];
@@ -912,7 +912,7 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
             {interestingGames.length > 0 && (
               <div className="pt-2 mt-2 border-t border-gray-700">
                 <div className="flex items-center gap-3">
-                  <Star className="w-4 h-4 text-[#ff00cc]" />
+                  <Star className="w-4 h-4 text-[#559CF8]" />
                   <span className="font-mono text-sm text-gray-300">Interesting Games</span>
                 </div>
                 <p className="text-xs text-gray-500 font-mono mt-1 ml-7">
@@ -925,12 +925,12 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId }) =>
 
         {/* Performance Stats */}
         <div>
-          <h4 className="text-lg font-bold text-[#ff00cc] mb-3 font-mono">FINAL RANKINGS</h4>
+          <h4 className="text-lg font-bold text-[#559CF8] mb-3 font-mono">FINAL RANKINGS</h4>
           <div className="space-y-2">
             {userStats.map((stat, index) => (
               <div key={stat.username} className="flex items-center justify-between bg-gray-800/50 p-2 rounded">
                 <div className="flex items-center gap-3">
-                  <span className="text-[#39ff14] font-bold text-sm">#{index + 1}</span>
+                  <span className="text-[#FFFFFF] font-bold text-sm">#{index + 1}</span>
                   <div
                     className="w-3 h-3 rounded"
                     style={{ backgroundColor: stat.color }}

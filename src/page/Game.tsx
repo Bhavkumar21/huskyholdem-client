@@ -117,9 +117,9 @@ const GamePage: React.FC = () => {
       {/* Header */}
       <div className="mb-10 border-b border-[#444] pb-6">
         <div className="flex items-center gap-3 mb-4">
-          <Gamepad2 className="w-8 h-8 text-[#ff00cc]" />
+          <Gamepad2 className="w-8 h-8 text-[#559CF8]" />
           <h1 className="text-3xl font-bold font-glitch">
-            Game <span className="text-[#39ff14]">Replay</span>
+            Game <span className="text-[#FFFFFF]">Replay</span>
           </h1>
         </div>
         <p className="text-gray-300">
@@ -132,7 +132,7 @@ const GamePage: React.FC = () => {
         <button
           onClick={fetchJobs}
           disabled={loading}
-          className="flex items-center gap-2 px-4 py-2 bg-[#ff00cc] text-black hover:bg-[#ff00cc]/80 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex items-center gap-2 px-4 py-2 bg-[#559CF8] text-black hover:bg-[#559CF8]/80 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
           Refresh
@@ -142,8 +142,8 @@ const GamePage: React.FC = () => {
           onClick={handleSortToggle}
           className={`flex items-center gap-2 px-4 py-2 border transition-colors ${
             sortOrder === 'none' 
-              ? 'border-[#39ff14] text-[#39ff14] hover:bg-[#39ff14] hover:text-black' 
-              : 'border-[#ff00cc] text-[#ff00cc] hover:bg-[#ff00cc] hover:text-black'
+              ? 'border-[#FFFFFF] text-[#FFFFFF] hover:bg-[#FFFFFF] hover:text-black' 
+              : 'border-[#559CF8] text-[#559CF8] hover:bg-[#559CF8] hover:text-black'
           }`}
         >
           <ArrowUpDown className="w-4 h-4" />
@@ -155,7 +155,7 @@ const GamePage: React.FC = () => {
       {loading && (
         <div className="flex items-center justify-center py-12">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#ff00cc] mb-4"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#559CF8] mb-4"></div>
             <p className="text-gray-400">Loading games...</p>
           </div>
         </div>
@@ -173,7 +173,7 @@ const GamePage: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
             <div className="bg-black/30 border border-[#444] rounded-lg p-4">
               <div className="flex items-center gap-2 mb-2">
-                <Trophy className="w-5 h-5 text-[#ff00cc]" />
+                <Trophy className="w-5 h-5 text-[#559CF8]" />
                 <span className="text-sm text-gray-400">Total Games</span>
               </div>
               <p className="text-2xl font-bold text-white">{jobs.length}</p>
@@ -181,7 +181,7 @@ const GamePage: React.FC = () => {
             
             <div className="bg-black/30 border border-[#444] rounded-lg p-4">
               <div className="flex items-center gap-2 mb-2">
-                <Users className="w-5 h-5 text-[#39ff14]" />
+                <Users className="w-5 h-5 text-[#FFFFFF]" />
                 <span className="text-sm text-gray-400">Total Players</span>
               </div>
               <p className="text-2xl font-bold text-white">
@@ -215,18 +215,18 @@ const GamePage: React.FC = () => {
               {sortedJobs.map((job, index) => (
                 <div
                   key={job.job_id}
-                  className="bg-black/30 border border-[#444] rounded-lg p-6 hover:border-[#ff00cc]/50 transition-colors"
+                  className="bg-black/30 border border-[#444] rounded-lg p-6 hover:border-[#559CF8]/50 transition-colors"
                 >
                   <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
-                        <div className="bg-[#ff00cc]/20 p-2 rounded-lg">
-                          <Gamepad2 className="w-5 h-5 text-[#ff00cc]" />
+                        <div className="bg-[#559CF8]/20 p-2 rounded-lg">
+                          <Gamepad2 className="w-5 h-5 text-[#559CF8]" />
                         </div>
                         <div>
                           <Link
                             to={`/games/${job.job_id}?gameNumber=${index + 1}`}
-                            className="font-bold text-white font-mono underline underline-offset-4 hover:text-[#ff00cc] transition-colors"
+                            className="font-bold text-white font-mono underline underline-offset-4 hover:text-[#559CF8] transition-colors"
                           >
                             Game #{index + 1} Batch #1
                           </Link>
@@ -253,7 +253,7 @@ const GamePage: React.FC = () => {
                         <Link
                           key={index}
                           to={`/profile/${player}`}
-                          className="border border-[#39ff14] px-2 py-1 text-[#39ff14] rounded text-sm font-mono hover:bg-[#39ff14]/60 hover:text-[#39ff14] transition-colors cursor-pointer"
+                          className="border border-[#FFFFFF] px-2 py-1 text-[#FFFFFF] rounded text-sm font-mono hover:bg-[#FFFFFF]/60 hover:text-[#FFFFFF] transition-colors cursor-pointer"
                         >
                           {player}
                         </Link>

@@ -80,7 +80,7 @@ const VerifyAccount: React.FC = () => {
       <div className="max-w-md w-full bg-white/5 backdrop-blur-md rounded-xl border border-white/10 shadow-lg p-8">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="mx-auto w-16 h-16 bg-gradient-to-r from-[#ff00cc] to-[#39ff14] rounded-full flex items-center justify-center mb-4">
+          <div className="mx-auto w-16 h-16 bg-gradient-to-r from-[#559CF8] to-[#FFFFFF] rounded-full flex items-center justify-center mb-4">
             <Mail className="h-8 w-8 text-white" />
           </div>
           <h1 className="text-2xl font-bold mb-2 font-glitch">
@@ -92,11 +92,11 @@ const VerifyAccount: React.FC = () => {
         </div>
 
         {/* User Info */}
-        <div className="bg-black bg-opacity-30 border border-[#ff00cc] rounded-lg p-4 mb-6">
+        <div className="bg-black bg-opacity-30 border border-[#559CF8] rounded-lg p-4 mb-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-400">Logged in as:</p>
-              <p className="text-[#ff00cc] font-semibold">{user?.username}</p>
+              <p className="text-[#559CF8] font-semibold">{user?.username}</p>
             </div>
             <div className="text-right">
               <div className="flex items-center text-yellow-400">
@@ -109,7 +109,7 @@ const VerifyAccount: React.FC = () => {
 
         {/* Instructions */}
         <div className="mb-6">
-          <h3 className="text-lg font-semibold text-[#39ff14] mb-3 flex items-center">
+          <h3 className="text-lg font-semibold text-[#FFFFFF] mb-3 flex items-center">
             <CheckCircle className="h-5 w-5 mr-2" />
             Next Steps
           </h3>
@@ -144,8 +144,8 @@ const VerifyAccount: React.FC = () => {
             cooldownTime > 0
               ? "border-gray-600 text-gray-500 cursor-not-allowed"
               : loading
-              ? "border-[#39ff14] text-[#39ff14] opacity-50 cursor-not-allowed"
-              : "border-[#39ff14] text-[#39ff14] hover:bg-[#39ff14] hover:text-black"
+              ? "border-[#FFFFFF] text-[#FFFFFF] opacity-50 cursor-not-allowed"
+              : "border-[#FFFFFF] text-[#FFFFFF] hover:bg-[#FFFFFF] hover:text-black"
           }`}
         >
           {loading ? (

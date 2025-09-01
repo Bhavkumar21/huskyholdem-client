@@ -127,7 +127,7 @@ const DirectoryPage: React.FC = () => {
         <button
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className="flex items-center px-3 py-2 text-sm border border-gray-600 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:border-[#39ff14] hover:text-[#39ff14] transition-colors"
+          className="flex items-center px-3 py-2 text-sm border border-gray-600 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:border-[#FFFFFF] hover:text-[#FFFFFF] transition-colors"
         >
           <ChevronLeft className="h-4 w-4 mr-1" />
           Previous
@@ -137,7 +137,7 @@ const DirectoryPage: React.FC = () => {
           <>
             <button
               onClick={() => handlePageChange(1)}
-              className="px-3 py-2 text-sm border border-gray-600 rounded-lg hover:border-[#39ff14] hover:text-[#39ff14] transition-colors"
+              className="px-3 py-2 text-sm border border-gray-600 rounded-lg hover:border-[#FFFFFF] hover:text-[#FFFFFF] transition-colors"
             >
               1
             </button>
@@ -151,8 +151,8 @@ const DirectoryPage: React.FC = () => {
             onClick={() => handlePageChange(pageNum)}
             className={`px-3 py-2 text-sm border rounded-lg transition-colors ${
               pageNum === currentPage
-                ? "border-[#ff00cc] bg-[#ff00cc] text-black font-semibold"
-                : "border-gray-600 hover:border-[#39ff14] hover:text-[#39ff14]"
+                ? "border-[#559CF8] bg-[#559CF8] text-black font-semibold"
+                : "border-gray-600 hover:border-[#FFFFFF] hover:text-[#FFFFFF]"
             }`}
           >
             {pageNum}
@@ -164,7 +164,7 @@ const DirectoryPage: React.FC = () => {
             {endPage < totalPages - 1 && <span className="text-gray-400">...</span>}
             <button
               onClick={() => handlePageChange(totalPages)}
-              className="px-3 py-2 text-sm border border-gray-600 rounded-lg hover:border-[#39ff14] hover:text-[#39ff14] transition-colors"
+              className="px-3 py-2 text-sm border border-gray-600 rounded-lg hover:border-[#FFFFFF] hover:text-[#FFFFFF] transition-colors"
             >
               {totalPages}
             </button>
@@ -174,7 +174,7 @@ const DirectoryPage: React.FC = () => {
         <button
           onClick={() => handlePageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="flex items-center px-3 py-2 text-sm border border-gray-600 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:border-[#39ff14] hover:text-[#39ff14] transition-colors"
+          className="flex items-center px-3 py-2 text-sm border border-gray-600 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:border-[#FFFFFF] hover:text-[#FFFFFF] transition-colors"
         >
           Next
           <ChevronRight className="h-4 w-4 ml-1" />
@@ -200,12 +200,12 @@ const DirectoryPage: React.FC = () => {
           <div
             key={user.username}
             onClick={() => handleUserClick(user.username)}
-            className="bg-white/5 border border-gray-700 rounded-lg p-4 cursor-pointer hover:border-[#ff00cc] hover:bg-white/10 transition-all duration-200 group"
+            className="bg-white/5 border border-gray-700 rounded-lg p-4 cursor-pointer hover:border-[#559CF8] hover:bg-white/10 transition-all duration-200 group"
           >
             <div className="flex items-start justify-between">
               <div className="flex-1">
                 <div className="flex items-center mb-2">
-                  <h3 className="text-lg font-semibold text-white group-hover:text-[#ff00cc] transition-colors">
+                  <h3 className="text-lg font-semibold text-white group-hover:text-[#559CF8] transition-colors">
                     {user.name || user.username}
                   </h3>
                   {user.name && (
@@ -238,7 +238,7 @@ const DirectoryPage: React.FC = () => {
               </div>
               
               <div className="ml-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                <div className="text-[#ff00cc] text-sm font-medium">
+                <div className="text-[#559CF8] text-sm font-medium">
                   View Profile →
                 </div>
               </div>
@@ -255,7 +255,7 @@ const DirectoryPage: React.FC = () => {
       <div className="mb-10 border-b border-[#444] pb-6">
         <h1 className="text-3xl font-bold mb-2 font-glitch">
           User Directory —{" "}
-          <span className="text-[#ff00cc]">Find Participants</span>
+          <span className="text-[#559CF8]">Find Participants</span>
         </h1>
         <p className="text-gray-400">
           {hasSearched 
@@ -288,12 +288,12 @@ const DirectoryPage: React.FC = () => {
       </div>
 
       {/* User List */}
-      <div className="bg-white/5 backdrop-blur-sm border border-[#39ff14] rounded-lg p-6">
-        <h2 className="text-xl font-bold text-[#39ff14] mb-4 flex items-center">
+      <div className="bg-white/5 backdrop-blur-sm border border-[#FFFFFF] rounded-lg p-6">
+        <h2 className="text-xl font-bold text-[#FFFFFF] mb-4 flex items-center">
           <User className="h-5 w-5 mr-2" />
           {hasSearched ? "Search Results" : "All Users"}
           {(hasSearched ? searchResults : allUsers).length > 0 && (
-            <span className="ml-2 text-sm bg-[#39ff14] text-black px-2 py-1 rounded">
+            <span className="ml-2 text-sm bg-[#FFFFFF] text-black px-2 py-1 rounded">
               {hasSearched 
                 ? `${searchResults.length} found`
                 : `${(currentPage - 1) * pageSize + 1}-${Math.min(currentPage * pageSize, totalUsers)} of ${totalUsers}`

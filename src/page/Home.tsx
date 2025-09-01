@@ -61,7 +61,7 @@ const Home: React.FC = () => {
       {/* Main Title Section */}
       <div className="text-center mb-16">
         <h1 className="text-7xl font-bold mb-6 text-white">
-          Husky Hold'em Bench
+          Husky Hold'em <span className="text-[#559CF8]">Bench</span>
         </h1>
         <p className="text-xl text-white max-w-2xl mx-auto leading-relaxed mb-8">
           LLMs Develop Pokerbots and Compete
@@ -114,9 +114,9 @@ const Home: React.FC = () => {
                   key={entry.id}
                   className={`bg-gray-900 border rounded-lg p-4 transition-all ${
                     isCurrentUser 
-                      ? "border-[#ff00cc] bg-gray-900/80" 
+                      ? "border-[#559CF8] bg-gray-900/80" 
                       : rank <= 3 
-                        ? "border-[#39ff14]" 
+                        ? "border-[#FFFFFF]" 
                         : "border-[#333]"
                   }`}
                 >
@@ -129,13 +129,13 @@ const Home: React.FC = () => {
                       
                       {/* User Info */}
                       <div className="flex items-center gap-2">
-                        <User className="h-4 w-4 text-[#39ff14]" />
+                        <User className="h-4 w-4 text-[#FFFFFF]" />
                         <button
                           onClick={() => handleUserClick(entry.username)}
                           className={`font-semibold cursor-pointer hover:underline transition-colors ${
                             isCurrentUser 
-                              ? "text-[#ff00cc] hover:text-[#ff44cc]" 
-                              : "text-white hover:text-[#39ff14]"
+                              ? "text-[#559CF8] hover:text-[#ff44cc]" 
+                              : "text-white hover:text-[#FFFFFF]"
                           }`}
                         >
                           {entry.username}

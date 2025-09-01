@@ -81,13 +81,13 @@ const UserList: React.FC<UserListProps> = ({
                 {/* Status Tags */}
                 <div className="flex gap-2">
                   {u.admin && (
-                    <span className="inline-flex items-center gap-1 px-3 py-1 bg-opacity-20 border border-[#ff00cc] text-[#ff00cc] text-xs rounded font-bold">
+                    <span className="inline-flex items-center gap-1 px-3 py-1 bg-opacity-20 border border-[#559CF8] text-[#559CF8] text-xs rounded font-bold">
                       <Shield className="w-3 h-3" />
                       ADMIN
                     </span>
                   )}
                   {u.is_verified ? (
-                    <span className="inline-flex items-center gap-1 px-3 py-1 bg-opacity-20 border border-[#39ff14] text-[#39ff14] text-xs rounded font-bold">
+                    <span className="inline-flex items-center gap-1 px-3 py-1 bg-opacity-20 border border-[#FFFFFF] text-[#FFFFFF] text-xs rounded font-bold">
                       <CheckCircle className="w-3 h-3" />
                       VERIFIED
                     </span>
@@ -118,7 +118,7 @@ const UserList: React.FC<UserListProps> = ({
                     className={`px-4 py-2 text-xs rounded border transition-colors duration-200 font-semibold flex items-center gap-1 ${
                       u.is_verified
                         ? 'border-orange-500 text-orange-400 hover:bg-orange-500 hover:text-black'
-                        : 'border-[#39ff14] text-[#39ff14] hover:bg-[#39ff14] hover:text-black'
+                        : 'border-[#FFFFFF] text-[#FFFFFF] hover:bg-[#FFFFFF] hover:text-black'
                     }`}
                   >
                     <UserCheck className="w-3 h-3" />
@@ -164,7 +164,7 @@ const UserList: React.FC<UserListProps> = ({
             
             <p className="text-gray-300 mb-6">
               Are you sure you want to permanently delete user{' '}
-              <span className="font-mono text-[#ff00cc]">{confirmDelete}</span>?
+              <span className="font-mono text-[#559CF8]">{confirmDelete}</span>?
             </p>
             
             <div className="bg-red-900 bg-opacity-20 border border-red-500 rounded-lg p-4 mb-6">

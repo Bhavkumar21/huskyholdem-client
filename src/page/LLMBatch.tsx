@@ -217,7 +217,7 @@ const LLMBatchPage = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "FINISHED": return "text-[#39ff14]";
+      case "FINISHED": return "text-[#FFFFFF]";
       case "RUNNING": return "text-yellow-400";
       case "FAILED": return "text-red-400";
       case "PENDING": return "text-gray-400";
@@ -235,13 +235,13 @@ const LLMBatchPage = () => {
       <div className="mb-8">
         <button
           onClick={() => navigate("/admin")}
-          className="mb-6 text-sm px-4 py-2 border border-[#39ff14] text-[#39ff14] rounded hover:bg-[#39ff14] hover:text-black transition duration-200 flex items-center gap-2"
+          className="mb-6 text-sm px-4 py-2 border border-[#FFFFFF] text-[#FFFFFF] rounded hover:bg-[#FFFFFF] hover:text-black transition duration-200 flex items-center gap-2"
         >
           ← Back to Admin Dashboard
         </button>
         
         <div className="border-b border-[#444] pb-6">
-          <h1 className="text-4xl font-bold mb-3 font-glitch text-[#ff00cc]">
+          <h1 className="text-4xl font-bold mb-3 font-glitch text-[#559CF8]">
             <Zap className="inline w-8 h-8 mr-3" />
             LLM BATCH CONTROL CENTER
           </h1>
@@ -252,10 +252,10 @@ const LLMBatchPage = () => {
       </div>
 
       {/* Protocol Notice */}
-      <div className="bg-black bg-opacity-30 border-l-4 border-[#ff00cc] pl-6 py-4 my-6 rounded-md">
-        <p className="text-[#39ff14] font-bold mb-2">⚡ BATCH PROTOCOL ⚡</p>
+      <div className="bg-black bg-opacity-30 border-l-4 border-[#559CF8] pl-6 py-4 my-6 rounded-md">
+        <p className="text-[#FFFFFF] font-bold mb-2">⚡ BATCH PROTOCOL ⚡</p>
         <p className="text-gray-300 text-sm mb-2">
-          Welcome to the <span className="text-[#ff00cc] font-semibold">LLM Batch Processing Arena</span>! 
+          Welcome to the <span className="text-[#559CF8] font-semibold">LLM Batch Processing Arena</span>! 
           Select at least 6 users with final submissions to generate all possible 6-user combinations for batch processing.
         </p>
         <p className="text-gray-400 text-xs">
@@ -264,15 +264,15 @@ const LLMBatchPage = () => {
       </div>
 
       {/* Users Selection Section */}
-      <div className="bg-black bg-opacity-30 border-l-4 border-[#39ff14] p-6 my-8 rounded-lg">
+      <div className="bg-black bg-opacity-30 border-l-4 border-[#FFFFFF] p-6 my-8 rounded-lg">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold text-white flex items-center gap-3">
-            <Users className="w-6 h-6 text-[#39ff14]" />
+            <Users className="w-6 h-6 text-[#FFFFFF]" />
             USER SELECTION MATRIX
           </h2>
           <button 
             onClick={fetchUsersSubStatus}
-            className="text-sm border border-[#39ff14] text-[#39ff14] px-4 py-2 rounded hover:bg-[#39ff14] hover:text-black transition duration-200"
+            className="text-sm border border-[#FFFFFF] text-[#FFFFFF] px-4 py-2 rounded hover:bg-[#FFFFFF] hover:text-black transition duration-200"
           >
             SYNC DATA
           </button>
@@ -281,11 +281,11 @@ const LLMBatchPage = () => {
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
           {/* Left Column - User List */}
           <div className="xl:col-span-2">
-            <h3 className="text-[#ff00cc] text-lg mb-4 font-semibold">REGISTERED PARTICIPANTS</h3>
+            <h3 className="text-[#559CF8] text-lg mb-4 font-semibold">REGISTERED PARTICIPANTS</h3>
             <div className="bg-gray-900 p-6 rounded-lg border border-gray-700">
               {usersLoading ? (
                 <div className="text-center py-8">
-                  <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#39ff14]"></div>
+                  <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#FFFFFF]"></div>
                   <p className="text-gray-400 mt-2">Loading participants...</p>
                 </div>
               ) : (
@@ -297,7 +297,7 @@ const LLMBatchPage = () => {
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       placeholder="Search by username"
-                      className="flex-1 px-3 py-2 bg-gray-800 border border-gray-600 rounded text-white focus:border-[#39ff14] focus:outline-none transition-colors"
+                      className="flex-1 px-3 py-2 bg-gray-800 border border-gray-600 rounded text-white focus:border-[#FFFFFF] focus:outline-none transition-colors"
                     />
                     {searchQuery && (
                       <button
@@ -310,7 +310,7 @@ const LLMBatchPage = () => {
                   </div>
               
                   {/* Header */}
-                  <div className="grid grid-cols-4 gap-4 font-semibold py-3 border-b-2 border-[#39ff14] text-[#39ff14]">
+                  <div className="grid grid-cols-4 gap-4 font-semibold py-3 border-b-2 border-[#FFFFFF] text-[#FFFFFF]">
                     <div>SELECT</div>
                     <div>USERNAME</div>
                     <div className="flex items-center space-x-2">
@@ -335,7 +335,7 @@ const LLMBatchPage = () => {
                         <div
                           key={username}
                           className={`grid grid-cols-4 gap-4 py-3 items-center border-b border-gray-700 hover:bg-gray-800 transition-colors ${
-                            selectedUsers.includes(username) ? 'bg-gray-800 border-[#39ff14]' : ''
+                            selectedUsers.includes(username) ? 'bg-gray-800 border-[#FFFFFF]' : ''
                           }`}
                         >
                           <div>
@@ -348,10 +348,10 @@ const LLMBatchPage = () => {
                             />
                           </div>
                           <div className="font-mono">{username}</div>
-                          <div className={hasFinal ? "text-[#39ff14]" : "text-red-400"}>
+                          <div className={hasFinal ? "text-[#FFFFFF]" : "text-red-400"}>
                             {hasFinal ? "✓ YES" : "✗ NO"}
                           </div>
-                          <div className={selectedUsers.includes(username) ? "text-[#39ff14] font-bold" : "text-gray-400"}>
+                          <div className={selectedUsers.includes(username) ? "text-[#FFFFFF] font-bold" : "text-gray-400"}>
                             {selectedUsers.includes(username) ? "SELECTED" : "STANDBY"}
                           </div>
                         </div>
@@ -365,17 +365,17 @@ const LLMBatchPage = () => {
                       <button
                         onClick={prev}
                         disabled={page === 0}
-                        className="px-4 py-2 border border-[#39ff14] text-[#39ff14] rounded disabled:opacity-40 disabled:cursor-not-allowed hover:bg-[#39ff14] hover:text-black transition"
+                        className="px-4 py-2 border border-[#FFFFFF] text-[#FFFFFF] rounded disabled:opacity-40 disabled:cursor-not-allowed hover:bg-[#FFFFFF] hover:text-black transition"
                       >
                         PREV
                       </button>
-                      <span className="text-[#ff00cc] font-mono">
+                      <span className="text-[#559CF8] font-mono">
                         PAGE {page + 1} OF {pageCount}
                       </span>
                       <button
                         onClick={next}
                         disabled={page === pageCount - 1}
-                        className="px-4 py-2 border border-[#39ff14] text-[#39ff14] rounded disabled:opacity-40 disabled:cursor-not-allowed hover:bg-[#39ff14] hover:text-black transition"
+                        className="px-4 py-2 border border-[#FFFFFF] text-[#FFFFFF] rounded disabled:opacity-40 disabled:cursor-not-allowed hover:bg-[#FFFFFF] hover:text-black transition"
                       >
                         NEXT
                       </button>
@@ -388,13 +388,13 @@ const LLMBatchPage = () => {
 
           {/* Right Column - Selected Users & Controls */}
           <div className="xl:col-span-1">
-            <h3 className="text-[#ff00cc] text-lg mb-4 font-semibold">BATCH ROSTER</h3>
+            <h3 className="text-[#559CF8] text-lg mb-4 font-semibold">BATCH ROSTER</h3>
             <div className="bg-gray-900 p-6 rounded-lg border border-gray-700">
               <div className="text-center mb-4">
-                <div className="text-3xl font-bold text-[#39ff14] mb-2">{selectedUsers.length}</div>
+                <div className="text-3xl font-bold text-[#FFFFFF] mb-2">{selectedUsers.length}</div>
                 <div className="text-sm text-gray-400">PARTICIPANTS SELECTED</div>
                 {selectedUsers.length >= 6 && (
-                  <div className="text-xs text-[#ff00cc] mt-1">
+                  <div className="text-xs text-[#559CF8] mt-1">
                     Will generate {Math.floor(selectedUsers.length * (selectedUsers.length - 1) * (selectedUsers.length - 2) * (selectedUsers.length - 3) * (selectedUsers.length - 4) * (selectedUsers.length - 5) / (6 * 5 * 4 * 3 * 2 * 1))} combinations
                   </div>
                 )}
@@ -408,9 +408,9 @@ const LLMBatchPage = () => {
               ) : (
                 <div className="space-y-3 mb-6 max-h-64 overflow-y-auto">
                   {selectedUsers.map((username, index) => (
-                    <div key={username} className="flex items-center justify-between bg-gray-800 p-3 rounded border-l-2 border-[#39ff14]">
+                    <div key={username} className="flex items-center justify-between bg-gray-800 p-3 rounded border-l-2 border-[#FFFFFF]">
                       <div className="flex items-center gap-3">
-                        <span className="text-[#39ff14] font-bold text-xs">#{index + 1}</span>
+                        <span className="text-[#FFFFFF] font-bold text-xs">#{index + 1}</span>
                         <span className="font-mono text-sm">{username}</span>
                       </div>
                       <button
@@ -435,7 +435,7 @@ const LLMBatchPage = () => {
                 disabled={selectedUsers.length < 6 || submittingBatch}
                 className={`w-full py-4 px-6 rounded-lg font-bold text-lg transition-all duration-200 flex items-center justify-center gap-3 ${
                   selectedUsers.length >= 6 && !submittingBatch
-                    ? "bg-[#39ff14] text-black hover:bg-[#2bff00] hover:shadow-lg hover:shadow-[#39ff14]/50"
+                    ? "bg-[#FFFFFF] text-black hover:bg-[#2bff00] hover:shadow-lg hover:shadow-[#FFFFFF]/50"
                     : "bg-gray-700 text-gray-500 cursor-not-allowed"
                 }`}
                 onClick={runBatch}
@@ -458,10 +458,10 @@ const LLMBatchPage = () => {
       </div>
 
       {/* Batches Status Section */}
-      <div className="bg-black bg-opacity-30 border-l-4 border-[#ff00cc] p-6 my-8 rounded-lg">
+      <div className="bg-black bg-opacity-30 border-l-4 border-[#559CF8] p-6 my-8 rounded-lg">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold text-white flex items-center gap-3">
-            <Zap className="w-6 h-6 text-[#ff00cc]" />
+            <Zap className="w-6 h-6 text-[#559CF8]" />
             ACTIVE BATCH JOBS
           </h2>
           <button 
@@ -469,7 +469,7 @@ const LLMBatchPage = () => {
               setBatchesLoading(true);
               fetchBatches();
             }}
-            className="text-sm border border-[#ff00cc] text-[#ff00cc] px-4 py-2 rounded hover:bg-[#ff00cc] hover:text-black transition duration-200 flex items-center gap-2"
+            className="text-sm border border-[#559CF8] text-[#559CF8] px-4 py-2 rounded hover:bg-[#559CF8] hover:text-black transition duration-200 flex items-center gap-2"
           >
             <RefreshCw className="w-4 h-4" />
             REFRESH
@@ -478,7 +478,7 @@ const LLMBatchPage = () => {
 
         {batchesLoading ? (
           <div className="text-center py-8">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#ff00cc]"></div>
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#559CF8]"></div>
             <p className="text-gray-400 mt-2">Loading batches...</p>
           </div>
         ) : batches.length === 0 ? (
@@ -492,7 +492,7 @@ const LLMBatchPage = () => {
               <div key={batch.batch_id} className="bg-gray-900 p-6 rounded-lg border border-gray-700">
                 <div className="flex items-center justify-between mb-4">
                   <div>
-                    <h3 className="text-lg font-bold text-[#39ff14] mb-1">
+                    <h3 className="text-lg font-bold text-[#FFFFFF] mb-1">
                       Batch ID: {batch.batch_id}
                     </h3>
                     <p className="text-sm text-gray-400">
@@ -503,7 +503,7 @@ const LLMBatchPage = () => {
                     <button
                       onClick={() => addBatchToLeaderboard(batch.batch_id)}
                       disabled={!!processingLeaderboard[batch.batch_id] || !!allAddedMap[batch.batch_id]}
-                      className="px-2 py-1 text-xs border border-[#ff00cc] text-[#ff00cc] rounded hover:bg-[#ff00cc] hover:text-black transition disabled:opacity-50"
+                      className="px-2 py-1 text-xs border border-[#559CF8] text-[#559CF8] rounded hover:bg-[#559CF8] hover:text-black transition disabled:opacity-50"
                     >
                       {processingLeaderboard[batch.batch_id] ? (
                         <div className="flex items-center gap-2">
@@ -562,7 +562,7 @@ const LLMBatchPage = () => {
                     <div className="text-xs text-gray-400">Running</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-[#39ff14]">{batch.job_statuses.FINISHED || 0}</div>
+                    <div className="text-2xl font-bold text-[#FFFFFF]">{batch.job_statuses.FINISHED || 0}</div>
                     <div className="text-xs text-gray-400">Finished</div>
                   </div>
                   <div className="text-center">
@@ -572,7 +572,7 @@ const LLMBatchPage = () => {
                 </div>
 
                 <div className="border-t border-gray-700 pt-4">
-                  <h4 className="text-sm font-semibold text-[#ff00cc] mb-2">Job Details:</h4>
+                  <h4 className="text-sm font-semibold text-[#559CF8] mb-2">Job Details:</h4>
                   <div className="max-h-32 overflow-y-auto space-y-1">
                     {batch.jobs.map((job) => (
                       <div key={job.job_id} className="flex items-center justify-between text-xs bg-gray-800 p-2 rounded">

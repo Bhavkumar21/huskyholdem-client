@@ -181,7 +181,7 @@ const ProfilePage: React.FC = () => {
       <div className="mb-10 border-b border-[#444] pb-6">
         <h1 className="text-3xl font-bold mb-2 font-glitch">
           Profile —{" "}
-          <span className="text-[#ff00cc]">
+          <span className="text-[#559CF8]">
             {isSelf ? "You" : profile?.username}
           </span>
           {profile?.admin && (
@@ -197,13 +197,13 @@ const ProfilePage: React.FC = () => {
       ) : (
         <div className="grid md:grid-cols-2 gap-6">
             {/* Profile Info */}
-            <div className="bg-gray-900 border border-[#ff00cc] rounded-lg p-6">
-                <h2 className="text-xl font-bold text-[#ff00cc] flex items-center mb-4">
+            <div className="bg-gray-900 border border-[#559CF8] rounded-lg p-6">
+                <h2 className="text-xl font-bold text-[#559CF8] flex items-center mb-4">
                     <User className="h-5 w-5 mr-2" />
                     Profile Info
                     {isSelf && (
                         <button
-                            className="ml-auto px-3 py-1 border-[#39ff14] border-2 text-[#39ff14] text-sm font-medium rounded hover:bg-[#39ff14] hover:text-black transition-colors duration-200"
+                            className="ml-auto px-3 py-1 border-[#FFFFFF] border-2 text-[#FFFFFF] text-sm font-medium rounded hover:bg-[#FFFFFF] hover:text-black transition-colors duration-200"
                             onClick={() => setEditMode(!editMode)}
                         >
                             {editMode ? "Cancel" : "Edit"}
@@ -222,7 +222,7 @@ const ProfilePage: React.FC = () => {
                                 <input
                                     id="name"
                                     name="name"
-                                    className="w-full px-4 py-2 bg-white/10 text-white placeholder-gray-400 border border-white/10 focus:outline-none focus:ring-2 focus:ring-[#ff00cc]"
+                                    className="w-full px-4 py-2 bg-white/10 text-white placeholder-gray-400 border border-white/10 focus:outline-none focus:ring-2 focus:ring-[#559CF8]"
                                     value={formData.name}
                                     onChange={handleChange}
                                     placeholder="Your full name"
@@ -234,7 +234,7 @@ const ProfilePage: React.FC = () => {
                                 <input
                                     id="github"
                                     name="github"
-                                    className="w-full px-4 py-2 bg-white/10 text-white placeholder-gray-400 border border-white/10 focus:outline-none focus:ring-2 focus:ring-[#ff00cc]"
+                                    className="w-full px-4 py-2 bg-white/10 text-white placeholder-gray-400 border border-white/10 focus:outline-none focus:ring-2 focus:ring-[#559CF8]"
                                     value={formData.github}
                                     onChange={handleChange}
                                     placeholder="Your GitHub username"
@@ -246,7 +246,7 @@ const ProfilePage: React.FC = () => {
                                 <input
                                     id="discord_username"
                                     name="discord_username"
-                                    className="w-full px-4 py-2 bg-white/10 text-white placeholder-gray-400 border border-white/10 focus:outline-none focus:ring-2 focus:ring-[#ff00cc]"
+                                    className="w-full px-4 py-2 bg-white/10 text-white placeholder-gray-400 border border-white/10 focus:outline-none focus:ring-2 focus:ring-[#559CF8]"
                                     value={formData.discord_username}
                                     onChange={handleChange}
                                     placeholder="Your Discord username"
@@ -259,7 +259,7 @@ const ProfilePage: React.FC = () => {
                                     id="about"
                                     name="about"
                                     rows={4}
-                                    className="w-full px-4 py-2 bg-white/10 text-white placeholder-gray-400 border border-white/10 focus:outline-none focus:ring-2 focus:ring-[#ff00cc] resize-none"
+                                    className="w-full px-4 py-2 bg-white/10 text-white placeholder-gray-400 border border-white/10 focus:outline-none focus:ring-2 focus:ring-[#559CF8] resize-none"
                                     value={formData.about}
                                     onChange={handleChange}
                                     placeholder="Tell us about yourself..."
@@ -268,7 +268,7 @@ const ProfilePage: React.FC = () => {
                             <div className="flex gap-3 pt-2">
                                 <button
                                     type="submit"
-                                    className="px-6 py-2 border border-[#39ff14] text-[#39ff14] hover:bg-[#39ff14] hover:text-black transition-colors duration-200"
+                                    className="px-6 py-2 border border-[#FFFFFF] text-[#FFFFFF] hover:bg-[#FFFFFF] hover:text-black transition-colors duration-200"
                                 >
                                     Save Changes
                                 </button>
@@ -285,23 +285,23 @@ const ProfilePage: React.FC = () => {
                 ) : (
                     <>
                         <p>
-                            <span className="text-[#39ff14]">Username:</span>{" "}
+                            <span className="text-[#FFFFFF]">Username:</span>{" "}
                             {profile?.username || "N/A"}
                         </p>
                         <p>
-                            <span className="text-[#39ff14]">Name:</span>{" "}
+                            <span className="text-[#FFFFFF]">Name:</span>{" "}
                             {profile?.name || "N/A"}
                         </p>
                         <p>
-                            <span className="text-[#39ff14]">GitHub:</span>{" "}
+                            <span className="text-[#FFFFFF]">GitHub:</span>{" "}
                             {profile?.github || "N/A"}
                         </p>
                         <p>
-                            <span className="text-[#39ff14]">Discord:</span>{" "}
+                            <span className="text-[#FFFFFF]">Discord:</span>{" "}
                             {profile?.discord_username || "N/A"}
                         </p>
                         <div className="mt-4">
-                            <p className="text-[#39ff14] font-semibold">About Me:</p>
+                            <p className="text-[#FFFFFF] font-semibold">About Me:</p>
                             <p className="text-sm text-gray-300 bg-gray-800 p-3 rounded mt-2">
                                 {profile?.about || "This user hasn't written anything yet."}
                             </p>
@@ -311,8 +311,8 @@ const ProfilePage: React.FC = () => {
             </div>
 
           {/* Score Stats */}
-          <div className="bg-gray-900 border border-[#39ff14] rounded-lg p-6">
-            <h2 className="text-xl font-bold text-[#39ff14] mb-4 flex items-center">
+          <div className="bg-gray-900 border border-[#FFFFFF] rounded-lg p-6">
+            <h2 className="text-xl font-bold text-[#FFFFFF] mb-4 flex items-center">
               <Trophy className="h-5 w-5 mr-2" />
               Performance Stats
             </h2>
@@ -372,12 +372,12 @@ const ProfilePage: React.FC = () => {
 
           {/* Final Submission - Show for admin viewing other users */}
           {user?.admin && finalSubmission && (
-            <div className="bg-gray-900 border border-[#ff00cc] rounded-lg p-6 md:col-span-2">
+            <div className="bg-gray-900 border border-[#559CF8] rounded-lg p-6 md:col-span-2">
               <div 
                 onClick={toggleSubmission}
                 className="flex justify-between items-center cursor-pointer hover:bg-gray-800 transition duration-200"
               >
-                <h2 className="text-xl font-bold text-[#ff00cc] flex items-center">
+                <h2 className="text-xl font-bold text-[#559CF8] flex items-center">
                   <Package className="h-5 w-5 mr-2" />
                   Final Submission
                   {finalSubmission.has_final_submission && (
@@ -402,10 +402,10 @@ const ProfilePage: React.FC = () => {
               {finalSubmission.has_final_submission && (
                 <div className="mt-4">
                   <p className="text-gray-300 text-sm">
-                    Submission ID: <span className="font-mono text-[#39ff14]">{finalSubmission.submission_id}</span>
+                    Submission ID: <span className="font-mono text-[#FFFFFF]">{finalSubmission.submission_id}</span>
                   </p>
                   <p className="text-gray-300 text-sm">
-                    Created: <span className="font-mono text-[#39ff14]">
+                    Created: <span className="font-mono text-[#FFFFFF]">
                       {finalSubmission.created_at ? new Date(finalSubmission.created_at).toLocaleString() : 'N/A'}
                     </span>
                   </p>
@@ -416,14 +416,14 @@ const ProfilePage: React.FC = () => {
                 <div className="border-t border-gray-700 mt-4 pt-4">
                   {loadingContents ? (
                     <div className="flex justify-center items-center py-8">
-                      <Loader className="h-6 w-6 text-[#ff00cc] animate-spin" />
+                      <Loader className="h-6 w-6 text-[#559CF8] animate-spin" />
                       <span className="ml-3 text-gray-400">Loading file contents...</span>
                     </div>
                   ) : (
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                      <div className="bg-gray-800 rounded border border-[#39ff14] p-4">
+                      <div className="bg-gray-800 rounded border border-[#FFFFFF] p-4">
                         <div className="flex justify-between items-center mb-2">
-                          <h3 className="text-[#39ff14] font-medium flex items-center">
+                          <h3 className="text-[#FFFFFF] font-medium flex items-center">
                             <FileText className="h-4 w-4 mr-2" /> player.py
                           </h3>
                           <a

@@ -212,13 +212,13 @@ const SimulationPage = () => {
       <div className="mb-8">
         <button
           onClick={() => navigate("/admin")}
-          className="mb-6 text-sm px-4 py-2 border border-[#39ff14] text-[#39ff14] rounded hover:bg-[#39ff14] hover:text-black transition duration-200 flex items-center gap-2"
+          className="mb-6 text-sm px-4 py-2 border border-[#FFFFFF] text-[#FFFFFF] rounded hover:bg-[#FFFFFF] hover:text-black transition duration-200 flex items-center gap-2"
         >
           ← Back to Admin Dashboard
         </button>
         
         <div className="border-b border-[#444] pb-6">
-          <h1 className="text-4xl font-bold mb-3 font-glitch text-[#ff00cc]">
+          <h1 className="text-4xl font-bold mb-3 font-glitch text-[#559CF8]">
             <Zap className="inline w-8 h-8 mr-3" />
             SIMULATION CONTROL CENTER
           </h1>
@@ -229,10 +229,10 @@ const SimulationPage = () => {
       </div>
 
       {/* Protocol Notice */}
-      <div className="bg-black bg-opacity-30 border-l-4 border-[#ff00cc] pl-6 py-4 my-6 rounded-md">
-        <p className="text-[#39ff14] font-bold mb-2">⚡ SIMULATION PROTOCOL ⚡</p>
+      <div className="bg-black bg-opacity-30 border-l-4 border-[#559CF8] pl-6 py-4 my-6 rounded-md">
+        <p className="text-[#FFFFFF] font-bold mb-2">⚡ SIMULATION PROTOCOL ⚡</p>
         <p className="text-gray-300 text-sm mb-2">
-          Welcome to the <span className="text-[#ff00cc] font-semibold">Tournament Simulation Arena</span>! 
+          Welcome to the <span className="text-[#559CF8] font-semibold">Tournament Simulation Arena</span>! 
           Select up to 6 users with final submissions to run competitive poker simulations. 
           Monitor job progress below and track results in real-time.
         </p>
@@ -242,15 +242,15 @@ const SimulationPage = () => {
       </div>
 
       {/* Users Selection Section */}
-      <div className="bg-black bg-opacity-30 border-l-4 border-[#39ff14] p-6 my-8 rounded-lg">
+      <div className="bg-black bg-opacity-30 border-l-4 border-[#FFFFFF] p-6 my-8 rounded-lg">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold text-white flex items-center gap-3">
-            <Users className="w-6 h-6 text-[#39ff14]" />
+            <Users className="w-6 h-6 text-[#FFFFFF]" />
             USER SELECTION MATRIX
           </h2>
           <button 
             onClick={fetchUsersSubStatus}
-            className="text-sm border border-[#39ff14] text-[#39ff14] px-4 py-2 rounded hover:bg-[#39ff14] hover:text-black transition duration-200"
+            className="text-sm border border-[#FFFFFF] text-[#FFFFFF] px-4 py-2 rounded hover:bg-[#FFFFFF] hover:text-black transition duration-200"
           >
             SYNC DATA
           </button>
@@ -259,11 +259,11 @@ const SimulationPage = () => {
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
           {/* Left Column - User List */}
           <div className="xl:col-span-2">
-            <h3 className="text-[#ff00cc] text-lg mb-4 font-semibold">REGISTERED PARTICIPANTS</h3>
+            <h3 className="text-[#559CF8] text-lg mb-4 font-semibold">REGISTERED PARTICIPANTS</h3>
             <div className="bg-gray-900 p-6 rounded-lg border border-gray-700">
               {usersLoading ? (
                 <div className="text-center py-8">
-                  <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#39ff14]"></div>
+                  <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#FFFFFF]"></div>
                   <p className="text-gray-400 mt-2">Loading participants...</p>
                 </div>
               ) : (
@@ -275,7 +275,7 @@ const SimulationPage = () => {
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       placeholder="Search by username"
-                      className="flex-1 px-3 py-2 bg-gray-800 border border-gray-600 rounded text-white focus:border-[#39ff14] focus:outline-none transition-colors"
+                      className="flex-1 px-3 py-2 bg-gray-800 border border-gray-600 rounded text-white focus:border-[#FFFFFF] focus:outline-none transition-colors"
                     />
                     {searchQuery && (
                       <button
@@ -288,7 +288,7 @@ const SimulationPage = () => {
                   </div>
               
                   {/* Header */}
-                  <div className="grid grid-cols-4 gap-4 font-semibold py-3 border-b-2 border-[#39ff14] text-[#39ff14]">
+                  <div className="grid grid-cols-4 gap-4 font-semibold py-3 border-b-2 border-[#FFFFFF] text-[#FFFFFF]">
                     <div>SELECT</div>
                     <div>USERNAME</div>
                     <div className="flex items-center space-x-2">
@@ -313,7 +313,7 @@ const SimulationPage = () => {
                         <div
                           key={username}
                           className={`grid grid-cols-4 gap-4 py-3 items-center border-b border-gray-700 hover:bg-gray-800 transition-colors ${
-                            selectedUsers.includes(username) ? 'bg-gray-800 border-[#39ff14]' : ''
+                            selectedUsers.includes(username) ? 'bg-gray-800 border-[#FFFFFF]' : ''
                           }`}
                         >
                           <div>
@@ -326,10 +326,10 @@ const SimulationPage = () => {
                             />
                           </div>
                           <div className="font-mono">{username}</div>
-                          <div className={hasFinal ? "text-[#39ff14]" : "text-red-400"}>
+                          <div className={hasFinal ? "text-[#FFFFFF]" : "text-red-400"}>
                             {hasFinal ? "✓ YES" : "✗ NO"}
                           </div>
-                          <div className={selectedUsers.includes(username) ? "text-[#39ff14] font-bold" : "text-gray-400"}>
+                          <div className={selectedUsers.includes(username) ? "text-[#FFFFFF] font-bold" : "text-gray-400"}>
                             {selectedUsers.includes(username) ? "SELECTED" : "STANDBY"}
                           </div>
                         </div>
@@ -343,17 +343,17 @@ const SimulationPage = () => {
                       <button
                         onClick={prev}
                         disabled={page === 0}
-                        className="px-4 py-2 border border-[#39ff14] text-[#39ff14] rounded disabled:opacity-40 disabled:cursor-not-allowed hover:bg-[#39ff14] hover:text-black transition"
+                        className="px-4 py-2 border border-[#FFFFFF] text-[#FFFFFF] rounded disabled:opacity-40 disabled:cursor-not-allowed hover:bg-[#FFFFFF] hover:text-black transition"
                       >
                         PREV
                       </button>
-                      <span className="text-[#ff00cc] font-mono">
+                      <span className="text-[#559CF8] font-mono">
                         PAGE {page + 1} OF {pageCount}
                       </span>
                       <button
                         onClick={next}
                         disabled={page === pageCount - 1}
-                        className="px-4 py-2 border border-[#39ff14] text-[#39ff14] rounded disabled:opacity-40 disabled:cursor-not-allowed hover:bg-[#39ff14] hover:text-black transition"
+                        className="px-4 py-2 border border-[#FFFFFF] text-[#FFFFFF] rounded disabled:opacity-40 disabled:cursor-not-allowed hover:bg-[#FFFFFF] hover:text-black transition"
                       >
                         NEXT
                       </button>
@@ -366,10 +366,10 @@ const SimulationPage = () => {
 
           {/* Right Column - Selected Users & Controls */}
           <div className="xl:col-span-1">
-            <h3 className="text-[#ff00cc] text-lg mb-4 font-semibold">SIMULATION ROSTER</h3>
+            <h3 className="text-[#559CF8] text-lg mb-4 font-semibold">SIMULATION ROSTER</h3>
             <div className="bg-gray-900 p-6 rounded-lg border border-gray-700">
               <div className="text-center mb-4">
-                <div className="text-3xl font-bold text-[#39ff14] mb-2">{selectedUsers.length}/6</div>
+                <div className="text-3xl font-bold text-[#FFFFFF] mb-2">{selectedUsers.length}/6</div>
                 <div className="text-sm text-gray-400">PARTICIPANTS SELECTED</div>
               </div>
 
@@ -381,9 +381,9 @@ const SimulationPage = () => {
               ) : (
                 <div className="space-y-3 mb-6">
                   {selectedUsers.map((username, index) => (
-                    <div key={username} className="flex items-center justify-between bg-gray-800 p-3 rounded border-l-2 border-[#39ff14]">
+                    <div key={username} className="flex items-center justify-between bg-gray-800 p-3 rounded border-l-2 border-[#FFFFFF]">
                       <div className="flex items-center gap-3">
-                        <span className="text-[#39ff14] font-bold text-xs">#{index + 1}</span>
+                        <span className="text-[#FFFFFF] font-bold text-xs">#{index + 1}</span>
                         <span className="font-mono text-sm">{username}</span>
                       </div>
                       <button
@@ -406,7 +406,7 @@ const SimulationPage = () => {
 
               {/* Number of Rounds Input */}
               <div className="mb-6">
-                <label className="block text-sm font-semibold text-[#ff00cc] mb-2">
+                <label className="block text-sm font-semibold text-[#559CF8] mb-2">
                   NUMBER OF ROUNDS
                 </label>
                 <input
@@ -415,7 +415,7 @@ const SimulationPage = () => {
                   max="100"
                   value={numRounds}
                   onChange={(e) => setNumRounds(Math.max(1, parseInt(e.target.value) || 1))}
-                  className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded text-white focus:border-[#39ff14] focus:outline-none transition-colors"
+                  className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded text-white focus:border-[#FFFFFF] focus:outline-none transition-colors"
                   placeholder="Enter number of rounds"
                 />
                 <p className="text-xs text-gray-400 mt-1">Default: 6 rounds</p>
@@ -423,7 +423,7 @@ const SimulationPage = () => {
 
               {/* Blind Input */}
               <div className="mb-6">
-                <label className="block text-sm font-semibold text-[#ff00cc] mb-2">
+                <label className="block text-sm font-semibold text-[#559CF8] mb-2">
                   INITIAL BLIND
                 </label>
                 <input
@@ -431,7 +431,7 @@ const SimulationPage = () => {
                   min="1"
                   value={blind}
                   onChange={(e) => setBlind(Math.max(1, parseInt(e.target.value) || 1))}
-                  className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded text-white focus:border-[#39ff14] focus:outline-none transition-colors"
+                  className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded text-white focus:border-[#FFFFFF] focus:outline-none transition-colors"
                   placeholder="Enter initial blind"
                 />
                 <p className="text-xs text-gray-400 mt-1">Default: 10</p>
@@ -439,7 +439,7 @@ const SimulationPage = () => {
 
               {/* Blind Multiplier Input */}
               <div className="mb-6">
-                <label className="block text-sm font-semibold text-[#ff00cc] mb-2">
+                <label className="block text-sm font-semibold text-[#559CF8] mb-2">
                   BLIND MULTIPLIER
                 </label>
                 <input
@@ -448,7 +448,7 @@ const SimulationPage = () => {
                   step="0.01"
                   value={blindMultiplier}
                   onChange={(e) => setBlindMultiplier(Math.max(0.1, parseFloat(e.target.value) || 0.1))}
-                  className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded text-white focus:border-[#39ff14] focus:outline-none transition-colors"
+                  className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded text-white focus:border-[#FFFFFF] focus:outline-none transition-colors"
                   placeholder="Enter blind multiplier"
                 />
                 <p className="text-xs text-gray-400 mt-1">Default: 1.0</p>
@@ -456,7 +456,7 @@ const SimulationPage = () => {
 
               {/* Blind Increase Interval Input */}
               <div className="mb-6">
-                <label className="block text-sm font-semibold text-[#ff00cc] mb-2">
+                <label className="block text-sm font-semibold text-[#559CF8] mb-2">
                   BLIND INCREASE INTERVAL
                 </label>
                 <input
@@ -464,7 +464,7 @@ const SimulationPage = () => {
                   min="1"
                   value={blindIncreaseInterval}
                   onChange={(e) => setBlindIncreaseInterval(Math.max(1, parseInt(e.target.value) || 1))}
-                  className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded text-white focus:border-[#39ff14] focus:outline-none transition-colors"
+                  className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded text-white focus:border-[#FFFFFF] focus:outline-none transition-colors"
                   placeholder="Enter blind increase interval"
                 />
                 <p className="text-xs text-gray-400 mt-1">Default: 1</p>
@@ -474,7 +474,7 @@ const SimulationPage = () => {
                 disabled={selectedUsers.length !== 6}
                 className={`w-full py-4 px-6 rounded-lg font-bold text-lg transition-all duration-200 flex items-center justify-center gap-3 ${
                   selectedUsers.length === 6
-                    ? "bg-[#39ff14] text-black hover:bg-[#2bff00] hover:shadow-lg hover:shadow-[#39ff14]/50"
+                    ? "bg-[#FFFFFF] text-black hover:bg-[#2bff00] hover:shadow-lg hover:shadow-[#FFFFFF]/50"
                     : "bg-gray-700 text-gray-500 cursor-not-allowed"
                 }`}
                 onClick={runSimulation}

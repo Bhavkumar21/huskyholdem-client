@@ -88,7 +88,7 @@ const JobGamesPage: React.FC = () => {
               block: 'center' 
             });
             // Add a highlight effect
-            targetElement.style.border = '2px solid #39ff14';
+            targetElement.style.border = '2px solid #FFFFFF';
             targetElement.style.boxShadow = '0 0 20px rgba(57, 255, 20, 0.5)';
             setTimeout(() => {
               targetElement.style.border = '';
@@ -231,29 +231,29 @@ const JobGamesPage: React.FC = () => {
   return (
     <div className="min-h-screen text-white px-4 py-12 max-w-3xl mx-auto">
       <div className="mb-8 flex items-center gap-3">
-        <Link to="/games" className="text-[#ff00cc] hover:underline flex items-center gap-1">
+        <Link to="/games" className="text-[#559CF8] hover:underline flex items-center gap-1">
           <ArrowLeft className="w-5 h-5" /> Back to Games
         </Link>
       </div>
       <div className="mb-8 border-b border-[#444] pb-4">
         <div className="flex items-center gap-3 mb-2">
-          <Gamepad2 className="w-7 h-7 text-[#ff00cc]" />
+          <Gamepad2 className="w-7 h-7 text-[#559CF8]" />
           <h1 className="text-2xl font-bold font-glitch">
-            Live Gamplay for {gameNumber ? `Game #${gameNumber} Batch 1` : 'Game'}: <span className="text-[#39ff14]">{jobId}</span>
+            Live Gamplay for {gameNumber ? `Game #${gameNumber} Batch 1` : 'Game'}: <span className="text-[#FFFFFF]">{jobId}</span>
           </h1>
         </div>
       </div>
       {jobResult && (
-        <div className="mb-10 p-0 border-2 border-[#39ff14] rounded-lg overflow-hidden w-full max-w-6xl mx-auto">
-          <div className="px-6 py-3 border-b-2 border-[#39ff14] bg-black/80">
-            <span className="text-lg font-mono font-bold tracking-widest text-[#39ff14] uppercase">Job Final Result</span>
+        <div className="mb-10 p-0 border-2 border-[#FFFFFF] rounded-lg overflow-hidden w-full max-w-6xl mx-auto">
+          <div className="px-6 py-3 border-b-2 border-[#FFFFFF] bg-black/80">
+            <span className="text-lg font-mono font-bold tracking-widest text-[#FFFFFF] uppercase">Job Final Result</span>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-0 divide-x divide-y divide-[#39ff14]">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-0 divide-x divide-y divide-[#FFFFFF]">
             {Object.entries(jobResult).map(([player, score]) => (
               <div
                 key={player}
-                className="flex items-center px-6 py-4 font-mono text-base text-[#39ff14] whitespace-nowrap border-[#39ff14] bg-black/60"
-                style={{ borderBottom: '1px solid #39ff14', borderRight: '1px solid #39ff14' }}
+                className="flex items-center px-6 py-4 font-mono text-base text-[#FFFFFF] whitespace-nowrap border-[#FFFFFF] bg-black/60"
+                style={{ borderBottom: '1px solid #FFFFFF', borderRight: '1px solid #FFFFFF' }}
               >
                 <a
                   href={`/profile/${player}`}
@@ -277,7 +277,7 @@ const JobGamesPage: React.FC = () => {
       
       {loading && (
         <div className="flex items-center justify-center py-12">
-          <Loader2 className="w-8 h-8 text-[#ff00cc] animate-spin" />
+          <Loader2 className="w-8 h-8 text-[#559CF8] animate-spin" />
           <span className="ml-3 text-gray-400">Loading games...</span>
         </div>
       )}
@@ -294,8 +294,8 @@ const JobGamesPage: React.FC = () => {
               onClick={handleSortToggle}
               className={`flex items-center gap-2 px-4 py-2 border transition-colors ${
                 sortOrder === 'none' 
-                  ? 'border-[#39ff14] text-[#39ff14] hover:bg-[#39ff14] hover:text-black' 
-                  : 'border-[#ff00cc] text-[#ff00cc] hover:bg-[#ff00cc] hover:text-black'
+                  ? 'border-[#FFFFFF] text-[#FFFFFF] hover:bg-[#FFFFFF] hover:text-black' 
+                  : 'border-[#559CF8] text-[#559CF8] hover:bg-[#559CF8] hover:text-black'
               }`}
             >
               <ArrowUpDown className="w-4 h-4" />
@@ -314,7 +314,7 @@ const JobGamesPage: React.FC = () => {
               >
                 <div>
                   <span className="font-mono text-white">Hand #{index + 1}: </span>
-                  <span className="font-mono text-[#ff00cc]">{game.game_id}</span>
+                  <span className="font-mono text-[#559CF8]">{game.game_id}</span>
                 </div>
                 <div>
                   <span className="font-mono text-gray-400">
@@ -323,13 +323,13 @@ const JobGamesPage: React.FC = () => {
                 </div>
                 <div className="flex gap-3 mt-2 md:mt-0">
                   <button
-                    className="px-3 py-1 border border-[#ff00cc] text-[#ff00cc] font-mono rounded hover:bg-[#ff00cc] hover:text-black transition-colors text-sm"
+                    className="px-3 py-1 border border-[#559CF8] text-[#559CF8] font-mono rounded hover:bg-[#559CF8] hover:text-black transition-colors text-sm"
                     onClick={() => handleDownloadRawLog(game.game_id)}
                   >
                     Get Raw Log
                   </button>
                   <button
-                    className="px-3 py-1 border border-[#39ff14] text-[#39ff14] font-mono rounded hover:bg-[#39ff14] hover:text-black transition-colors text-sm"
+                    className="px-3 py-1 border border-[#FFFFFF] text-[#FFFFFF] font-mono rounded hover:bg-[#FFFFFF] hover:text-black transition-colors text-sm"
                     onClick={() => navigate(`/replay/${game.game_id}`)}
                   >
                     View Hand
@@ -344,7 +344,7 @@ const JobGamesPage: React.FC = () => {
               <button
                 onClick={handleLoadMore}
                 disabled={loadingMore}
-                className="px-6 py-2 border border-[#39ff14] text-[#39ff14] rounded hover:bg-[#39ff14] hover:text-black transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-6 py-2 border border-[#FFFFFF] text-[#FFFFFF] rounded hover:bg-[#FFFFFF] hover:text-black transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loadingMore ? 'Loading...' : 'Load more'}
               </button>

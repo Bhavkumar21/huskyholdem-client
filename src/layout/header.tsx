@@ -28,22 +28,22 @@ const DefaultHeader = () => {
             {/* Logo */}
             <Link
               to="/"
-              className="text-[#ff00cc] glitch font-glitch text-xl sm:text-2xl uppercase glitch-move"
+              className="text-[#559CF8] glitch font-glitch text-xl sm:text-2xl uppercase glitch-move"
             >
-              HUSKY HOLDEM <span className="text-[#39ff14]">BENCH</span>
+              HUSKY HOLDEM <span className="text-[#559CF8]">BENCH</span>
             </Link>
 
             {/* Desktop Menu */}
             <div className="hidden md:flex gap-8 text-sm font-mono tracking-widest uppercase items-center">
               <Link
                 to="/"
-                className="hover:text-[#ff00cc] text-white transition-all glitch-hover"
+                className="hover:text-[#559CF8] text-white transition-all glitch-hover"
               >
                 Home
               </Link>
               <Link
                 to="/games"
-                className="hover:text-[#39ff14] text-white transition-all glitch-hover"
+                className="hover:text-[#FFFFFF] text-white transition-all glitch-hover"
               >
                 Games
               </Link>
@@ -52,19 +52,19 @@ const DefaultHeader = () => {
                 <>
                   <Link
                     to="/submission"
-                    className="hover:text-[#39ff14] text-white transition-all glitch-hover"
+                    className="hover:text-[#FFFFFF] text-white transition-all glitch-hover"
                   >
                     Submission
                   </Link>
                   <Link
                     to="/dashboard"
-                    className="hover:text-[#39ff14] text-white transition-all glitch-hover"
+                    className="hover:text-[#FFFFFF] text-white transition-all glitch-hover"
                   >
                     Dashboard
                   </Link>
                   <Link
                     to="/leaderboard"
-                    className="hover:text-[#39ff14] text-white transition-all glitch-hover"
+                    className="hover:text-[#FFFFFF] text-white transition-all glitch-hover"
                   >
                     Leaderboard
                   </Link>
@@ -79,11 +79,11 @@ const DefaultHeader = () => {
                   )}
                   <Link
                     to="/profile"
-                    className="hover:text-[#39ff14] text-white transition-all glitch-hover"
+                    className="hover:text-[#FFFFFF] text-white transition-all glitch-hover"
                   >
                     <span className="text-gray-300">
                       Hi,{" "}
-                      <span className="text-[#ff00cc]">{user?.username}</span>
+                      <span className="text-[#559CF8]">{user?.username}</span>
                     </span>
                   </Link>
 
@@ -142,14 +142,14 @@ const DefaultHeader = () => {
           <div className="md:hidden bg-black border-t border-[#444] px-6 pb-4 pt-2 text-sm font-mono uppercase space-y-4">
             <Link
               to="/"
-              className="block text-white hover:text-[#ff00cc] glitch-hover"
+              className="block text-white hover:text-[#559CF8] glitch-hover"
               onClick={() => setIsMenuOpen(false)}
             >
               Home
             </Link>
             <Link
               to="/games"
-              className="block text-white hover:text-[#39ff14] glitch-hover"
+              className="block text-white hover:text-[#FFFFFF] glitch-hover"
               onClick={() => setIsMenuOpen(false)}
             >
               Games
@@ -159,21 +159,21 @@ const DefaultHeader = () => {
               <>
                 <Link
                   to="/submission"
-                  className="block text-white hover:text-[#39ff14] glitch-hover"
+                  className="block text-white hover:text-[#FFFFFF] glitch-hover"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Submission
                 </Link>
                 <Link
                   to="/dashboard"
-                  className="block text-white hover:text-[#39ff14] glitch-hover"
+                  className="block text-white hover:text-[#FFFFFF] glitch-hover"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Dashboard
                 </Link>
                 <Link
                   to="/leaderboard"
-                  className="block text-white hover:text-[#39ff14] glitch-hover"
+                  className="block text-white hover:text-[#FFFFFF] glitch-hover"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Leaderboard
@@ -191,7 +191,7 @@ const DefaultHeader = () => {
 
                 <span className="block text-gray-300">
                   Hi,{" "}
-                  <span className="text-[#ff00cc]">{user?.username}</span>
+                  <span className="text-[#559CF8]">{user?.username}</span>
                 </span>
                 <button
                   onClick={() => {

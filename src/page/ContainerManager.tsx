@@ -80,13 +80,13 @@ const ContainerManagerPage = () => {
             <div className="mb-8">
                 <button
                 onClick={() => navigate("/admin")}
-                className="mb-6 text-sm px-4 py-2 border border-[#39ff14] text-[#39ff14] rounded hover:bg-[#39ff14] hover:text-black transition duration-200 flex items-center gap-2"
+                className="mb-6 text-sm px-4 py-2 border border-[#FFFFFF] text-[#FFFFFF] rounded hover:bg-[#FFFFFF] hover:text-black transition duration-200 flex items-center gap-2"
                 >
                 ← Back to Admin Dashboard
                 </button>
                 
                 <div className="border-b border-[#444] pb-6">
-                <h1 className="text-4xl font-bold mb-3 font-glitch text-[#ff00cc]">
+                <h1 className="text-4xl font-bold mb-3 font-glitch text-[#559CF8]">
                     <Zap className="inline w-8 h-8 mr-3" />
                     CONTAINER MANAGER CENTER
                 </h1>
@@ -96,28 +96,28 @@ const ContainerManagerPage = () => {
                 </div>
             </div>
 
-            <div className="bg-black bg-opacity-30 border-l-4 border-[#ff00cc] p-6 my-8 rounded-lg">
+            <div className="bg-black bg-opacity-30 border-l-4 border-[#559CF8] p-6 my-8 rounded-lg">
                 <div className="flex items-center justify-between mb-6">
                     <h2 className="text-2xl font-bold text-white flex items-center gap-3">
-                    <Zap className="w-6 h-6 text-[#ff00cc]" />
+                    <Zap className="w-6 h-6 text-[#559CF8]" />
                     CURRENT POOL STATUS
                     </h2>
                     <button 
                     onClick={fetchPoolStatus}
-                    className="text-sm border border-[#ff00cc] text-[#ff00cc] px-4 py-2 rounded hover:bg-[#ff00cc] hover:text-black transition duration-200"
+                    className="text-sm border border-[#559CF8] text-[#559CF8] px-4 py-2 rounded hover:bg-[#559CF8] hover:text-black transition duration-200"
                     >
                     REFRESH POOL STATUS
                     </button>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                    <div className="bg-gray-900 border border-[#ff00cc] p-6 rounded-lg">
-                    <h2 className="text-xl font-bold text-[#ff00cc] mb-2">Pool Size</h2>
+                    <div className="bg-gray-900 border border-[#559CF8] p-6 rounded-lg">
+                    <h2 className="text-xl font-bold text-[#559CF8] mb-2">Pool Size</h2>
                     <p className="text-3xl font-mono">{poolSize !== null ? poolSize : '...'}</p>
                     </div>
 
-                    <div className="bg-gray-900 border border-[#39ff14] p-6 rounded-lg">
-                    <h2 className="text-xl font-bold text-[#39ff14] mb-2">Active Containers</h2>
+                    <div className="bg-gray-900 border border-[#FFFFFF] p-6 rounded-lg">
+                    <h2 className="text-xl font-bold text-[#FFFFFF] mb-2">Active Containers</h2>
                     <p className="text-3xl font-mono">{activeContainers !== null ? activeContainers : '...'}</p>
                     </div>
 
@@ -154,7 +154,7 @@ const ContainerManagerPage = () => {
                             if (targetSize >= 3) runScaling();
                             else alert("Target size must be at least 3.");
                         }}
-                        className="px-4 py-2 bg-[#39ff14] text-black font-semibold rounded hover:bg-[#2ecc71] transition-colors"
+                        className="px-4 py-2 bg-[#FFFFFF] text-black font-semibold rounded hover:bg-[#2ecc71] transition-colors"
                     >
                         Scale Now
                     </button>

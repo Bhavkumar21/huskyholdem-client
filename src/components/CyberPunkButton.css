@@ -1,9 +1,9 @@
 .cyberpunk-btn::after {
   padding: 15px 80px;
-  background: linear-gradient(45deg, transparent 5%, #FF00CC 5%);
-  /* background-color: #FF00CC; */
-  /* border: 1px solid #39FF14; */
-  box-shadow: 6px 0px 0px #39FF14;
+  background: linear-gradient(45deg, transparent 5%, #559CF8 5%);
+  /* background-color: #559CF8; */
+  /* border: 1px solid #FFFFFF; */
+  box-shadow: 6px 0px 0px #FFFFFF;
   cursor: pointer;
   /* border: 0; */
   color: #fff;
@@ -13,14 +13,14 @@
 
 .cyberpunk-btn {
   padding: 15px 80px;
-  /* background: linear-gradient(45deg, transparent 5%, #FF00CC 5%); */
-  background-color: #FF00CC;
-  border: 1px solid #FF00CC;
-  box-shadow: 6px 0px 0px #39FF14;
+  /* background: linear-gradient(45deg, transparent 5%, #559CF8 5%); */
+  background-color: #559CF8;
+  border: 1px solid #559CF8;
+  box-shadow: 6px 0px 0px #FFFFFF;
   cursor: pointer;
   /* border: 0; */
   color: white;
-  /* box-shadow: 6px 0px 0px #39FF14; */
+  /* box-shadow: 6px 0px 0px #FFFFFF; */
   outline: transparent;
   position: relative;
 }
@@ -41,8 +41,8 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(45deg, transparent 3%, #39FF14 3%, #39FF14 5%, #FF00CC 5%);
-  text-shadow: -3px -3px 0px #FF00CC, 3px 3px 0px #39FF14;
+  background: linear-gradient(45deg, transparent 3%, #FFFFFF 3%, #FFFFFF 5%, #559CF8 5%);
+  text-shadow: -3px -3px 0px #559CF8, 3px 3px 0px #FFFFFF;
   clip-path: var(--slice-0);
 }
 

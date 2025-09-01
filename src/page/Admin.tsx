@@ -144,38 +144,38 @@ const Admin: React.FC = () => {
                 <div className="flex flex-row space-x-4 mb-8">
                     <button
                         onClick={() => navigate('/simulation')}
-                        className="w-fit px-6 py-2 bg-[#39ff14] text-black rounded hover:bg-[#2ecc71] transition-colors"
+                        className="w-fit px-6 py-2 bg-[#FFFFFF] text-black rounded hover:bg-[#2ecc71] transition-colors"
                     >
                         Go to Simulation Page
                     </button>
                     <button
                         onClick={() => navigate('/llm-batch')}
-                        className="w-fit px-6 py-2 bg-[#ff00cc] text-black rounded hover:bg-[#e91e63] transition-colors"
+                        className="w-fit px-6 py-2 bg-[#559CF8] text-black rounded hover:bg-[#e91e63] transition-colors"
                     >
                         Go to LLM Batch Page
                     </button>
                     <button
                         onClick={() => navigate('/container-manager')}
-                        className="w-fit px-6 py-2 bg-[#39ff14] text-black rounded hover:bg-[#2ecc71] transition-colors"
+                        className="w-fit px-6 py-2 bg-[#FFFFFF] text-black rounded hover:bg-[#2ecc71] transition-colors"
                     >
                         Go to Container Manager
                     </button>
                     <button
                         onClick={() => navigate('/admin/games')}
-                        className="w-fit px-6 py-2 bg-[#39ff14] text-black rounded hover:bg-[#2ecc71] transition-colors"
+                        className="w-fit px-6 py-2 bg-[#FFFFFF] text-black rounded hover:bg-[#2ecc71] transition-colors"
                     >
                         Go to Admin Game Page
                     </button>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                    <div className="bg-gray-900 border border-[#ff00cc] p-6 rounded-lg">
-                        <h2 className="text-xl font-bold text-[#ff00cc] mb-2">Total Users</h2>
+                    <div className="bg-gray-900 border border-[#559CF8] p-6 rounded-lg">
+                        <h2 className="text-xl font-bold text-[#559CF8] mb-2">Total Users</h2>
                         <p className="text-3xl font-mono">{userCount !== null ? userCount : '...'}</p>
                     </div>
 
-                    <div className="bg-gray-900 border border-[#39ff14] p-6 rounded-lg">
-                        <h2 className="text-xl font-bold text-[#39ff14] mb-2">Verified Users</h2>
+                    <div className="bg-gray-900 border border-[#FFFFFF] p-6 rounded-lg">
+                        <h2 className="text-xl font-bold text-[#FFFFFF] mb-2">Verified Users</h2>
                         <p className="text-3xl font-mono">{verifiedUserCount !== null ? verifiedUserCount : '...'}</p>
                     </div>
 

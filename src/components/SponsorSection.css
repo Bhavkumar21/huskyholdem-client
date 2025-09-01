@@ -9,14 +9,14 @@
 .sponsor-title {
   font-size: 2.5rem;
   letter-spacing: 2px;
-  color: #ff00cc;
-  text-shadow: 0 0 10px #ff00cc;
+  color: #559CF8;
+  text-shadow: 0 0 10px #559CF8;
   margin-bottom: 0.5rem;
 }
 
 .sponsor-contact {
   font-size: 1.1rem;
-  color: #39ff14;
+  color: #FFFFFF;
   margin-bottom: 2.5rem;
 }
 
@@ -27,7 +27,7 @@
 }
 
 .sponsor-contact a:hover {
-  color: #ff00cc;
+  color: #559CF8;
 }
 
 .sponsor-grid {
@@ -49,7 +49,7 @@
 .sponsor-card {
   background-color: transparent;
   padding: 1rem;
-  /* border: 1px solid #39ff14; */
+  /* border: 1px solid #FFFFFF; */
   transition: border-color 0.3s;
   display: flex;
   align-items: center;
@@ -57,7 +57,7 @@
 }
 
 .sponsor-card:hover {
-  /* border-color: #ff00cc; */
+  /* border-color: #559CF8; */
 }
 
 .sponsor-card img {

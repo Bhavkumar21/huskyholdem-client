@@ -141,15 +141,15 @@ const SubmissionPage = () => {
     <div className="min-h-screen text-white px-4 py-12 max-w-3xl mx-auto">
       <div className="mb-10 border-b border-[#444] pb-6">
         <h1 className="text-3xl font-bold mb-2 font-glitch">
-          Submissions — <span className="text-[#ff00cc]">{user?.username}</span>
+          Submissions — <span className="text-[#559CF8]">{user?.username}</span>
         </h1>
       </div>
 
-      <div className="bg-black bg-opacity-30 border-l-4 border-[#ff00cc] pl-4 py-3 my-4">
-        <p className="text-[#39ff14] font-bold mb-1">🃏 TOURNAMENT PROTOCOL 🃏</p>
+      <div className="bg-black bg-opacity-30 border-l-4 border-[#559CF8] pl-4 py-3 my-4">
+        <p className="text-[#FFFFFF] font-bold mb-1">🃏 TOURNAMENT PROTOCOL 🃏</p>
         <p className="text-gray-300 text-sm mb-2">
-            Your submissions will be used by <span className="text-[#ff00cc]">HuskyHoldem Admin</span> to determine your fate in the final tournament. 
-            Remember to <span className="text-[#39ff14] font-semibold">mark your best submission as final</span> before the deadline!
+            Your submissions will be used by <span className="text-[#559CF8]">HuskyHoldem Admin</span> to determine your fate in the final tournament. 
+            Remember to <span className="text-[#FFFFFF] font-semibold">mark your best submission as final</span> before the deadline!
         </p>
         <p className="text-gray-400 text-xs">
             <span className="text-yellow-400">⚠️ HOUSE RULES:</span> Maximum of 5 submissions allowed in your hand. To upload more, fold (delete) the ones you don't need.
@@ -173,7 +173,7 @@ const SubmissionPage = () => {
       <div className="mt-12">
         <div className="flex items-center justify-between mb-4">
         <h2 className="text-2xl font-bold mb-4 border-b border-gray-700 pb-3 flex items-center">
-          <Package className="mr-2 text-[#39ff14]" />
+          <Package className="mr-2 text-[#FFFFFF]" />
           Your Submissions
         </h2>
         </div>
@@ -196,7 +196,7 @@ const SubmissionPage = () => {
                         <Star className="h-4 w-4 inline mr-1" /> Final
                       </span>
                     )}
-                    <div className="font-mono text-xs text-[#39ff14] break-all">{sub.id}</div>
+                    <div className="font-mono text-xs text-[#FFFFFF] break-all">{sub.id}</div>
                     <div className="text-gray-400 text-sm">{formatDate(sub.created_at || new Date().toISOString())}</div>
                   </div>
                   <div className="flex items-center space-x-3">
@@ -235,14 +235,14 @@ const SubmissionPage = () => {
                   <div className="border-t border-gray-700 p-4">
                     {loadingContents ? (
                       <div className="flex justify-center items-center py-8">
-                        <Loader className="h-6 w-6 text-[#ff00cc] animate-spin" />
+                        <Loader className="h-6 w-6 text-[#559CF8] animate-spin" />
                         <span className="ml-3 text-gray-400">Loading file contents...</span>
                       </div>
                     ) : (
                       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                        <div className="bg-gray-900 rounded border border-[#39ff14] p-4">
+                        <div className="bg-gray-900 rounded border border-[#FFFFFF] p-4">
                           <div className="flex justify-between items-center mb-2">
-                            <h3 className="text-[#39ff14] font-medium flex items-center">
+                            <h3 className="text-[#FFFFFF] font-medium flex items-center">
                               <FileText className="h-4 w-4 mr-2" /> player.py
                             </h3>
                             <a

@@ -15,8 +15,8 @@ const RotatingPrizeModel = () => {
       
       {/* Enhanced lighting for cyberpunk effect */}
       <ambientLight intensity={0.3} />
-      <pointLight position={[20, 20, 20]} color="#39ff14" intensity={2} />
-      <pointLight position={[-20, -10, -10]} color="#ff00cc" intensity={1.5} />
+      <pointLight position={[20, 20, 20]} color="#FFFFFF" intensity={2} />
+      <pointLight position={[-20, -10, -10]} color="#559CF8" intensity={1.5} />
       
       <Stage 
         intensity={0.5} 
@@ -52,7 +52,7 @@ const PrizeCard = ({ emoji, title, description, color, highlight }: any) => {
       
       {/* Highlight indicator */}
       {highlight && (
-        <div className="absolute -right-1 top-0 bottom-0 w-1 bg-gradient-to-b from-[#39ff14] via-fuchsia-600 to-[#39ff14]"></div>
+        <div className="absolute -right-1 top-0 bottom-0 w-1 bg-gradient-to-b from-[#FFFFFF] via-fuchsia-600 to-[#FFFFFF]"></div>
       )}
       
       <div className="flex items-center">
@@ -85,7 +85,7 @@ const GlitchText = ({ children }: any) => {
       </span>
       {glitchActive && (
         <>
-          <span className="absolute top-0 left-0 text-[#39ff14] translate-x-0.5 translate-y-0.5 opacity-70">
+          <span className="absolute top-0 left-0 text-[#FFFFFF] translate-x-0.5 translate-y-0.5 opacity-70">
             {children}
           </span>
           <span className="absolute top-0 left-0 text-fuchsia-600 -translate-x-0.5 -translate-y-0.5 opacity-70">
@@ -106,17 +106,17 @@ const PrizeSection = () => {
       {/* <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(0,0,0,0)_0px,rgba(255,0,204,0.1)_1px,rgba(0,0,0,0)_1px)]" style={{ backgroundSize: "40px 40px" }}></div> */}
       
       {/* Corner decorations */}
-      <div className="absolute top-0 right-0 w-32 h-32 border-t-2 border-r-2 border-[#39ff14] opacity-30"></div>
+      <div className="absolute top-0 right-0 w-32 h-32 border-t-2 border-r-2 border-[#FFFFFF] opacity-30"></div>
       <div className="absolute bottom-0 left-0 w-32 h-32 border-b-2 border-l-2 border-fuchsia-600 opacity-30"></div>
       
       <div className="container mx-auto z-10">
         {/* Header */}
         <div className="relative mb-12 text-center">
           <h2 className="text-4xl  text-fuchsia-600 mb-2 tracking-widest uppercase">
-            <GlitchText>NEURAL</GlitchText>::<span className="text-[#39ff14]"><GlitchText>REWARDS</GlitchText></span>
+            <GlitchText>NEURAL</GlitchText>::<span className="text-[#FFFFFF]"><GlitchText>REWARDS</GlitchText></span>
           </h2>
           <p className="text-gray-400  text-sm">// TOURNAMENT PRIZES 2.0.2.5</p>
-          <div className="w-32 h-1 mx-auto mt-2 bg-gradient-to-r from-fuchsia-600 to-[#39ff14]"></div>
+          <div className="w-32 h-1 mx-auto mt-2 bg-gradient-to-r from-fuchsia-600 to-[#FFFFFF]"></div>
         </div>
 
         <div className="flex flex-col md:flex-row gap-8 items-center">
@@ -127,7 +127,7 @@ const PrizeSection = () => {
               <RotatingPrizeModel />
               <div className="absolute bottom-4 left-0 right-0 text-center">
                 <div className="inline-block px-3 py-1 bg-black bg-opacity-70 border-l border-r border-fuchsia-600">
-                  <span className="text-[#39ff14]  text-sm tracking-wider">CHAMPIONSHIP TROPHY</span>
+                  <span className="text-[#FFFFFF]  text-sm tracking-wider">CHAMPIONSHIP TROPHY</span>
                 </div>
               </div>
             </div>
@@ -146,21 +146,21 @@ const PrizeSection = () => {
               emoji="🥈" 
               title="SECOND PRIZE" 
               description="$100 + Jane Street Owala Water bottles + Digital Certificate" 
-              color="#39ff14" 
+              color="#FFFFFF" 
               highlight={false}
             />
             <PrizeCard 
               emoji="🥉" 
               title="THIRD PRIZE" 
               description="$50 + Jane Street Owala Water bottles + Digital Certificate" 
-              color="#39ff14" 
+              color="#FFFFFF" 
               highlight={false}
             />
             <PrizeCard 
               emoji="🏅" 
               title="HONORABLE MENTIONS" 
               description="Digital Certificate" 
-              color="#39ff14" 
+              color="#FFFFFF" 
               highlight={false}
             />
           </div>
@@ -168,7 +168,7 @@ const PrizeSection = () => {
         
         {/* Additional details */}
         <div className="mt-12 max-w-lg mx-auto text-center">
-          <div className="inline-block px-4 py-2 bg-black bg-opacity-70 border-l-2 border-r-2 border-[#39ff14]">
+          <div className="inline-block px-4 py-2 bg-black bg-opacity-70 border-l-2 border-r-2 border-[#FFFFFF]">
             <p className="text-gray-400  text-sm">
               <span className="text-fuchsia-600">[SYS:INFO]</span> All winners receive exclusive fast-track interview for ATC-0, our newest quant funnel program.
             </p>

@@ -62,15 +62,15 @@ const JobList: React.FC<JobListProps> = ({
   };
 
   return (
-    <div className="bg-black bg-opacity-30 border-l-4 border-[#ff00cc] p-6 my-8 rounded-lg">
+    <div className="bg-black bg-opacity-30 border-l-4 border-[#559CF8] p-6 my-8 rounded-lg">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold text-white flex items-center gap-3">
-          <Zap className="w-6 h-6 text-[#ff00cc]" />
+          <Zap className="w-6 h-6 text-[#559CF8]" />
           {title}
         </h2>
         <button 
           onClick={onRefresh}
-          className="text-sm border border-[#ff00cc] text-[#ff00cc] px-4 py-2 rounded hover:bg-[#ff00cc] hover:text-black transition duration-200"
+          className="text-sm border border-[#559CF8] text-[#559CF8] px-4 py-2 rounded hover:bg-[#559CF8] hover:text-black transition duration-200"
         >
           REFRESH STATUS
         </button>
@@ -78,7 +78,7 @@ const JobList: React.FC<JobListProps> = ({
 
       {loading ? (
         <div className="text-center py-8">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#ff00cc]"></div>
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#559CF8]"></div>
           <p className="text-gray-400 mt-2">Loading job status...</p>
         </div>
       ) : jobs.length === 0 ? (
@@ -91,7 +91,7 @@ const JobList: React.FC<JobListProps> = ({
         <div className="overflow-x-auto">
           <table className="w-full table-fixed border-collapse text-sm">
             <thead>
-              <tr className="text-left text-[#ff00cc] border-b border-[#333]">
+              <tr className="text-left text-[#559CF8] border-b border-[#333]">
                 <th className="p-2 w-1/4">Job ID</th>
                 <th className="p-2 w-1/8">Status</th>
                 <th className="p-2 w-1/8">User</th>
@@ -118,7 +118,7 @@ const JobList: React.FC<JobListProps> = ({
                 const isRemoving = removing2025[job.job_id];
                 return (
                   <tr key={job.job_id} className="border-b border-[#222]">
-                    <td className="p-2 font-mono text-xs text-[#39ff14] break-all w-1/4">
+                    <td className="p-2 font-mono text-xs text-[#FFFFFF] break-all w-1/4">
                       <Link
                         to={`/games/${job.job_id}`}
                         className="underline underline-offset-2 hover:text-[#2bff00] transition-colors"
@@ -142,7 +142,7 @@ const JobList: React.FC<JobListProps> = ({
                         {job.job_status}
                       </span>
                     </td>
-                    <td className="p-2 w-1/8 text-[#39ff14] font-mono text-xs">
+                    <td className="p-2 w-1/8 text-[#FFFFFF] font-mono text-xs">
                       {job.username || 'N/A'}
                     </td>
                     <td className="p-2 w-1/3">
@@ -167,7 +167,7 @@ const JobList: React.FC<JobListProps> = ({
                         </button>
                       ) : (
                         <button
-                          className="px-2 py-1 text-xs border border-[#ff00cc] text-[#ff00cc] rounded hover:bg-[#ff00cc] hover:text-black transition disabled:opacity-50"
+                          className="px-2 py-1 text-xs border border-[#559CF8] text-[#559CF8] rounded hover:bg-[#559CF8] hover:text-black transition disabled:opacity-50"
                           disabled={isProcessing || !onProcess2025}
                           onClick={() => onProcess2025 && onProcess2025(job.job_id)}
                         >
@@ -179,7 +179,7 @@ const JobList: React.FC<JobListProps> = ({
                       <div className="flex gap-2">
                         <button
                           onClick={() => copyToClipboard(contentToShow)}
-                          className="text-[#39ff14] hover:text-[#2bff00] transition-colors p-1 rounded hover:bg-gray-700"
+                          className="text-[#FFFFFF] hover:text-[#2bff00] transition-colors p-1 rounded hover:bg-gray-700"
                           title="Copy to clipboard"
                         >
                           <Copy className="w-4 h-4" />

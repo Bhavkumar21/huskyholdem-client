@@ -219,7 +219,7 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId, uploadedGameData 
   if (!gameData) return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#ff00cc] mb-4"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#559CF8] mb-4"></div>
         <p className="text-gray-400">Loading round replay...</p>
       </div>
     </div>
@@ -345,22 +345,22 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId, uploadedGameData 
     } else if (isAllIn) {
       borderColor = 'border-yellow-500';
     } else if (isCurrentPlayer) {
-      borderColor = 'border-[#ff00cc]';
+      borderColor = 'border-[#559CF8]';
     }
     
     return (
       <div 
         className={`absolute bg-black/30 border rounded-lg p-2 min-w-[140px] ${borderColor} ${
-          isCurrentPlayer ? 'shadow-lg shadow-[#ff00cc]/25' : ''
+          isCurrentPlayer ? 'shadow-lg shadow-[#559CF8]/25' : ''
         } ${hasFolded ? 'opacity-60' : ''}`}
         style={style}
         title={username !== truncatedUsername ? username : undefined} // Show full username on hover if truncated
       >
         <div className="text-center">
-          <div className={`font-mono text-sm font-bold ${isCurrentPlayer ? 'text-[#ff00cc]' : 'text-white'}`}>
+          <div className={`font-mono text-sm font-bold ${isCurrentPlayer ? 'text-[#559CF8]' : 'text-white'}`}>
             {truncatedUsername}
           </div>
-          <div className="text-[#39ff14] font-mono text-xs mt-1">
+          <div className="text-[#FFFFFF] font-mono text-xs mt-1">
             ${stack}
           </div>
           {/* Status indicators */}
@@ -405,9 +405,9 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId, uploadedGameData 
 
   const getActionColor = (action: string) => {
     switch (action.toUpperCase()) {
-      case 'CALL': return 'text-[#39ff14]';
-      case 'RAISE': return 'text-[#ff00cc]';
-      case 'BET': return 'text-[#ff00cc]';
+      case 'CALL': return 'text-[#FFFFFF]';
+      case 'RAISE': return 'text-[#559CF8]';
+      case 'BET': return 'text-[#559CF8]';
       case 'FOLD': return 'text-red-500';
       case 'CHECK': return 'text-gray-400';
       default: return 'text-white';
@@ -548,13 +548,13 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId, uploadedGameData 
           <div className="flex items-center justify-between mb-4">
             <button
               onClick={() => navigate(-1)}
-              className="flex items-center gap-2 px-4 py-2 bg-black border border-[#444] text-[#39ff14] rounded-lg hover:bg-[#39ff14]/20 transition-colors"
+              className="flex items-center gap-2 px-4 py-2 bg-black border border-[#444] text-[#FFFFFF] rounded-lg hover:bg-[#FFFFFF]/20 transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
               Back
             </button>
             <div className="text-center flex-1">
-          <h1 className="text-3xl font-bold font-mono text-[#ff00cc] mb-2">POKER REPLAY</h1>
+          <h1 className="text-3xl font-bold font-mono text-[#559CF8] mb-2">POKER REPLAY</h1>
           <p className="text-gray-400">Action-by-Action hand vizualization</p>
             </div>
             <div className="w-20"></div> {/* Spacer to center the title */}
@@ -568,8 +568,8 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId, uploadedGameData 
               onClick={() => setViewMode('action')}
               className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
                 viewMode === 'action' 
-                  ? 'bg-[#ff00cc] text-black' 
-                  : 'text-[#ff00cc] hover:bg-[#ff00cc]/20'
+                  ? 'bg-[#559CF8] text-black' 
+                  : 'text-[#559CF8] hover:bg-[#559CF8]/20'
               }`}
             >
               Actions this Hand
@@ -578,8 +578,8 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId, uploadedGameData 
               onClick={() => setViewMode('round')}
               className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
                 viewMode === 'round' 
-                  ? 'bg-[#39ff14] text-black' 
-                  : 'text-[#39ff14] hover:bg-[#39ff14]/20'
+                  ? 'bg-[#FFFFFF] text-black' 
+                  : 'text-[#FFFFFF] hover:bg-[#FFFFFF]/20'
               }`}
             >
               Results 
@@ -596,18 +596,18 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId, uploadedGameData 
                   <button
                     onClick={() => setCurrentActionIdx(Math.max(0, currentActionIdx - 1))}
                     disabled={currentActionIdx === 0}
-                    className="flex items-center gap-2 px-4 py-2 bg-[#ff00cc]/20 border border-[#ff00cc] text-[#ff00cc] rounded-lg hover:bg-[#ff00cc]/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex items-center gap-2 px-4 py-2 bg-[#559CF8]/20 border border-[#559CF8] text-[#559CF8] rounded-lg hover:bg-[#559CF8]/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <SkipBack className="w-4 h-4" />
                     Previous
                   </button>
                   <span className="font-mono text-lg">
-                    Action <span className="text-[#ff00cc]">{currentActionIdx + 1}</span> of <span className="text-[#39ff14]">{actionList.length}</span>
+                    Action <span className="text-[#559CF8]">{currentActionIdx + 1}</span> of <span className="text-[#FFFFFF]">{actionList.length}</span>
                   </span>
                   <button
                     onClick={() => setCurrentActionIdx(Math.min(maxActionIdx, currentActionIdx + 1))}
                     disabled={currentActionIdx === maxActionIdx}
-                    className="flex items-center gap-2 px-4 py-2 bg-[#ff00cc]/20 border border-[#ff00cc] text-[#ff00cc] rounded-lg hover:bg-[#ff00cc]/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex items-center gap-2 px-4 py-2 bg-[#559CF8]/20 border border-[#559CF8] text-[#559CF8] rounded-lg hover:bg-[#559CF8]/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Next
                     <SkipForward className="w-4 h-4" />
@@ -618,18 +618,18 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId, uploadedGameData 
                   <button
                     onClick={() => setCurrentRoundIdx(Math.max(0, currentRoundIdx - 1))}
                     disabled={currentRoundIdx === 0}
-                    className="flex items-center gap-2 px-4 py-2 bg-[#39ff14]/20 border border-[#39ff14] text-[#39ff14] rounded-lg hover:bg-[#39ff14]/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex items-center gap-2 px-4 py-2 bg-[#FFFFFF]/20 border border-[#FFFFFF] text-[#FFFFFF] rounded-lg hover:bg-[#FFFFFF]/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <SkipBack className="w-4 h-4" />
                     Previous
                   </button>
                   <span className="font-mono text-lg">
-                    <span className="text-[#39ff14]">{getRoundName(currentRoundIdx)}</span> ({currentRoundIdx + 1} of {roundKeys.length})
+                    <span className="text-[#FFFFFF]">{getRoundName(currentRoundIdx)}</span> ({currentRoundIdx + 1} of {roundKeys.length})
                   </span>
                   <button
                     onClick={() => setCurrentRoundIdx(Math.min(maxRoundIdx, currentRoundIdx + 1))}
                     disabled={currentRoundIdx === maxRoundIdx}
-                    className="flex items-center gap-2 px-4 py-2 bg-[#39ff14]/20 border border-[#39ff14] text-[#39ff14] rounded-lg hover:bg-[#39ff14]/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex items-center gap-2 px-4 py-2 bg-[#FFFFFF]/20 border border-[#FFFFFF] text-[#FFFFFF] rounded-lg hover:bg-[#FFFFFF]/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Next
                     <SkipForward className="w-4 h-4" />
@@ -665,8 +665,8 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId, uploadedGameData 
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <div className="flex items-center gap-2">
-                    <Users className="w-5 h-5 text-[#39ff14]" />
-                    <span className="font-mono text-[#39ff14]" title={getPlayerUsername(String(currentAction.player))}>
+                    <Users className="w-5 h-5 text-[#FFFFFF]" />
+                    <span className="font-mono text-[#FFFFFF]" title={getPlayerUsername(String(currentAction.player))}>
                       {truncateUsername(getPlayerUsername(String(currentAction.player)))}
                     </span>
                   </div>
@@ -680,12 +680,12 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId, uploadedGameData 
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="text-gray-400 text-sm">Round:</span>
-                    <span className="font-mono font-bold text-[#ff00cc]">
+                    <span className="font-mono font-bold text-[#559CF8]">
                       {getRoundName(getCurrentActionRound())}
                     </span>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 text-[#39ff14]">
+                <div className="flex items-center gap-2 text-[#FFFFFF]">
                   <DollarSign className="w-4 h-4" />
                   <span className="font-mono">Pot: ${currentAction.pot_after_action}</span>
                 </div>
@@ -698,13 +698,13 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId, uploadedGameData 
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <div className="flex items-center gap-2">
-                    <Users className="w-5 h-5 text-[#39ff14]" />
-                    <span className="font-mono text-[#39ff14] font-bold">
+                    <Users className="w-5 h-5 text-[#FFFFFF]" />
+                    <span className="font-mono text-[#FFFFFF] font-bold">
                       {getRoundName(currentRoundIdx)}
                     </span>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 text-[#39ff14]">
+                <div className="flex items-center gap-2 text-[#FFFFFF]">
                   <DollarSign className="w-4 h-4" />
                   <span className="font-mono">Pot: ${currentRound.pot}</span>
                 </div>
@@ -795,11 +795,11 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId, uploadedGameData 
           {/* Poker Table */}
           <div className="lg:col-span-2">
             <div className="bg-black border border-[#444] rounded-xl p-6 relative h-96">
-              <div className="absolute inset-4 bg-green-900/20 rounded-full border-2 border-[#39ff14]/30"></div>
+              <div className="absolute inset-4 bg-green-900/20 rounded-full border-2 border-[#FFFFFF]/30"></div>
               
               {/* Center area with pot and board */}
               <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
-                <div className="text-[#39ff14] font-mono text-2xl font-bold mb-2">
+                <div className="text-[#FFFFFF] font-mono text-2xl font-bold mb-2">
                   ${viewMode === 'action' ? (currentAction?.pot_after_action || 0) : (currentRound?.pot || 0)}
                 </div>
                 <div className="text-gray-400 text-sm mb-1">POT</div>
@@ -856,8 +856,8 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId, uploadedGameData 
           {/* Player Stacks */}
           <div className="bg-black border border-[#444] rounded-xl p-6">
             <div className="flex items-center gap-2 mb-4">
-              <TrendingUp className="w-5 h-5 text-[#39ff14]" />
-              <h3 className="font-mono font-bold text-[#39ff14]">PLAYER STACKS</h3>
+              <TrendingUp className="w-5 h-5 text-[#FFFFFF]" />
+              <h3 className="font-mono font-bold text-[#FFFFFF]">PLAYER STACKS</h3>
             </div>
             <div className="space-y-2">
               {playerOrder.map(pid => {
@@ -875,13 +875,13 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId, uploadedGameData 
                     key={pid}
                     className={`flex justify-between items-center p-2 rounded border font-mono text-sm ${
                       isCurrentPlayer 
-                        ? 'border-[#ff00cc] bg-[#ff00cc]/10' 
+                        ? 'border-[#559CF8] bg-[#559CF8]/10' 
                         : 'border-[#444] bg-black/30'
                     }`}
                     title={username !== truncatedUsername ? username : undefined} // Show full username on hover if truncated
                   >
                     <div className="flex items-center gap-2">
-                    <span className={isCurrentPlayer ? 'text-[#ff00cc]' : 'text-white'}>
+                    <span className={isCurrentPlayer ? 'text-[#559CF8]' : 'text-white'}>
                         {truncatedUsername}
                     </span>
                       {isSmallBlind && (
@@ -892,10 +892,10 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId, uploadedGameData 
                       )}
                     </div>
                     <div className="flex flex-col items-end">
-                    <span className={`font-bold ${stack >= 0 ? 'text-[#39ff14]' : 'text-red-500'}`}>
+                    <span className={`font-bold ${stack >= 0 ? 'text-[#FFFFFF]' : 'text-red-500'}`}>
                       ${stack}
                     </span>
-                      <span className={`text-xs ${delta >= 0 ? 'text-[#39ff14]' : 'text-red-500'}`}>
+                      <span className={`text-xs ${delta >= 0 ? 'text-[#FFFFFF]' : 'text-red-500'}`}>
                         {delta >= 0 ? '+' : ''}{delta}
                       </span>
                     </div>
@@ -908,8 +908,8 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId, uploadedGameData 
         </div>
                  {/* Game Results Display */}
          {isGameEnd() && (
-           <div className="bg-black border-l-4 border-[#ff00cc] pl-4 py-3 my-4">
-             <p className="text-[#39ff14] font-bold mb-1 text-lg">🎉 GAME RESULTS 🎉</p>
+           <div className="bg-black border-l-4 border-[#559CF8] pl-4 py-3 my-4">
+             <p className="text-[#FFFFFF] font-bold mb-1 text-lg">🎉 GAME RESULTS 🎉</p>
              <p className="text-gray-300 text-base mb-3">
                Final standings and updated balances for this hand. Winners are highlighted in green, losers in red.
              </p>

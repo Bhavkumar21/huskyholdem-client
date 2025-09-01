@@ -131,19 +131,19 @@ const Dashboard: React.FC = () => {
       {/* Top: User & Countdown */}
       <div className="mb-10 border-b border-[#444] pb-6">
         <h1 className="text-3xl font-bold mb-2 font-glitch">
-          Welcome, <span className="text-[#ff00cc]">{user?.username}</span>
+          Welcome, <span className="text-[#559CF8]">{user?.username}</span>
         </h1>
         <p className="text-md text-gray-400">
           {timeLeft != "Huskyholdem will officially start at July 12 2025" && "Time left until final submission:"}
-          <span className="text-[#39ff14] font-mono">{timeLeft}</span>
+          <span className="text-[#FFFFFF] font-mono">{timeLeft}</span>
         </p>
       </div>
 
-      <div className="bg-black bg-opacity-30 border-l-4 border-[#ff00cc] pl-4 py-3 my-4">
-        <p className="text-[#39ff14] font-bold mb-1">🃏 TOURNAMENT PROTOCOL 🃏</p>
+      <div className="bg-black bg-opacity-30 border-l-4 border-[#559CF8] pl-4 py-3 my-4">
+        <p className="text-[#FFFFFF] font-bold mb-1">🃏 TOURNAMENT PROTOCOL 🃏</p>
         <p className="text-gray-300 text-sm mb-2">
-        ♠️ Welcome to the <span className="text-[#ff00cc] font-semibold">HuskyHoldem Tournament</span> Arena! Upload your poker bot below to face off in simulated games at our virtual table. 
-        This phase (our first phase or the tournament - development) allows you to challenge the <span className="text-[#39ff14] font-mono">House Bot</span> to test your strategy before the main competition.
+        ♠️ Welcome to the <span className="text-[#559CF8] font-semibold">HuskyHoldem Tournament</span> Arena! Upload your poker bot below to face off in simulated games at our virtual table. 
+        This phase (our first phase or the tournament - development) allows you to challenge the <span className="text-[#FFFFFF] font-mono">House Bot</span> to test your strategy before the main competition.
         Upon submission, you'll receive a unique <span className="text-yellow-300">Job ID</span> to track your bot's performance in real-time under the <strong>My Jobs</strong> section.
         </p>
         <p className="text-gray-400 text-xs mb-2">
@@ -176,7 +176,7 @@ const Dashboard: React.FC = () => {
         setJobsLoading(true);
         fetchJobs();
       }}
-      className="text-sm border border-[#39ff14] text-[#39ff14] hover:bg-[#39ff14] hover:text-black px-3 py-1 transition"
+      className="text-sm border border-[#FFFFFF] text-[#FFFFFF] hover:bg-[#FFFFFF] hover:text-black px-3 py-1 transition"
     >
       Refresh Jobs
     </button>
@@ -191,7 +191,7 @@ const Dashboard: React.FC = () => {
     <div className="overflow-x-auto">
       <table className="w-full table-fixed border-collapse text-sm">
         <thead>
-          <tr className="text-left text-[#ff00cc] border-b border-[#333]">
+          <tr className="text-left text-[#559CF8] border-b border-[#333]">
             <th className="p-2 w-1/3">Job ID</th>
             <th className="p-2 w-1/6">Status</th>
             <th className="p-2 w-1/3">Result/Error</th>
@@ -214,7 +214,7 @@ const Dashboard: React.FC = () => {
             
             return (
               <tr key={job.job_id} className="border-b border-[#222]">
-                <td className="p-2 font-mono text-xs text-[#39ff14] break-all w-1/3">{job.job_id}</td>
+                <td className="p-2 font-mono text-xs text-[#FFFFFF] break-all w-1/3">{job.job_id}</td>
                 <td className="p-2 w-1/6">
                   <span
                     className={`px-2 py-1 rounded text-xs font-semibold ${
@@ -242,7 +242,7 @@ const Dashboard: React.FC = () => {
                 <td className="p-2 w-1/6">
                   <button
                     onClick={() => copyToClipboard(contentToShow)}
-                    className="text-[#39ff14] hover:text-[#2bff00] transition-colors p-1 rounded hover:bg-gray-700"
+                    className="text-[#FFFFFF] hover:text-[#2bff00] transition-colors p-1 rounded hover:bg-gray-700"
                     title="Copy to clipboard"
                   >
                     <Copy className="w-4 h-4" />

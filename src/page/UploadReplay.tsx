@@ -99,7 +99,7 @@ const UploadReplay: React.FC = () => {
         <div className="fixed bottom-6 right-6 z-50">
           <button
             onClick={clearData}
-            className="flex items-center gap-2 px-4 py-3 bg-[#ff00cc] text-black font-bold rounded-lg hover:bg-[#ff00cc]/80 transition-colors shadow-lg"
+            className="flex items-center gap-2 px-4 py-3 bg-[#559CF8] text-black font-bold rounded-lg hover:bg-[#559CF8]/80 transition-colors shadow-lg"
             title="Upload another replay file"
           >
             <Upload className="w-5 h-5" />
@@ -119,13 +119,13 @@ const UploadReplay: React.FC = () => {
           <div className="flex items-center justify-between mb-4">
             <button
               onClick={() => navigate(-1)}
-              className="flex items-center gap-2 px-4 py-2 bg-black border border-[#444] text-[#39ff14] rounded-lg hover:bg-[#39ff14]/20 transition-colors"
+              className="flex items-center gap-2 px-4 py-2 bg-black border border-[#444] text-[#FFFFFF] rounded-lg hover:bg-[#FFFFFF]/20 transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
               Back
             </button>
             <div className="text-center flex-1">
-              <h1 className="text-3xl font-bold font-mono text-[#ff00cc] mb-2">UPLOAD REPLAY</h1>
+              <h1 className="text-3xl font-bold font-mono text-[#559CF8] mb-2">UPLOAD REPLAY</h1>
               <p className="text-gray-400">Upload a game JSON file to analyze</p>
             </div>
             <div className="w-20"></div>
@@ -137,14 +137,14 @@ const UploadReplay: React.FC = () => {
           <div
             className={`border-2 border-dashed rounded-xl p-8 text-center transition-colors ${
               isDragOver
-                ? 'border-[#ff00cc] bg-[#ff00cc]/10'
+                ? 'border-[#559CF8] bg-[#559CF8]/10'
                 : 'border-[#444] bg-black/30'
             }`}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
           >
-            <Upload className="w-16 h-16 text-[#39ff14] mx-auto mb-4" />
+            <Upload className="w-16 h-16 text-[#FFFFFF] mx-auto mb-4" />
             <h3 className="text-xl font-bold text-white mb-2">
               Upload Game Data
             </h3>
@@ -161,7 +161,7 @@ const UploadReplay: React.FC = () => {
             />
             <label
               htmlFor="file-upload"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-[#39ff14] text-black font-bold rounded-lg hover:bg-[#39ff14]/80 transition-colors cursor-pointer"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-[#FFFFFF] text-black font-bold rounded-lg hover:bg-[#FFFFFF]/80 transition-colors cursor-pointer"
             >
               <FileText className="w-4 h-4" />
               Choose File
@@ -169,8 +169,8 @@ const UploadReplay: React.FC = () => {
           </div>
 
           {/* Requirements */}
-          <div className="bg-black/30 border-l-4 border-[#39ff14] pl-4 py-3 my-6">
-            <p className="text-[#39ff14] font-bold mb-1">📋 FILE REQUIREMENTS</p>
+          <div className="bg-black/30 border-l-4 border-[#FFFFFF] pl-4 py-3 my-6">
+            <p className="text-[#FFFFFF] font-bold mb-1">📋 FILE REQUIREMENTS</p>
             <p className="text-gray-300 text-sm mb-2">
               Upload a valid poker game JSON file with the following requirements:
             </p>

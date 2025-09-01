@@ -92,7 +92,7 @@ const LeaderboardPage: React.FC = () => {
       {/* Header */}
       <div className="mb-10 border-b border-[#444] pb-6">
         <h1 className="text-4xl font-bold mb-4 font-glitch flex items-center">
-          <Trophy className="h-8 w-8 mr-3 text-[#ff00cc]" />
+          <Trophy className="h-8 w-8 mr-3 text-[#559CF8]" />
           Leaderboard
         </h1>
         <p className="text-gray-400">Compete for the top scores and climb the rankings</p>
@@ -102,15 +102,15 @@ const LeaderboardPage: React.FC = () => {
       <div className="mb-8 bg-gray-900 border border-[#333] rounded-lg p-4">
         <div className="flex items-center gap-4 flex-wrap">
           <div className="flex items-center gap-2">
-            <Filter className="h-5 w-5 text-[#39ff14]" />
-            <span className="text-[#39ff14] font-semibold">Filter by Tag:</span>
+            <Filter className="h-5 w-5 text-[#FFFFFF]" />
+            <span className="text-[#FFFFFF] font-semibold">Filter by Tag:</span>
           </div>
           <button
             onClick={() => setSelectedTag(null)}
             className={`px-3 py-1 rounded border transition-colors ${
               selectedTag === null
-                ? "bg-[#ff00cc] text-black border-[#ff00cc]"
-                : "border-[#444] text-gray-300 hover:border-[#ff00cc]"
+                ? "bg-[#559CF8] text-black border-[#559CF8]"
+                : "border-[#444] text-gray-300 hover:border-[#559CF8]"
             }`}
           >
             All
@@ -121,8 +121,8 @@ const LeaderboardPage: React.FC = () => {
               onClick={() => setSelectedTag(tag)}
               className={`px-3 py-1 rounded border transition-colors ${
                 selectedTag === tag
-                  ? "bg-[#ff00cc] text-black border-[#ff00cc]"
-                  : "border-[#444] text-gray-300 hover:border-[#ff00cc]"
+                  ? "bg-[#559CF8] text-black border-[#559CF8]"
+                  : "border-[#444] text-gray-300 hover:border-[#559CF8]"
               }`}
             >
               {tag}
@@ -164,9 +164,9 @@ const LeaderboardPage: React.FC = () => {
                   key={entry.id}
                   className={`bg-gray-900 border rounded-lg p-4 transition-all hover:bg-gray-800 ${
                     isCurrentUser 
-                      ? "border-[#ff00cc] bg-gray-900/80" 
+                      ? "border-[#559CF8] bg-gray-900/80" 
                       : rank <= 3 
-                        ? "border-[#39ff14]" 
+                        ? "border-[#FFFFFF]" 
                         : "border-[#333]"
                   }`}
                 >
@@ -180,13 +180,13 @@ const LeaderboardPage: React.FC = () => {
                       {/* User Info */}
                       <div>
                         <div className="flex items-center gap-2">
-                          <User className="h-4 w-4 text-[#39ff14]" />
+                          <User className="h-4 w-4 text-[#FFFFFF]" />
                           <button
                             onClick={() => handleUserClick(entry.username)}
                             className={`font-semibold cursor-pointer hover:underline transition-colors ${
                               isCurrentUser 
-                                ? "text-[#ff00cc] hover:text-[#ff44cc]" 
-                                : "text-white hover:text-[#39ff14]"
+                                ? "text-[#559CF8] hover:text-[#ff44cc]" 
+                                : "text-white hover:text-[#FFFFFF]"
                             }`}
                           >
                             {entry.username}
@@ -246,10 +246,10 @@ const LeaderboardPage: React.FC = () => {
               Are you sure you want to delete this leaderboard entry?
             </p>
             <div className="bg-gray-800 border border-[#333] rounded p-3 mb-6">
-              <p><span className="text-[#39ff14]">User:</span> {deleteModal.entry.username}</p>
-              <p><span className="text-[#39ff14]">Score:</span> {deleteModal.entry.score}</p>
+              <p><span className="text-[#FFFFFF]">User:</span> {deleteModal.entry.username}</p>
+              <p><span className="text-[#FFFFFF]">Score:</span> {deleteModal.entry.score}</p>
               {deleteModal.entry.tag && (
-                <p><span className="text-[#39ff14]">Tag:</span> {deleteModal.entry.tag}</p>
+                <p><span className="text-[#FFFFFF]">Tag:</span> {deleteModal.entry.tag}</p>
               )}
             </div>
             <div className="flex gap-3">
