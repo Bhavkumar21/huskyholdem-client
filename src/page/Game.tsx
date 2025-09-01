@@ -56,7 +56,7 @@ const GamePage: React.FC = () => {
       setLoading(true);
       setError(null);
       setCurrentPage(1);
-      const response: PaginatedJobIdsResponse = await liveAPI.get_public_job_ids_paginated(1, 500);
+      const response: PaginatedJobIdsResponse = await liveAPI.get_public_job_ids_paginated(1, 100);
       
       // Sort jobs by creation time (newest first - server already returns newest first)
       const sortedJobs = response.jobs.sort((a, b) => {
