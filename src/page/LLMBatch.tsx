@@ -1,4 +1,4 @@
-import { ChevronDown, X, Zap, Users, Play, Trash2, RefreshCw } from "lucide-react";
+import { ChevronDown, X, Zap, Users, Play, Trash2, RefreshCw, Edit3, Save, FileText } from "lucide-react";
 import { useEffect, useState } from "react";
 import { submissionAPI, userAPI, llmAPI } from "../api";
 import { useNavigate } from "react-router-dom";
@@ -18,6 +18,14 @@ interface Batch {
   job_statuses: Record<string, number>;
 }
 
+interface BatchMetadata {
+  batch_id: string;
+  metadata_id?: string;
+  batch_metadata: Record<string, any>;
+  batch_entries_count?: number;
+  created_at?: string;
+}
+
 const LLMBatchPage = () => {
   const navigate = useNavigate();
 
@@ -33,6 +41,13 @@ const LLMBatchPage = () => {
   const [processingLeaderboard, setProcessingLeaderboard] = useState<Record<string, boolean>>({});
   const [removingLeaderboard, setRemovingLeaderboard] = useState<Record<string, boolean>>({});
   const [allAddedMap, setAllAddedMap] = useState<Record<string, boolean>>({});
+  
+  // Metadata state
+  const [batchMetadata, setBatchMetadata] = useState<Record<string, BatchMetadata>>({});
+  const [editingMetadata, setEditingMetadata] = useState<Record<string, boolean>>({});
+  const [metadataText, setMetadataText] = useState<Record<string, string>>({});
+  const [updatingMetadata, setUpdatingMetadata] = useState<Record<string, boolean>>({});
+  const [metadataValidationErrors, setMetadataValidationErrors] = useState<Record<string, string>>({});
 
   const [searchQuery, setSearchQuery] = useState("");
   const [submittingBatch, setSubmittingBatch] = useState(false);
@@ -81,22 +96,53 @@ const LLMBatchPage = () => {
       setBatches(data.batches || []);
       const ids: string[] = (data.batches || []).map((b: Batch) => b.batch_id);
       if (ids.length > 0) {
-        // Fetch arena statuses in parallel
+        // Fetch arena statuses and metadata in parallel
         const results = await Promise.all(
           ids.map(async (id) => {
             try {
-              const status = await llmAPI.getBatchArenaStatus(id);
-              return [id, !!status.all_added] as [string, boolean];
+              const [statusResult, metadataResult] = await Promise.allSettled([
+                llmAPI.getBatchArenaStatus(id),
+                llmAPI.getBatchMetadata(id)
+              ]);
+              
+              const arenaStatus = statusResult.status === 'fulfilled' ? statusResult.value : null;
+              const metadata = metadataResult.status === 'fulfilled' ? metadataResult.value : null;
+              
+              return {
+                id,
+                arenaAdded: !!arenaStatus?.all_added,
+                metadata: metadata
+              };
             } catch {
-              return [id, false] as [string, boolean];
+              return {
+                id,
+                arenaAdded: false,
+                metadata: null
+              };
             }
           })
         );
-        const map: Record<string, boolean> = {};
-        for (const [id, val] of results) map[id] = val;
-        setAllAddedMap(map);
+        
+        const arenaMap: Record<string, boolean> = {};
+        const metadataMap: Record<string, BatchMetadata> = {};
+        
+        for (const result of results) {
+          arenaMap[result.id] = result.arenaAdded;
+          if (result.metadata) {
+            metadataMap[result.id] = result.metadata;
+            // Initialize metadata text for editing
+            setMetadataText(prev => ({
+              ...prev,
+              [result.id]: JSON.stringify(result.metadata.batch_metadata, null, 2)
+            }));
+          }
+        }
+        
+        setAllAddedMap(arenaMap);
+        setBatchMetadata(metadataMap);
       } else {
         setAllAddedMap({});
+        setBatchMetadata({});
       }
     } catch (err) {
       console.error("Failed to fetch batches:", err);
@@ -169,6 +215,104 @@ const LLMBatchPage = () => {
       alert("Failed to remove from leaderboard: " + (err?.response?.data?.detail || err.message || "Unknown error"));
     } finally {
       setRemovingLeaderboard(prev => ({ ...prev, [batchId]: false }));
+    }
+  };
+
+  const validateJSON = (jsonString: string): { isValid: boolean; error?: string } => {
+    if (!jsonString.trim()) {
+      return { isValid: true }; // Empty string is valid (will be treated as empty object)
+    }
+    
+    try {
+      JSON.parse(jsonString);
+      return { isValid: true };
+    } catch (error) {
+      return { 
+        isValid: false, 
+        error: error instanceof Error ? error.message : 'Invalid JSON format' 
+      };
+    }
+  };
+
+  const handleMetadataTextChange = (batchId: string, value: string) => {
+    setMetadataText(prev => ({ ...prev, [batchId]: value }));
+    
+    // Validate JSON in real-time
+    const validation = validateJSON(value);
+    setMetadataValidationErrors(prev => ({
+      ...prev,
+      [batchId]: validation.isValid ? '' : validation.error || 'Invalid JSON'
+    }));
+  };
+
+  const startEditingMetadata = (batchId: string) => {
+    setEditingMetadata(prev => ({ ...prev, [batchId]: true }));
+    // Initialize with current metadata or empty object
+    if (!metadataText[batchId]) {
+      const currentMetadata = batchMetadata[batchId];
+      const initialText = currentMetadata ? JSON.stringify(currentMetadata.batch_metadata, null, 2) : '{}';
+      setMetadataText(prev => ({
+        ...prev,
+        [batchId]: initialText
+      }));
+      // Clear any existing validation errors
+      setMetadataValidationErrors(prev => ({ ...prev, [batchId]: '' }));
+    }
+  };
+
+  const cancelEditingMetadata = (batchId: string) => {
+    setEditingMetadata(prev => ({ ...prev, [batchId]: false }));
+    // Reset to original metadata
+    const currentMetadata = batchMetadata[batchId];
+    if (currentMetadata) {
+      setMetadataText(prev => ({
+        ...prev,
+        [batchId]: JSON.stringify(currentMetadata.batch_metadata, null, 2)
+      }));
+    }
+    // Clear validation errors
+    setMetadataValidationErrors(prev => ({ ...prev, [batchId]: '' }));
+  };
+
+  const updateBatchMetadata = async (batchId: string) => {
+    // Check if JSON is valid before proceeding
+    const validation = validateJSON(metadataText[batchId] || '{}');
+    if (!validation.isValid) {
+      alert(`Invalid JSON format: ${validation.error}`);
+      return;
+    }
+
+    setUpdatingMetadata(prev => ({ ...prev, [batchId]: true }));
+    try {
+      let parsedMetadata;
+      try {
+        parsedMetadata = JSON.parse(metadataText[batchId] || '{}');
+      } catch (err) {
+        alert("Invalid JSON format. Please check your syntax.");
+        return;
+      }
+
+      const result = await llmAPI.updateBatchMetadata(batchId, parsedMetadata);
+      
+      // Update local state
+      setBatchMetadata(prev => ({
+        ...prev,
+        [batchId]: {
+          batch_id: batchId,
+          metadata_id: result.metadata_id,
+          batch_metadata: parsedMetadata,
+          batch_entries_count: result.batch_entries_updated,
+          created_at: result.metadata_id
+        }
+      }));
+      
+      setEditingMetadata(prev => ({ ...prev, [batchId]: false }));
+      alert(`Metadata ${result.action} successfully for batch ${batchId}`);
+    } catch (err: any) {
+      console.error("Failed to update batch metadata:", err);
+      alert("Failed to update metadata: " + (err?.response?.data?.detail || err.message || "Unknown error"));
+    } finally {
+      setUpdatingMetadata(prev => ({ ...prev, [batchId]: false }));
     }
   };
 
@@ -569,6 +713,87 @@ const LLMBatchPage = () => {
                     <div className="text-2xl font-bold text-red-400">{batch.job_statuses.FAILED || 0}</div>
                     <div className="text-xs text-gray-400">Failed</div>
                   </div>
+                </div>
+
+                {/* Metadata Section */}
+                <div className="border-t border-gray-700 pt-4 mb-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <h4 className="text-sm font-semibold text-[#559CF8] flex items-center gap-2">
+                      <FileText className="w-4 h-4" />
+                      Batch Metadata
+                    </h4>
+                    {!editingMetadata[batch.batch_id] && (
+                      <button
+                        onClick={() => startEditingMetadata(batch.batch_id)}
+                        className="px-3 py-1 text-xs border border-[#559CF8] text-[#559CF8] rounded hover:bg-[#559CF8] hover:text-black transition flex items-center gap-1"
+                      >
+                        <Edit3 className="w-3 h-3" />
+                        {batchMetadata[batch.batch_id] ? 'Edit' : 'Add'}
+                      </button>
+                    )}
+                  </div>
+                  
+                  {editingMetadata[batch.batch_id] ? (
+                    <div className="space-y-3">
+                      <div className="relative">
+                        <textarea
+                          value={metadataText[batch.batch_id] || '{}'}
+                          onChange={(e) => handleMetadataTextChange(batch.batch_id, e.target.value)}
+                          placeholder="Enter metadata as JSON..."
+                          className={`w-full h-32 px-3 py-2 bg-gray-800 border rounded text-white text-xs font-mono focus:outline-none resize-none ${
+                            metadataValidationErrors[batch.batch_id] 
+                              ? 'border-red-500 focus:border-red-400' 
+                              : 'border-gray-600 focus:border-[#559CF8]'
+                          }`}
+                        />
+                        {metadataValidationErrors[batch.batch_id] && (
+                          <div className="absolute -bottom-6 left-0 text-xs text-red-400 flex items-center gap-1">
+                            <span>⚠️</span>
+                            {metadataValidationErrors[batch.batch_id]}
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => updateBatchMetadata(batch.batch_id)}
+                          disabled={updatingMetadata[batch.batch_id] || !!metadataValidationErrors[batch.batch_id]}
+                          className={`px-3 py-1 text-xs rounded transition flex items-center gap-1 ${
+                            updatingMetadata[batch.batch_id] || metadataValidationErrors[batch.batch_id]
+                              ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                              : 'bg-[#559CF8] text-black hover:bg-[#4a8ae8]'
+                          }`}
+                        >
+                          {updatingMetadata[batch.batch_id] ? (
+                            <>
+                              <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-black"></div>
+                              Saving...
+                            </>
+                          ) : (
+                            <>
+                              <Save className="w-3 h-3" />
+                              Save
+                            </>
+                          )}
+                        </button>
+                        <button
+                          onClick={() => cancelEditingMetadata(batch.batch_id)}
+                          className="px-3 py-1 text-xs border border-gray-500 text-gray-300 rounded hover:bg-gray-700 transition"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="bg-gray-800 p-3 rounded border border-gray-700">
+                      {batchMetadata[batch.batch_id] ? (
+                        <pre className="text-xs text-gray-300 font-mono whitespace-pre-wrap overflow-x-auto">
+                          {JSON.stringify(batchMetadata[batch.batch_id].batch_metadata, null, 2)}
+                        </pre>
+                      ) : (
+                        <p className="text-xs text-gray-500 italic">No metadata available</p>
+                      )}
+                    </div>
+                  )}
                 </div>
 
                 <div className="border-t border-gray-700 pt-4">

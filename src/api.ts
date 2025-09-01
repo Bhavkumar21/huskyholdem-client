@@ -343,6 +343,14 @@ const llmAPI = {
         const response = await apiClient.get(`llm/game-log/${game_log_id}/batch-order`);
         return response.data;
     },
+    getBatchMetadata: async (batch_id: string) => {
+        const response = await apiClient.get(`/llm/batch/${batch_id}/metadata`);
+        return response.data;
+    },
+    updateBatchMetadata: async (batch_id: string, metadata: Record<string, any>) => {
+        const response = await apiClient.post(`/llm/batch/${batch_id}/metadata`, metadata);
+        return response.data;
+    },
 }
 
 const dockerAPI = {
