@@ -9,16 +9,16 @@ interface JobGameInfo {
   game_uuid: string;
 }
 
-interface JobGamesResponse {
-  message: string;
-  job_id: string;
-  games: JobGameInfo[];
-  total_count?: number;
-  page?: number;
-  page_size?: number;
-  has_next?: boolean;
-  has_previous?: boolean;
-}
+// interface JobGamesResponse {
+//   message: string;
+//   job_id: string;
+//   games: JobGameInfo[];
+//   total_count?: number;
+//   page?: number;
+//   page_size?: number;
+//   has_next?: boolean;
+//   has_previous?: boolean;
+// }
 
 interface GameResult {
   [player_id: string]: number;
