@@ -71,8 +71,8 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId, uploadedGameData 
   const [playerStacks, setPlayerStacks] = useState<{ [playerId: string]: number }>({});
   const [playerDeltas, setPlayerDeltas] = useState<{ [playerId: string]: number }>({});
   const [viewMode, setViewMode] = useState<'action' | 'round'>('action');
-  const [showPlayerCards, setShowPlayerCards] = useState<boolean>(false);
-  const [showPots, setShowPots] = useState<boolean>(false);
+  const [showPlayerCards, setShowPlayerCards] = useState<boolean>(true);
+  const [showPots, setShowPots] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   // Fetch game data or use uploaded data
@@ -773,7 +773,7 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId, uploadedGameData 
                         {/* Total Row */}
                         <tr className="border-t-2 border-blue-400 bg-blue-900/20">
                           <td className="p-2 font-mono text-blue-300 font-bold">
-                            TOTAL
+                            TOTAL POT
                           </td>
                           <td className="p-2 font-bold text-blue-400 text-sm">
                             ${pots.reduce((sum, pot) => sum + pot.amount, 0)}
@@ -802,13 +802,13 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId, uploadedGameData 
                 <div className="text-[#FFFFFF] font-mono text-2xl font-bold mb-2">
                   ${viewMode === 'action' ? (currentAction?.pot_after_action || 0) : (currentRound?.pot || 0)}
                 </div>
-                <div className="text-gray-400 text-sm mb-1">POT</div>
+                <div className="text-gray-400 text-sm mb-1">ROUND POT</div>
                 {(() => {
                   const pots = getCurrentPots();
                   const totalPots = pots.reduce((sum, pot) => sum + pot.amount, 0);
                   return (
                     <div className="text-blue-400 font-mono text-sm mb-3">
-                      TOTAL: ${totalPots}
+                      TOTAL POT: ${totalPots}
                     </div>
                   );
                 })()}

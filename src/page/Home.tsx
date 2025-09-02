@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { leaderboardAPI } from "../api";
 import { Trophy, Crown, User } from "lucide-react";
@@ -18,7 +17,6 @@ const Home: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   const { user } = useAuth();
-  const navigate = useNavigate();
 
   useEffect(() => {
     fetchLeaderboardData();
@@ -50,10 +48,6 @@ const Home: React.FC = () => {
     if (score > 0) return "text-green-400";
     if (score < 0) return "text-red-400";
     return "text-gray-300";
-  };
-
-  const handleUserClick = (username: string) => {
-    navigate(`/profile/${username}`);
   };
 
   return (
@@ -130,17 +124,16 @@ const Home: React.FC = () => {
                       {/* User Info */}
                       <div className="flex items-center gap-2">
                         <User className="h-4 w-4 text-[#FFFFFF]" />
-                        <button
-                          onClick={() => handleUserClick(entry.username)}
-                          className={`font-semibold cursor-pointer hover:underline transition-colors ${
+                        <span
+                          className={`font-semibold ${
                             isCurrentUser 
-                              ? "text-[#559CF8] hover:text-[#ff44cc]" 
-                              : "text-white hover:text-[#FFFFFF]"
+                              ? "text-[#559CF8]" 
+                              : "text-white"
                           }`}
                         >
                           {entry.username}
                           {isCurrentUser && <span className="ml-2 text-xs">(You)</span>}
-                        </button>
+                        </span>
                       </div>
                     </div>
 
