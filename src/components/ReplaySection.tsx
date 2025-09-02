@@ -72,7 +72,7 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId, uploadedGameData 
   const [playerDeltas, setPlayerDeltas] = useState<{ [playerId: string]: number }>({});
   const [viewMode, setViewMode] = useState<'action' | 'round'>('action');
   const [showPlayerCards, setShowPlayerCards] = useState<boolean>(true);
-  const [showPots, setShowPots] = useState<boolean>(true);
+  const [showPots, setShowPots] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
   // Fetch game data or use uploaded data
