@@ -7,13 +7,17 @@ const DefaultFooter = () => {
   const bibtexCitation = `@misc{huskyholdem2025,
   title={Husky Hold'em Bench},
   author={Kumar, Bhavesh and Nguyen, Hoang and Jin, Roger},
+  organization={Nous Research},
   year={2025},
-  howpublished={\\url{https://huskyholdem.nousresearch.com}},
+  howpublished={\\url{https://huskybench.com/}},
   note={Accessed: ${new Date().toISOString().split('T')[0]}}
 }`;
 
-  const handleCiteClick = async () => {
+  const handleCiteClick = () => {
     setShowCitation(true);
+  };
+
+  const handleCopyClick = async () => {
     try {
       await navigator.clipboard.writeText(bibtexCitation);
       setCopied(true);
@@ -95,15 +99,23 @@ const DefaultFooter = () => {
                 {copied ? (
                   <span className="text-green-400">✓ Copied to clipboard!</span>
                 ) : (
-                  "Citation automatically copied to clipboard"
+                  "Click the copy button to copy citation"
                 )}
               </div>
-              <button 
-                onClick={closeCitation}
-                className="text-[#559CF8] border border-[#559CF8] px-4 py-2 hover:bg-[#559CF8] hover:text-black transition-colors uppercase"
-              >
-                Close
-              </button>
+              <div className="flex gap-3">
+                <button 
+                  onClick={handleCopyClick}
+                  className="text-[#559CF8] border border-[#559CF8] px-4 py-2 hover:bg-[#559CF8] hover:text-black transition-colors uppercase"
+                >
+                  Copy
+                </button>
+                <button 
+                  onClick={closeCitation}
+                  className="text-white border border-white px-4 py-2 hover:bg-white hover:text-black transition-colors uppercase"
+                >
+                  Close
+                </button>
+              </div>
             </div>
           </div>
         </div>
