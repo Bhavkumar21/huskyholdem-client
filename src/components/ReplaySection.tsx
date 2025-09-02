@@ -795,7 +795,7 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId, uploadedGameData 
           {/* Poker Table */}
           <div className="lg:col-span-2">
             <div className="bg-black border border-[#444] rounded-xl p-6 relative h-96">
-              <div className="absolute inset-4 bg-green-900/20 rounded-full border-2 border-[#FFFFFF]/30"></div>
+              <div className="absolute inset-2 bg-green-900/20 rounded-full border-2 border-[#FFFFFF]/30"></div>
               
               {/* Center area with pot and board */}
               <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
