@@ -305,22 +305,22 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId, uploadedGameData 
     switch (suit) {
       case 'h':
       case 'H':
-        suitSymbol = '♥️';
+        suitSymbol = '♥';
         suitColor = 'text-red-600';
         break;
       case 'd':
       case 'D':
-        suitSymbol = '♦️';
+        suitSymbol = '♦';
         suitColor = 'text-red-600';
         break;
       case 'c':
       case 'C':
-        suitSymbol = '♣️';
+        suitSymbol = '♣';
         suitColor = 'text-black';
         break;
       case 's':
       case 'S':
-        suitSymbol = '♠️';
+        suitSymbol = '♠';
         suitColor = 'text-black';
         break;
       default:
@@ -380,10 +380,10 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId, uploadedGameData 
                 return (
                   <div
                     key={index}
-                    className="w-6 h-8 rounded border bg-white border-gray-300 text-xs flex flex-col items-center justify-center font-mono"
+                    className="w-6 h-8 rounded border bg-white border-gray-300 text-xs flex flex-col items-center justify-center font-mono gap-0"
                   >
-                    <div className="text-black font-bold">{formattedCard.rank}</div>
-                    <div className={`text-xs ${formattedCard.suitColor}`}>{formattedCard.suitSymbol}</div>
+                    <div className="text-black font-bold leading-none">{formattedCard.rank}</div>
+                    <div className={`text-sm ${formattedCard.suitColor} leading-none`}>{formattedCard.suitSymbol}</div>
                   </div>
                 );
               } else {
@@ -821,10 +821,10 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId, uploadedGameData 
                       return (
                       <div
                         key={index}
-                          className="w-8 h-11 bg-white border border-gray-300 rounded text-xs flex flex-col items-center justify-center font-mono"
+                          className="w-8 h-10 bg-white border border-gray-300 rounded text-xs flex flex-col items-center justify-center font-mono"
                       >
-                          <div className="text-black font-bold">{formattedCard.rank}</div>
-                          <div className={`text-xs ${formattedCard.suitColor}`}>{formattedCard.suitSymbol}</div>
+                          <div className="text-black font-bold leading-none">{formattedCard.rank}</div>
+                          <div className={`text-sm ${formattedCard.suitColor} leading-none`}>{formattedCard.suitSymbol}</div>
                       </div>
                       );
                     })
