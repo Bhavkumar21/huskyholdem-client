@@ -230,7 +230,7 @@ const JobGamesPage: React.FC = () => {
         <div className="flex items-center gap-3 mb-2">
           <Gamepad2 className="w-7 h-7 text-[#559CF8]" />
           <h1 className="text-2xl font-bold font-glitch">
-            Live Gamplay for {gameNumber ? `Game #${gameNumber} Batch 1` : 'Game'}: <span className="text-[#FFFFFF]">{jobId}</span>
+            Live Gameplay for {gameNumber ? `Game #${gameNumber}` : 'Game'}: <span className="text-[#FFFFFF]">{jobId}</span>
           </h1>
         </div>
       </div>
