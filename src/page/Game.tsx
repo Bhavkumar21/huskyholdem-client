@@ -397,7 +397,7 @@ const GamePage: React.FC = () => {
                 <span className="text-sm text-gray-400">Total Players</span>
               </div>
               <p className="text-2xl font-bold text-white">
-                {new Set(jobs.flatMap(job => job.players)).size}
+                12
               </p>
             </div>
             
