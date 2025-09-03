@@ -397,7 +397,7 @@ const GamePage: React.FC = () => {
                 <span className="text-sm text-gray-400">Total Players</span>
               </div>
               <p className="text-2xl font-bold text-white">
-                12
+                13
               </p>
             </div>
             
