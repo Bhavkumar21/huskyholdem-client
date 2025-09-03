@@ -604,7 +604,7 @@ const UserPerformanceChart: React.FC<UserPerformanceChartProps> = ({ jobId, game
               className="ml-1 px-2 py-1 rounded bg-gray-800 border border-gray-600 text-white text-xs font-mono focus:border-[#FFFFFF] focus:outline-none"
               style={{ minWidth: 60 }}
             >
-              {[2,25,50,75,100,200].map(n => (
+              {[25,50,75,100,200].map(n => (
                 <option key={n} value={n}>{n === 1 ? 'Raw' : `Avg ${n}`}</option>
               ))}
             </select>
