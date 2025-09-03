@@ -164,11 +164,11 @@ const GamePage: React.FC = () => {
         return dateB - dateA; // Newest first (descending order)
       });
       
-      // Assign descending game numbers within this batch (highest number down to 1)
+      // Assign ascending game numbers within this batch (1, 2, 3, etc.)
       sortedBatchJobs.forEach((job, index) => {
         finalJobs.push({
           ...job,
-          gameNumber: 924 - index // e.g., if 50 games: 50, 49, 48... 1
+          gameNumber: index + 1 // Use simple ascending index starting from 1
         });
       });
     });
