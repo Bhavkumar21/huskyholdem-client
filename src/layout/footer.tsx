@@ -44,9 +44,12 @@ const DefaultFooter = () => {
               <div>
                 <span className="text-[#559CF8]">[SYSTEM::CODE]</span> <a target="_blank" href="https://github.com/NousResearch/huskyholdem-bench" className="underline">GITHUB</a>
               </div>
+              <div>
+              <span className="text-[#559CF8]">[SYSTEM::COLLECT_DATASET]</span> <a target="_blank" href="https://huggingface.co/collections/NousResearch/huskybench-68bc8aec53b626cd7a44f189" className="underline">HUGGINGFACE</a>
+            </div>
               </div>
           </div>
-          
+
           {/* Center CITE button */}
           <div className="flex items-center justify-center mb-4 lg:mb-0">
             <button 
@@ -56,7 +59,7 @@ const DefaultFooter = () => {
               CITE
             </button>
           </div>
-          
+
           <div className="text-sm pl-4 w-full lg:w-auto">
               <div className="flex flex-col items-start">
               <div>
