@@ -10,6 +10,9 @@ const DefaultFooter = () => {
             <div>
               <span className="text-[#559CF8]">[SYSTEM::CODE]</span> <a target="_blank" href="https://github.com/NousResearch/huskyholdem-bench" className="underline">GITHUB</a>
             </div>
+            <div>
+              <span className="text-[#559CF8]">[SYSTEM::COLLECT_DATASET]</span> <a target="_blank" href="https://huggingface.co/collections/NousResearch/huskybench-68bc8aec53b626cd7a44f189" className="underline">HUGGINGFACE</a>
+            </div>
             </div>
         </div>
         <div className="text-sm pl-4 w-full md:w-auto">
