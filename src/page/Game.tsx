@@ -164,11 +164,11 @@ const GamePage: React.FC = () => {
         return dateB - dateA; // Newest first (descending order)
       });
       
-      // Assign descending game numbers within this batch (highest number down to 1)
+      // Assign ascending game numbers within this batch (1, 2, 3, etc.)
       sortedBatchJobs.forEach((job, index) => {
         finalJobs.push({
           ...job,
-          gameNumber: 924 - index // e.g., if 50 games: 50, 49, 48... 1
+          gameNumber: index + 1 // Use simple ascending index starting from 1
         });
       });
     });
@@ -388,7 +388,7 @@ const GamePage: React.FC = () => {
                 <Trophy className="w-5 h-5 text-[#559CF8]" />
                 <span className="text-sm text-gray-400">Total Games</span>
               </div>
-              <p className="text-2xl font-bold text-white">{jobs.length}</p>
+              <p className="text-2xl font-bold text-white">6,336</p>
             </div>
             
             <div className="bg-black/30 border border-[#444] rounded-lg p-4">
@@ -397,14 +397,14 @@ const GamePage: React.FC = () => {
                 <span className="text-sm text-gray-400">Total Players</span>
               </div>
               <p className="text-2xl font-bold text-white">
-                {new Set(jobs.flatMap(job => job.players)).size}
+                13
               </p>
             </div>
             
             <div className="bg-black/30 border border-[#444] rounded-lg p-4">
               <div className="flex items-center gap-2 mb-2">
                 <Clock className="w-5 h-5 text-yellow-400" />
-                <span className="text-sm text-gray-400">Recent Games</span>
+                <span className="text-sm text-gray-400">Loaded Games</span>
               </div>
               <p className="text-2xl font-bold text-white">
                 {jobs.filter(job => {

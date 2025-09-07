@@ -71,7 +71,7 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId, uploadedGameData 
   const [playerStacks, setPlayerStacks] = useState<{ [playerId: string]: number }>({});
   const [playerDeltas, setPlayerDeltas] = useState<{ [playerId: string]: number }>({});
   const [viewMode, setViewMode] = useState<'action' | 'round'>('action');
-  const [showPlayerCards, setShowPlayerCards] = useState<boolean>(false);
+  const [showPlayerCards, setShowPlayerCards] = useState<boolean>(true);
   const [showPots, setShowPots] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -305,22 +305,22 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId, uploadedGameData 
     switch (suit) {
       case 'h':
       case 'H':
-        suitSymbol = '♥️';
+        suitSymbol = '♥';
         suitColor = 'text-red-600';
         break;
       case 'd':
       case 'D':
-        suitSymbol = '♦️';
+        suitSymbol = '♦';
         suitColor = 'text-red-600';
         break;
       case 'c':
       case 'C':
-        suitSymbol = '♣️';
+        suitSymbol = '♣';
         suitColor = 'text-black';
         break;
       case 's':
       case 'S':
-        suitSymbol = '♠️';
+        suitSymbol = '♠';
         suitColor = 'text-black';
         break;
       default:
@@ -380,10 +380,10 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId, uploadedGameData 
                 return (
                   <div
                     key={index}
-                    className="w-6 h-8 rounded border bg-white border-gray-300 text-xs flex flex-col items-center justify-center font-mono"
+                    className="w-6 h-8 rounded border bg-white border-gray-300 text-xs flex flex-col items-center justify-center font-mono gap-0"
                   >
-                    <div className="text-black font-bold">{formattedCard.rank}</div>
-                    <div className={`text-xs ${formattedCard.suitColor}`}>{formattedCard.suitSymbol}</div>
+                    <div className="text-black font-bold leading-none">{formattedCard.rank}</div>
+                    <div className={`text-sm ${formattedCard.suitColor} leading-none`}>{formattedCard.suitSymbol}</div>
                   </div>
                 );
               } else {
@@ -773,7 +773,7 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId, uploadedGameData 
                         {/* Total Row */}
                         <tr className="border-t-2 border-blue-400 bg-blue-900/20">
                           <td className="p-2 font-mono text-blue-300 font-bold">
-                            TOTAL
+                            TOTAL POT
                           </td>
                           <td className="p-2 font-bold text-blue-400 text-sm">
                             ${pots.reduce((sum, pot) => sum + pot.amount, 0)}
@@ -795,20 +795,20 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId, uploadedGameData 
           {/* Poker Table */}
           <div className="lg:col-span-2">
             <div className="bg-black border border-[#444] rounded-xl p-6 relative h-96">
-              <div className="absolute inset-4 bg-green-900/20 rounded-full border-2 border-[#FFFFFF]/30"></div>
+              <div className="absolute inset-2 bg-green-900/20 rounded-full border-2 border-[#FFFFFF]/30"></div>
               
               {/* Center area with pot and board */}
               <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
                 <div className="text-[#FFFFFF] font-mono text-2xl font-bold mb-2">
                   ${viewMode === 'action' ? (currentAction?.pot_after_action || 0) : (currentRound?.pot || 0)}
                 </div>
-                <div className="text-gray-400 text-sm mb-1">POT</div>
+                <div className="text-gray-400 text-sm mb-1">ROUND POT</div>
                 {(() => {
                   const pots = getCurrentPots();
                   const totalPots = pots.reduce((sum, pot) => sum + pot.amount, 0);
                   return (
                     <div className="text-blue-400 font-mono text-sm mb-3">
-                      TOTAL: ${totalPots}
+                      TOTAL POT: ${totalPots}
                     </div>
                   );
                 })()}
@@ -821,10 +821,10 @@ const ReplaySection: React.FC<ReplaySectionProps> = ({ gameId, uploadedGameData 
                       return (
                       <div
                         key={index}
-                          className="w-8 h-11 bg-white border border-gray-300 rounded text-xs flex flex-col items-center justify-center font-mono"
+                          className="w-8 h-10 bg-white border border-gray-300 rounded text-xs flex flex-col items-center justify-center font-mono"
                       >
-                          <div className="text-black font-bold">{formattedCard.rank}</div>
-                          <div className={`text-xs ${formattedCard.suitColor}`}>{formattedCard.suitSymbol}</div>
+                          <div className="text-black font-bold leading-none">{formattedCard.rank}</div>
+                          <div className={`text-sm ${formattedCard.suitColor} leading-none`}>{formattedCard.suitSymbol}</div>
                       </div>
                       );
                     })
