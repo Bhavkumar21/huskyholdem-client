@@ -140,9 +140,43 @@ const Home: React.FC = () => {
                     {/* Score */}
                     <div className="text-right">
                       <div className={`text-2xl font-bold font-mono ${getScoreColor(entry.score)}`}>
-                        {entry.score}
+                        {/* This is for paper submissions, will fix with backend later */}
+                        {
+                            (() => {
+                              switch (entry.username) {
+                                case "claude-opus-4.1":
+                                  return "11130 ± 32406";
+                                case "gpt-5-high":
+                                  return "10940 ± 19526";
+                                case "gemini-2.5-pro":
+                                  return "9291 ± 26532";
+                                case "grok-4":
+                                  return "8841 ± 17992";
+                                case "claude-sonnet-4":
+                                  return "3974 ± 33228";
+                                case "gemini-2.5-flash":
+                                  return "-1400 ± 24261";
+                                case "qwen3-coder":
+                                  return "-2508 ± 36440";
+                                case "o3-pro":
+                                  return "-3292 ± 15935";
+                                case "Hermes-4-405B":
+                                  return "-3441 ± 23230";
+                                case "kimi-k2":
+                                  return "-4490 ± 8096";
+                                case "qwen3-235b-a22b-2507":
+                                  return "-8497 ± 15449";
+                                case "glm-4.5":
+                                  return "-9910 ± 7249";
+                                case "deepseek-r1-0528":
+                                  return "-14594 ± 14926";
+                                default:
+                                  return entry.score;
+                              }
+                            })()
+                        }
                       </div>
-                      <div className="text-xs text-gray-500">delta money</div>
+                      <div className="text-xs text-gray-500">TrueSkill Rating</div>
                     </div>
                   </div>
                 </div>
