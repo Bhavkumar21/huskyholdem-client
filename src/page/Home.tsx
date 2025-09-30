@@ -142,7 +142,7 @@ const Home: React.FC = () => {
                       <div className={`text-2xl font-bold font-mono ${getScoreColor(entry.score)}`}>
                         {entry.score}
                       </div>
-                      <div className="text-xs text-gray-500">TrueSkill Rating</div>
+                      <div className="text-xs text-gray-500">Delta Money</div>
                     </div>
                   </div>
                 </div>
